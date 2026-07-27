@@ -15,6 +15,19 @@ class CmsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // If the CMS is not installed, we must fall back to file-based sessions and cache.
+        // Otherwise, Laravel will crash when attempting to read from the non-existent 'sessions' table
+        // before the CheckInstallation middleware can even redirect the user to the setup wizard.
+        if (!is_cms_installed()) {
+            config(['session.driver' => 'file']);
+            config(['cache.default' => 'file']);
+        }
+
+        // Register the Widget Manager as a singleton
+        $this->app->singleton(\Cms\Core\Services\WidgetManager::class, function ($app) {
+            return new \Cms\Core\Services\WidgetManager();
+        });
+
         $this->app->singleton(\Cms\Core\Services\HookManager::class, function () {
             return new \Cms\Core\Services\HookManager();
         });
