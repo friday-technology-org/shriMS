@@ -37,16 +37,16 @@
     </div>
     @endif
 
-    <div class="space-y-6">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
-        <!-- Add New Term Form (Top stacked, full width) -->
-        <div class="w-full h-fit">
+        <!-- Add New Term Form (Left column) -->
+        <div class="w-full">
             <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
                 <h3 class="text-gray-1100 text-lg font-bold mb-6 dark:text-white">Add New {{ rtrim($taxonomy->name, 's') }}</h3>
                 <form action="{{ route('cms.terms.store', $taxonomy->id) }}" method="POST">
                     @csrf
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+                    <div class="flex flex-col gap-5 mb-5">
                         <div>
                             <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Name</p>
                             <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
@@ -97,9 +97,9 @@
             </div>
         </div>
 
-        <!-- List Terms (Bottom stacked, full width) -->
-        <div class="w-full">
-            <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl overflow-x-scroll scrollbar-hide px-[25px] py-[25px] xl:overflow-x-hidden">
+        <!-- List Terms (Right column) -->
+        <div class="w-full xl:col-span-2">
+            <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl overflow-x-auto scrollbar-hide px-[25px] py-[25px]">
                 <table class="w-full border-separate border-spacing-y-[15px] min-w-[600px]">
                     <thead> 
                     <tr> 

@@ -27,6 +27,10 @@ class CmsServiceProvider extends ServiceProvider
             return new \Cms\Core\Services\SearchService();
         });
 
+        $this->app->singleton(\Cms\Core\Services\ShortcodeParser::class, function () {
+            return new \Cms\Core\Services\ShortcodeParser();
+        });
+
         $this->app->singleton(\Cms\Core\Services\SeoHelper::class, function () {
             return new \Cms\Core\Services\SeoHelper();
         });
@@ -89,6 +93,9 @@ class CmsServiceProvider extends ServiceProvider
         
         $router->aliasMiddleware('cms.api.auth', \Cms\Core\Http\Middleware\AuthenticateCmsApi::class);
         $router->aliasMiddleware('cms.locale', \Cms\Core\Http\Middleware\SetLocale::class);
+        $router->aliasMiddleware('role', \Spatie\Permission\Middleware\RoleMiddleware::class);
+        $router->aliasMiddleware('permission', \Spatie\Permission\Middleware\PermissionMiddleware::class);
+        $router->aliasMiddleware('role_or_permission', \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class);
 
         // Register Observers
         \Cms\Core\Models\Post::observe(\Cms\Core\Observers\PostObserver::class);
@@ -104,7 +111,6 @@ class CmsServiceProvider extends ServiceProvider
             dispatch_cms_webhook('comment.created', $comment->toArray());
         });
 
-        // Register Auth activity log listener
         \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Login::class, function ($event) {
             \Cms\Core\Models\CmsActivityLog::create([
                 'user_id' => $event->user->id,
@@ -151,11 +157,11 @@ class CmsServiceProvider extends ServiceProvider
             try {
                 $previewSlug = request()?->query('cms_preview_theme');
                 if ($previewSlug && auth()->check()) {
-                    $activeTheme = Theme::where('slug', $previewSlug)->first();
+                    $activeTheme = \Cms\Core\Models\Theme::find($previewSlug);
                 }
-                $activeTheme ??= Theme::where('is_active', true)->first();
+                $activeTheme ??= \Cms\Core\Models\Theme::find(\Cms\Core\Models\Option::get('active_theme', 'default'));
             } catch (\Throwable $e) {
-                // themes table not migrated yet, or DB unreachable — fall through to default theme on disk
+                // DB unreachable — fall through to default theme on disk
             }
         }
 

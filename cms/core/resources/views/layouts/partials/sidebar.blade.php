@@ -13,6 +13,7 @@
                 </a>
             </div>
 
+            @hasrole('Administrator')
             <!-- Users -->
             <div class="sidemenu-item rounded-xl relative">
                 <a href="{{ route('cms.users.index') }}" class="flex items-center justify-between w-full cursor-pointer py-[17px] px-[21px] hover:bg-gray-50 dark:hover:bg-gray-dark-100 rounded-xl">
@@ -22,7 +23,9 @@
                     </div>
                 </a>
             </div>
+            @endhasrole
 
+            @hasanyrole('Administrator|Editor|Contributor|Author')
             <!-- Posts -->
             <div class="sidemenu-item rounded-xl relative">
                 <input class="sr-only peer" type="checkbox" value="posts" name="sidemenu" id="posts">
@@ -41,7 +44,9 @@
                     </ul>
                 </div>
             </div>
+            @endhasanyrole
 
+            @hasanyrole('Administrator|Editor')
             <!-- Pages -->
             <div class="sidemenu-item rounded-xl relative">
                 <input class="sr-only peer" type="checkbox" value="pages" name="sidemenu" id="pages">
@@ -58,17 +63,21 @@
                     </ul>
                 </div>
             </div>
+            @endhasanyrole
 
+            @hasanyrole('Administrator|Editor')
             <!-- Media Library -->
             <div class="sidemenu-item rounded-xl relative">
                 <a href="{{ route('cms.media.index') }}" class="flex items-center justify-between w-full cursor-pointer py-[17px] px-[21px] hover:bg-gray-50 dark:hover:bg-gray-dark-100 rounded-xl">
                     <div class="flex items-center gap-[10px]">
-                        <img src="{{ asset('assets/images/icons/icon-media-menu.svg') }}" alt="side menu icon">
+                        <img src="{{ asset('assets/images/icons/icon-gallery.svg') }}" alt="side menu icon">
                         <span class="text-normal font-semibold text-gray-500 sidemenu-title dark:text-gray-dark-500">Media</span>
                     </div>
                 </a>
             </div>
+            @endhasanyrole
 
+            @hasanyrole('Administrator|Editor')
             <!-- Comments -->
             <div class="sidemenu-item rounded-xl relative">
                 <a href="{{ route('cms.comments.index') }}" class="flex items-center justify-between w-full cursor-pointer py-[17px] px-[21px] hover:bg-gray-50 dark:hover:bg-gray-dark-100 rounded-xl">
@@ -78,7 +87,9 @@
                     </div>
                 </a>
             </div>
+            @endhasanyrole
 
+            @hasrole('Administrator')
             <!-- Plugins -->
             <div class="sidemenu-item rounded-xl relative">
                 <a href="{{ route('cms.plugins.index') }}" class="flex items-center justify-between w-full cursor-pointer py-[17px] px-[21px] hover:bg-gray-50 dark:hover:bg-gray-dark-100 rounded-xl">
@@ -88,6 +99,8 @@
                     </div>
                 </a>
             </div>
+            @endhasrole
+            @hasanyrole('Administrator|Editor')
             @php
                 $cpts = \Cms\Core\Models\PostType::all();
             @endphp
@@ -114,7 +127,9 @@
                 </div>
             </div>
             @endforeach
+            @endhasanyrole
 
+            @hasrole('Administrator')
             <!-- Appearance -->
             <div class="sidemenu-item rounded-xl relative">
                 <input class="sr-only peer" type="checkbox" value="appearance" name="sidemenu" id="appearance">
@@ -133,7 +148,9 @@
                     </ul>
                 </div>
             </div>
+            @endhasrole
 
+            @hasrole('Administrator')
             <!-- Settings / Architecture -->
             <div class="sidemenu-item rounded-xl relative">
                 <input class="sr-only peer" type="checkbox" value="settings" name="sidemenu" id="settings">
@@ -151,7 +168,9 @@
                     </ul>
                 </div>
             </div>
+            @endhasrole
 
+            @hasrole('Administrator')
             <!-- Settings -->
             <div class="sidemenu-item rounded-xl relative">
                 <input class="sr-only peer" type="checkbox" value="settings_panel" name="sidemenu" id="settings_panel">
@@ -172,7 +191,9 @@
                     </ul>
                 </div>
             </div>
+            @endhasrole
 
+            @hasrole('Administrator')
             <!-- Tools -->
             <div class="sidemenu-item rounded-xl relative">
                 <input class="sr-only peer" type="checkbox" value="tools_panel" name="sidemenu" id="tools_panel">
@@ -190,6 +211,7 @@
                     </ul>
                 </div>
             </div>
+            @endhasrole
 
         </div>
     </div>

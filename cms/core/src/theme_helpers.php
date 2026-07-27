@@ -420,12 +420,31 @@ if (!function_exists('the_tags')) {
     }
 }
 
+global $cms_filters;
+$cms_filters = [];
+
+if (!function_exists('add_filter')) {
+    function add_filter(string $tag, callable $function, int $priority = 10): void {
+        global $cms_filters;
+        $cms_filters[$tag][$priority][] = $function;
+    }
+}
+
 // ---------- Content filter placeholder ----------
 if (!function_exists('apply_filters')) {
     /**
-     * Placeholder filter system – returns the value unchanged.
+     * Filter system - passes value through registered callbacks
      */
-    function apply_filters(string $tag, $value) {
+    function apply_filters(string $tag, $value, ...$args) {
+        global $cms_filters;
+        if (!isset($cms_filters[$tag])) return $value;
+
+        ksort($cms_filters[$tag]);
+        foreach ($cms_filters[$tag] as $priority => $functions) {
+            foreach ($functions as $function) {
+                $value = call_user_func($function, $value, ...$args);
+            }
+        }
         return $value;
     }
 }
@@ -530,3 +549,37 @@ if (!function_exists('get_page_seo')) {
     }
 }
 
+if (!function_exists('cms_get_available_templates')) {
+    /**
+     * Scan the active theme for any Blade files containing a Template Name comment.
+     * e.g., @php /* Template Name: Full Width * / @endphp
+     */
+    function cms_get_available_templates(): array
+    {
+        try {
+            $activeTheme = \Cms\Core\Models\Theme::where('is_active', true)->first();
+            if (!$activeTheme) return [];
+
+            $path = base_path('cms-content/themes/' . $activeTheme->slug);
+            if (!is_dir($path)) return [];
+
+            $templates = [];
+            $files = \Illuminate\Support\Facades\File::allFiles($path);
+            
+            foreach ($files as $file) {
+                if ($file->getExtension() === 'php' && str_ends_with($file->getFilename(), '.blade.php')) {
+                    $content = file_get_contents($file->getPathname());
+                    if (preg_match('/Template Name:\s*(.*?)(\*\/|-->|\n)/i', $content, $matches)) {
+                        $relativePath = $file->getRelativePathname();
+                        // Remove .blade.php extension for the view name
+                        $viewName = str_replace(['/', '.blade.php'], ['.', ''], $relativePath);
+                        $templates[$viewName] = trim($matches[1]);
+                    }
+                }
+            }
+            return $templates;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+}

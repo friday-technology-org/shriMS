@@ -9,9 +9,25 @@
     <div>
         <h2 class="capitalize text-gray-1100 font-bold text-[28px] leading-[35px] dark:text-gray-dark-1100 mb-[13px]">Edit {{ strtolower($cpt->singular_label) }}</h2>
         <div class="flex justify-between flex-col gap-y-2 sm:flex-row mb-[54px]">
-        <div class="flex items-center text-xs gap-x-[11px]">
-            <div class="flex items-center gap-x-1"><img src="{{ asset('assets/images/icons/icon-home-2.svg') }}" alt="home icon"><span class="capitalize text-gray-500 dark:text-gray-dark-500">Home</span></div><img src="{{ asset('assets/images/icons/icon-arrow-right.svg') }}" alt="arrow right icon"><span class="capitalize text-color-brands">{{ $cpt->plural_label }}</span><img src="{{ asset('assets/images/icons/icon-arrow-right.svg') }}" alt="arrow right icon"><span class="capitalize text-color-brands">Edit {{ strtolower($cpt->singular_label) }}</span>
-        </div>
+            <div class="flex items-center text-xs gap-x-[11px]">
+                <div class="flex items-center gap-x-1"><img src="{{ asset('assets/images/icons/icon-home-2.svg') }}" alt="home icon"><span class="capitalize text-gray-500 dark:text-gray-dark-500">Home</span></div><img src="{{ asset('assets/images/icons/icon-arrow-right.svg') }}" alt="arrow right icon"><span class="capitalize text-color-brands">{{ $cpt->plural_label }}</span><img src="{{ asset('assets/images/icons/icon-arrow-right.svg') }}" alt="arrow right icon"><span class="capitalize text-color-brands">Edit {{ strtolower($cpt->singular_label) }}</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{{ url($content->slug) }}" target="_blank" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 border-neutral-bg bg-gray-200 font-medium text-gray-500 dark:border-dark-neutral-bg py-[7px] px-[14px] dark:bg-gray-dark-200 text-[12px] leading-[18px] dark:text-gray-dark-500 hover:bg-gray-200 dark:hover:bg-gray-dark-200 hover:border-gray-300 dark:hover:border-gray-dark-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    View {{ $cpt->singular_label }}
+                </a>
+                @if($content->revisions()->count() > 0)
+                <a href="{{ route('cms.content.revisions', [$cpt->name, $content->id]) }}" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 border-neutral-bg bg-color-brands font-medium text-white dark:border-dark-neutral-bg py-[7px] px-[14px] text-[12px] leading-[18px] hover:opacity-90 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Revisions ({{ $content->revisions()->count() }})
+                </a>
+                @endif
+            </div>
         </div>
 
         @if($errors->any())
@@ -76,6 +92,28 @@
                 <button type="submit" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] dark:hover:border-[#B2A7FF] border-neutral-bg font-medium dark:border-dark-neutral-bg py-[7px] px-[14px] text-[12px] leading-[18px] text-white">Update {{ $cpt->singular_label }}</button>
                 </div>
             </div>
+
+            <!-- Page Attributes / Template -->
+            @php $templates = cms_get_available_templates(); @endphp
+            @if(count($templates) > 0)
+            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg mb-[25px]">
+                <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
+                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Page Attributes</p>
+                </div>
+                <div class="px-5 py-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Template</label>
+                        <select name="meta[_cms_page_template]" class="select w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none">
+                            <option value="" class="bg-white dark:bg-dark-neutral-bg">Default Template</option>
+                            @foreach($templates as $file => $name)
+                                <option value="{{ $file }}" class="bg-white dark:bg-dark-neutral-bg" {{ old('meta._cms_page_template', $content->getMeta('_cms_page_template')) === $file ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Taxonomies Checklists -->
             @include('cms-core::layouts.partials.taxonomies', ['post' => $content, 'postType' => $cpt->name])
 

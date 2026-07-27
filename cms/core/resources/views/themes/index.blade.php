@@ -54,50 +54,55 @@
     </div>
 
     {{-- Installed themes --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-6">
-        @forelse($themes as $theme)
-        <div class="border-2 bg-neutral-bg dark:bg-dark-neutral-bg rounded-2xl overflow-hidden {{ $theme->is_active ? 'border-color-brands' : 'border-neutral dark:border-dark-neutral-border' }}">
-            <div class="w-full aspect-square bg-gray-100 dark:bg-[#1f2130] overflow-hidden">
-                @if($theme->screenshotUrl())
-                    <img src="{{ $theme->screenshotUrl() }}" alt="{{ $theme->name }}" class="w-full h-full object-cover">
-                @else
-                    <div class="w-full h-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-300 dark:text-gray-dark-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                @endif
-            </div>
-            <div class="p-5">
-                <div class="flex items-center justify-between mb-1">
-                    <h3 class="font-semibold text-gray-1100 dark:text-gray-dark-1100 text-[15px]">{{ $theme->name }}</h3>
-                    @if($theme->is_active)
-                        <span class="text-[10px] uppercase font-bold text-color-brands">Active</span>
+    <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl p-6 mt-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-gray-1100 text-lg font-bold dark:text-white">Installed Themes</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            @forelse($themes as $theme)
+            <div class="border-2 bg-neutral-bg dark:bg-dark-neutral-bg rounded-2xl overflow-hidden {{ $theme->is_active ? 'border-color-brands' : 'border-neutral dark:border-dark-neutral-border' }}">
+                <div class="w-full aspect-square bg-gray-100 dark:bg-[#1f2130] overflow-hidden">
+                    @if($theme->screenshotUrl())
+                        <img src="{{ $theme->screenshotUrl() }}" alt="{{ $theme->name }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-300 dark:text-gray-dark-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
                     @endif
                 </div>
-                <p class="text-xs text-gray-400 dark:text-gray-dark-500 mb-4">v{{ $theme->version }} @if($theme->author) &middot; {{ $theme->author }} @endif</p>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="font-semibold text-gray-1100 dark:text-gray-dark-1100 text-[15px]">{{ $theme->name }}</h3>
+                        @if($theme->is_active)
+                            <span class="text-[10px] uppercase font-bold text-color-brands">Active</span>
+                        @endif
+                    </div>
+                    <p class="text-xs text-gray-400 dark:text-gray-dark-500 mb-4">v{{ $theme->version }} @if($theme->author) &middot; {{ $theme->author }} @endif</p>
 
-                <div class="flex flex-wrap gap-2">
-                    @unless($theme->is_active)
-                    <form action="{{ route('cms.themes.activate', $theme) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn normal-case h-fit min-h-fit border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] border-neutral-bg dark:border-dark-neutral-bg text-white text-xs py-[6px] px-[12px] transition-all">Activate</button>
-                    </form>
-                    @endunless
-                    <a href="{{ route('cms.themes.preview', $theme) }}" target="_blank" class="btn normal-case h-fit min-h-fit border-4 border-[#E8EDF2] dark:border-[#313442] bg-neutral-bg dark:bg-dark-neutral-bg text-gray-600 dark:text-gray-dark-500 text-xs py-[6px] px-[12px] hover:border-color-brands transition-all">Preview</a>
-                    @unless($theme->is_active)
-                    <form action="{{ route('cms.themes.destroy', $theme) }}" method="POST" onsubmit="return confirm('Delete this theme? This cannot be undone.');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn normal-case h-fit min-h-fit border-4 border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs py-[6px] px-[12px] transition-all">Delete</button>
-                    </form>
-                    @endunless
+                    <div class="flex flex-wrap gap-2">
+                        @unless($theme->is_active)
+                        <form action="{{ route('cms.themes.activate', $theme->slug) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn normal-case h-fit min-h-fit border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] border-neutral-bg dark:border-dark-neutral-bg text-white text-xs py-[6px] px-[12px] transition-all">Activate</button>
+                        </form>
+                        @endunless
+                        <a href="{{ route('cms.themes.preview', $theme->slug) }}" target="_blank" class="btn normal-case h-fit min-h-fit border-4 border-[#E8EDF2] dark:border-[#313442] bg-neutral-bg dark:bg-dark-neutral-bg text-gray-600 dark:text-gray-dark-500 text-xs py-[6px] px-[12px] hover:border-color-brands transition-all">Preview</a>
+                        @unless($theme->is_active)
+                        <form action="{{ route('cms.themes.destroy', $theme->slug) }}" method="POST" onsubmit="return confirm('Delete this theme? This cannot be undone.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn normal-case h-fit min-h-fit border-4 border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs py-[6px] px-[12px] transition-all">Delete</button>
+                        </form>
+                        @endunless
+                    </div>
                 </div>
             </div>
+            @empty
+            <div class="col-span-full text-center py-20 text-gray-400 dark:text-gray-dark-500">No themes installed.</div>
+            @endforelse
         </div>
-        @empty
-        <div class="col-span-full text-center py-20 text-gray-400 dark:text-gray-dark-500">No themes installed.</div>
-        @endforelse
     </div>
 </div>
 @endsection

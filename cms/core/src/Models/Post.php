@@ -98,13 +98,18 @@ class Post extends Model
     public function getPermalinkAttribute(): string
     {
         if ($this->post_type === 'post' || $this->post_type === 'page') {
-            return url($this->slug);
+            return url($this->slug . '/url');
         }
-        return url($this->post_type . '/' . $this->slug);
+        return url($this->post_type . '/' . $this->slug . '/url');
     }
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function revisions()
+    {
+        return $this->hasMany(PostRevision::class)->orderBy('created_at', 'desc');
     }
 }

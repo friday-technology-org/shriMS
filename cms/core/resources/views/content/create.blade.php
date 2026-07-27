@@ -76,6 +76,27 @@
                 </div>
             </div>
 
+            <!-- Page Attributes / Template -->
+            @php $templates = cms_get_available_templates(); @endphp
+            @if(count($templates) > 0)
+            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg mb-[25px]">
+                <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
+                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Page Attributes</p>
+                </div>
+                <div class="px-5 py-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Template</label>
+                        <select name="meta[_cms_page_template]" class="select w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none">
+                            <option value="" class="bg-white dark:bg-dark-neutral-bg">Default Template</option>
+                            @foreach($templates as $file => $name)
+                                <option value="{{ $file }}" class="bg-white dark:bg-dark-neutral-bg" {{ old('meta._cms_page_template') === $file ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Taxonomies Checklists -->
             @include('cms-core::layouts.partials.taxonomies')
 

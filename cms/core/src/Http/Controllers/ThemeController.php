@@ -16,7 +16,7 @@ class ThemeController extends Controller
 
     public function index(): View
     {
-        $themes = Theme::orderByDesc('is_active')->orderBy('name')->get();
+        $themes = Theme::all();
 
         return view('cms-core::themes.index', compact('themes'));
     }
@@ -35,28 +35,40 @@ class ThemeController extends Controller
         }
     }
 
-    public function activate(Theme $theme): RedirectResponse
+    public function activate(string $themeSlug): RedirectResponse
     {
-        DB::transaction(function () use ($theme) {
-            Theme::where('is_active', true)->update(['is_active' => false]);
-            $theme->update(['is_active' => true]);
-        });
+        $theme = Theme::find($themeSlug);
+        if (!$theme) {
+            abort(404);
+        }
+
+        \Cms\Core\Models\Option::set('active_theme', $themeSlug);
 
         return redirect()->route('cms.themes.index')->with('success', "\"{$theme->name}\" is now the active theme.");
     }
 
-    public function destroy(Theme $theme): RedirectResponse
+    public function destroy(string $themeSlug): RedirectResponse
     {
-        try {
-            $this->installer->delete($theme);
-            return redirect()->route('cms.themes.index')->with('success', 'Theme deleted.');
-        } catch (\Exception $e) {
-            return back()->withErrors(['theme' => $e->getMessage()]);
+        $theme = Theme::find($themeSlug);
+        if (!$theme) {
+            abort(404);
         }
+
+        if ($theme->is_active) {
+            return redirect()->route('cms.themes.index')->with('error', "Cannot delete the active theme.");
+        }
+
+        \Illuminate\Support\Facades\File::deleteDirectory($theme->path());
+        return redirect()->route('cms.themes.index')->with('success', "\"{$theme->name}\" has been deleted.");
     }
 
-    public function preview(Theme $theme): RedirectResponse
+    public function preview(string $themeSlug)
     {
-        return redirect(url('/?cms_preview_theme=' . $theme->slug));
+        $theme = Theme::find($themeSlug);
+        if (!$theme) {
+            abort(404);
+        }
+
+        return redirect()->to(url('/?cms_preview_theme=' . $theme->slug));
     }
 }

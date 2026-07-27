@@ -30,40 +30,17 @@ class ThemeInstallerService
 
             $slug = $manifest['slug'];
 
-            if (is_dir($this->themesBasePath($slug)) || Theme::where('slug', $slug)->exists()) {
+            if (is_dir($this->themesBasePath($slug))) {
                 throw new \RuntimeException("A theme with slug \"{$slug}\" is already installed.");
             }
 
             $this->ensureThemesBaseDirectory();
             rename($themeRoot, $this->themesBasePath($slug));
 
-            return Theme::create([
-                'name' => $manifest['name'],
-                'slug' => $slug,
-                'version' => $manifest['version'],
-                'author' => $manifest['author'] ?? null,
-                'description' => $manifest['description'] ?? null,
-                'screenshot' => is_file($this->themesBasePath($slug) . '/' . ($manifest['screenshot'] ?? 'screenshot.png'))
-                    ? ($manifest['screenshot'] ?? 'screenshot.png')
-                    : null,
-                'is_active' => false,
-            ]);
+            return Theme::find($slug);
         } finally {
             $this->deleteDirectory($scratchDir);
         }
-    }
-
-    /**
-     * Remove a theme's files and DB record.
-     */
-    public function delete(Theme $theme): void
-    {
-        if ($theme->is_active) {
-            throw new \RuntimeException('Cannot delete the active theme. Activate another theme first.');
-        }
-
-        $this->deleteDirectory($theme->path());
-        $theme->delete();
     }
 
     // ─── Private Helpers ─────────────────────────────────────────────────────

@@ -23,6 +23,12 @@ class FrontendController extends Controller
         // Remove trailing slash if present
         $slug = trim($path, '/');
 
+        // Check if the route has the /url suffix
+        $hasUrlSuffix = str_ends_with($slug, '/url');
+        if ($hasUrlSuffix) {
+            $slug = substr($slug, 0, -4);
+        }
+
         if (empty($slug)) {
             return $this->renderHomepage();
         }
@@ -53,6 +59,9 @@ class FrontendController extends Controller
         }
 
         if ($post) {
+            if (!$hasUrlSuffix) {
+                return redirect($post->permalink, 301);
+            }
             return $this->renderPost($post);
         }
 
@@ -143,6 +152,11 @@ class FrontendController extends Controller
         $candidates = $post->post_type === 'page'
             ? ['theme::page-' . $post->slug, 'theme::page', 'theme::single', 'theme::index']
             : ['theme::single-' . $post->post_type, 'theme::single', 'theme::index'];
+
+        $customTemplate = $post->getMeta('_cms_page_template');
+        if ($customTemplate) {
+            array_unshift($candidates, 'theme::' . $customTemplate);
+        }
 
         foreach ($candidates as $view) {
             if (view()->exists($view)) {
