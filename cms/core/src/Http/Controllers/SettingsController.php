@@ -38,7 +38,7 @@ class SettingsController extends Controller
             if (is_array($value)) {
                 $value = json_encode($value);
             }
-            cms_option_set($key, $value);
+            update_cms_option($key, $value);
         }
 
         return redirect()->back()->with('success', 'Settings updated successfully.');

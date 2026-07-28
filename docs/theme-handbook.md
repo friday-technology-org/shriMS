@@ -6,26 +6,33 @@ Welcome to the LaraCMS Theme Developer Handbook! LaraCMS themes use standard Lar
 
 Themes live inside the `cms-content/themes/` directory.
 
-```
+```text
 cms-content/
   └── themes/
       └── my-custom-theme/
           ├── theme.json
           ├── functions.php
           ├── screenshot.png
+          ├── Controllers/
+          │   └── ExampleController.php
+          ├── Models/
+          │   └── ExampleModel.php
+          ├── Migrations/
+          │   └── 2026_01_01_000000_create_theme_examples_table.php
           ├── assets/
           │   ├── css/
+          │   │   └── style.css
           │   └── js/
-          ├── views/
-          │   ├── index.blade.php
-          │   ├── single.blade.php
-          │   ├── page.blade.php
-          │   ├── 404.blade.php
-          │   └── partials/
-          │       ├── header.blade.php
-          │       └── footer.blade.php
-          └── templates/
-              └── full-width.blade.php
+          │       └── script.js
+          └── views/
+              ├── index.blade.php
+              ├── single.blade.php
+              ├── page.blade.php
+              ├── 404.blade.php
+              ├── layouts/
+              │   └── app.blade.php
+              └── templates/
+                  └── landing.blade.php
 ```
 
 ## `theme.json`
@@ -81,7 +88,25 @@ To create a Page Template, create a new `.blade.php` file anywhere in your theme
 @endsection
 ```
 
-LaraCMS will detect this file, populate it in the **Page Attributes** dropdown in the editor, and securely override the Template Hierarchy to load it when selected.
+LaraCMS will detect this file, populate it in the **Page Attributes** dropdown in the editor, and securely override the Template Hierarchy to load it when selected. Note that Page Templates can only be applied to the `page` post type.
+
+## MVC within Themes
+
+LaraCMS supports full MVC (Model-View-Controller) development directly inside your themes! 
+
+To prevent class collisions between different themes, LaraCMS automatically generates a dynamic StudlyCase namespace based on your theme's slug (e.g., `namespace Theme\MyCustomTheme\Controllers;`).
+
+Controllers should be explicitly loaded in your `functions.php`:
+```php
+require_once __DIR__ . '/Controllers/ExampleController.php';
+```
+
+## Asset Helpers
+
+LaraCMS themes are exposed to the public through the `public/themes` symlink directory. To easily reference your static assets without hardcoding the theme name, use these built-in helpers inside your Blade views:
+
+- `theme_asset($path)`: Returns the full URL to an asset in the current theme. (e.g., `{{ theme_asset('assets/css/style.css') }}`)
+- `get_template_directory_uri()`: Returns the absolute URL to your active theme's root directory.
 
 ## `functions.php`
 
@@ -111,7 +136,7 @@ add_shortcode('button', function($atts, $content) {
 LaraCMS provides an Artisan command to quickly scaffold a new theme:
 
 ```bash
-php artisan cms:make-theme my-new-theme
+php artisan cms:make:theme my-new-theme
 ```
 
-This will generate the folder structure, a `theme.json`, and basic Blade templates for you!
+This will automatically generate the entire folder structure, `theme.json`, MVC scaffolding (Controllers/Models/Migrations), empty `assets/css` and `assets/js` files, and your master `app.blade.php` layout!

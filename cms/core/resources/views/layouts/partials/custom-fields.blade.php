@@ -99,6 +99,68 @@
                                     </div>
                                 </div>
                             
+                            @elseif($field->type === 'repeater')
+                                @php
+                                    $subFields = $field->settings['sub_fields'] ?? [];
+                                    $rows = is_array($metaValue) ? $metaValue : [];
+                                    // Ensure every row is an object, not a flat string
+                                    foreach($rows as $k => $r) { if(!is_array($r)) { $rows[$k] = []; } }
+                                @endphp
+                                <div class="border border-neutral rounded-lg p-4 bg-gray-50 dark:bg-[#1f2130] dark:border-dark-neutral-border"
+                                     x-data="repeaterField({{ json_encode($rows) }}, {{ json_encode($subFields) }}, '{{ $field->name }}')">
+                                    <div class="space-y-4">
+                                        <template x-for="(row, index) in rows" :key="row._id">
+                                            <div class="relative bg-white dark:bg-dark-neutral-bg p-5 border border-[#E8EDF2] dark:border-[#313442] rounded-lg shadow-sm group">
+                                                <div class="flex justify-between items-center mb-4 pb-2 border-b border-[#E8EDF2] dark:border-[#313442]">
+                                                    <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Row <span x-text="index + 1"></span></span>
+                                                    <button type="button" @click="removeRow(index)" class="flex items-center gap-1 text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-300 rounded px-3 py-1.5 transition-colors text-xs font-bold whitespace-nowrap">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                        Remove Row
+                                                    </button>
+                                                </div>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                                                    <template x-for="subField in subFields" :key="subField.name">
+                                                        <div class="flex flex-col">
+                                                            <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5" x-text="subField.label"></label>
+                                                            
+                                                            <!-- Text / Number -->
+                                                            <template x-if="subField.type === 'text' || subField.type === 'number'">
+                                                                <input :type="subField.type" :name="`meta[${fieldName}][${index}][${subField.name}]`" x-model="row[subField.name]" class="input w-full bg-transparent text-sm rounded border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none dark:text-white">
+                                                            </template>
+                                                            
+                                                            <!-- Textarea / WYSIWYG fallback -->
+                                                            <template x-if="subField.type === 'textarea' || subField.type === 'wysiwyg'">
+                                                                <textarea :name="`meta[${fieldName}][${index}][${subField.name}]`" x-model="row[subField.name]" class="textarea w-full bg-transparent text-sm rounded border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none dark:text-white min-h-[80px]"></textarea>
+                                                            </template>
+                                                            
+                                                            <!-- Image -->
+                                                            <template x-if="subField.type === 'image'">
+                                                                <div class="flex flex-col gap-2">
+                                                                    <div class="flex items-center gap-2">
+                                                                        <input type="text" :name="`meta[${fieldName}][${index}][${subField.name}]`" x-model="row[subField.name]" class="input flex-1 bg-transparent text-sm rounded border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none dark:text-white" placeholder="Media ID">
+                                                                        <button type="button" @click="pickImage(row, subField.name)" class="btn normal-case px-3 py-1.5 bg-color-brands text-white rounded text-xs hover:bg-[#9785FF]">Pick</button>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        
+                                        <!-- Empty State -->
+                                        <template x-if="rows.length === 0">
+                                            <div class="text-center py-6 border-2 border-dashed border-[#E8EDF2] dark:border-[#313442] rounded-lg">
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">No rows added yet.</p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <button type="button" @click="addRow()" class="mt-4 btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] text-white py-[8px] px-[16px] rounded flex items-center gap-2 whitespace-nowrap">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                                        Add Row
+                                    </button>
+                                </div>
+
                             @else
                                 <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442]">
                                     <input name="meta[{{ $field->name }}]" id="meta_{{ $field->name }}" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="text" value="{{ $metaValue }}" {{ $field->required ? 'required' : '' }}>
@@ -110,4 +172,36 @@
             </div>
         @endforeach
     </div>
+
+    @push('scripts')
+    <script>
+    function repeaterField(initialRows, subFields, fieldName) {
+        return {
+            rows: (initialRows || []).map(row => ({ ...row, _id: Math.random().toString(36).substr(2, 9) })),
+            subFields: subFields || [],
+            fieldName: fieldName,
+            
+            addRow() {
+                let newRow = { _id: Math.random().toString(36).substr(2, 9) };
+                this.subFields.forEach(sf => {
+                    newRow[sf.name] = '';
+                });
+                this.rows.push(newRow);
+            },
+            
+            removeRow(index) {
+                this.rows.splice(index, 1);
+            },
+
+            pickImage(row, key) {
+                if (typeof window.openMediaPicker === 'function') {
+                    window.openMediaPicker((media) => {
+                        row[key] = media.id;
+                    });
+                }
+            }
+        };
+    }
+    </script>
+    @endpush
 @endif

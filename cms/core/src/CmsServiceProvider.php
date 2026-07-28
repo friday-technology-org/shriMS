@@ -182,7 +182,12 @@ class CmsServiceProvider extends ServiceProvider
         $activePath = $activeTheme ? $activeTheme->path() : $defaultPath;
 
         if (is_dir($activePath)) {
-            $this->loadViewsFrom($activePath, 'theme');
+            $this->loadViewsFrom([$activePath . '/views', $activePath], 'theme');
+            
+            $functionsPath = $activePath . '/functions.php';
+            if (file_exists($functionsPath)) {
+                require_once $functionsPath;
+            }
         }
 
         if ($activeTheme?->is_child_of) {
@@ -192,12 +197,12 @@ class CmsServiceProvider extends ServiceProvider
                 // registration order, so the child (already registered above) wins
                 // and this parent path is only used as a fallback for files the
                 // child theme doesn't override.
-                $this->loadViewsFrom($parentPath, 'theme');
+                $this->loadViewsFrom([$parentPath . '/views', $parentPath], 'theme');
             }
         }
 
         if (is_dir($defaultPath) && $activePath !== $defaultPath) {
-            $this->loadViewsFrom($defaultPath, 'theme');
+            $this->loadViewsFrom([$defaultPath . '/views', $defaultPath], 'theme');
         }
     }
 }

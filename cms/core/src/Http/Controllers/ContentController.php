@@ -9,23 +9,23 @@ use Illuminate\Routing\Controller;
 
 class ContentController extends Controller
 {
-    public function index(string $postTypeSlug)
+    public function index(Request $request, string $postTypeSlug)
     {
         $cpt = PostType::where('name', $postTypeSlug)->firstOrFail();
         
-        $posts = Post::where('post_type', $postTypeSlug)->with('author')->latest()->paginate(20);
-        return view('cms-core::content.index', compact('posts', 'cpt'));
+        $query = Post::where('post_type', $postTypeSlug)->with('author');
+        if ($search = $request->input('search')) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+        $posts = $query->latest()->paginate(20)->appends($request->only('search'));
+        return view('cms-core::content.index', compact('posts', 'cpt', 'search'));
     }
 
     public function create(string $postTypeSlug)
     {
         $cpt = PostType::where('name', $postTypeSlug)->firstOrFail();
 
-        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
-            ->whereJsonContains('location_rules', ['param' => 'post_type', 'operator' => '==', 'value' => $postTypeSlug])
-            ->with('fields')
-            ->orderBy('sort_order')
-            ->get();
+        $fieldGroups = \Cms\Core\Models\FieldGroup::getForPost($postTypeSlug);
             
         return view('cms-core::content.create', compact('cpt', 'fieldGroups'));
     }
@@ -62,7 +62,7 @@ class ContentController extends Controller
             $post->terms()->sync($request->input('terms'));
         }
 
-        return redirect()->route('cms.content.index', $postTypeSlug)->with('success', $cpt->singular_label . ' created successfully.');
+        return redirect()->route('cms.content.edit', [$postTypeSlug, $post->id])->with('success', $cpt->singular_label . ' created successfully.');
     }
 
     public function edit(string $postTypeSlug, Post $content)
@@ -73,11 +73,7 @@ class ContentController extends Controller
             abort(404);
         }
 
-        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
-            ->whereJsonContains('location_rules', ['param' => 'post_type', 'operator' => '==', 'value' => $postTypeSlug])
-            ->with('fields')
-            ->orderBy('sort_order')
-            ->get();
+        $fieldGroups = \Cms\Core\Models\FieldGroup::getForPost($postTypeSlug, $content);
             
         return view('cms-core::content.edit', compact('content', 'cpt', 'fieldGroups'));
     }
@@ -125,7 +121,7 @@ class ContentController extends Controller
             $content->terms()->detach();
         }
 
-        return redirect()->route('cms.content.index', $postTypeSlug)->with('success', $cpt->singular_label . ' updated successfully.');
+        return redirect()->route('cms.content.edit', [$postTypeSlug, $content->id])->with('success', $cpt->singular_label . ' updated successfully.');
     }
 
     public function destroy(string $postTypeSlug, Post $content)

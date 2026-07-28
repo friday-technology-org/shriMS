@@ -78,7 +78,7 @@
 
             <!-- Page Attributes / Template -->
             @php $templates = cms_get_available_templates(); @endphp
-            @if(count($templates) > 0)
+            @if(count($templates) > 0 && $cpt->name === 'page')
             <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg mb-[25px]">
                 <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
                     <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Page Attributes</p>

@@ -51,7 +51,14 @@ class TermController extends Controller
     public function edit(Taxonomy $taxonomy, Term $term)
     {
         $parentTerms = $taxonomy->hierarchical ? $taxonomy->terms()->whereNull('parent_id')->where('id', '!=', $term->id)->get() : [];
-        return view('cms-core::terms.edit', compact('taxonomy', 'term', 'parentTerms'));
+        
+        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
+            ->whereJsonContains('location_rules', ['param' => 'taxonomy', 'operator' => '==', 'value' => $taxonomy->name])
+            ->with('fields')
+            ->orderBy('sort_order')
+            ->get();
+            
+        return view('cms-core::terms.edit', compact('taxonomy', 'term', 'parentTerms', 'fieldGroups'));
     }
 
     public function update(Request $request, Taxonomy $taxonomy, Term $term)
@@ -64,6 +71,15 @@ class TermController extends Controller
         ]);
 
         $term->update($validated);
+
+        if ($request->has('meta')) {
+            $metaData = $term->metadata ?? [];
+            foreach ($request->input('meta') as $key => $value) {
+                // Ensure repeaters/arrays are saved properly as JSON array, metadata column is cast to array
+                $metaData[$key] = $value;
+            }
+            $term->update(['metadata' => $metaData]);
+        }
 
         return redirect()->route('cms.terms.index', $taxonomy->id)->with('success', 'Term updated successfully.');
     }

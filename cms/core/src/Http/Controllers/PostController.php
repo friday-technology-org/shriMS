@@ -8,19 +8,19 @@ use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('author')->latest()->paginate(20);
-        return view('cms-core::posts.index', compact('posts'));
+        $query = Post::where('post_type', 'post')->with('author');
+        if ($search = $request->input('search')) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+        $posts = $query->latest()->paginate(20)->appends($request->only('search'));
+        return view('cms-core::posts.index', compact('posts', 'search'));
     }
 
     public function create()
     {
-        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
-            ->whereJsonContains('location_rules', ['param' => 'post_type', 'operator' => '==', 'value' => 'post'])
-            ->with('fields')
-            ->orderBy('sort_order')
-            ->get();
+        $fieldGroups = \Cms\Core\Models\FieldGroup::getForPost('post');
             
         return view('cms-core::posts.create', compact('fieldGroups'));
     }
@@ -59,16 +59,12 @@ class PostController extends Controller
             $post->terms()->sync($request->input('terms'));
         }
 
-        return redirect()->route('cms.posts.index')->with('success', 'Post created successfully.');
+        return redirect()->route('cms.posts.edit', $post->id)->with('success', 'Post created successfully.');
     }
 
     public function edit(Post $post)
     {
-        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
-            ->whereJsonContains('location_rules', ['param' => 'post_type', 'operator' => '==', 'value' => 'post'])
-            ->with('fields')
-            ->orderBy('sort_order')
-            ->get();
+        $fieldGroups = \Cms\Core\Models\FieldGroup::getForPost('post', $post);
             
         return view('cms-core::posts.edit', compact('post', 'fieldGroups'));
     }
@@ -101,7 +97,7 @@ class PostController extends Controller
             $post->terms()->detach();
         }
 
-        return redirect()->route('cms.posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('cms.posts.edit', $post->id)->with('success', 'Post updated successfully.');
     }
 
     public function destroy(Post $post)

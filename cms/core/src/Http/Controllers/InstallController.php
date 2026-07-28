@@ -192,11 +192,8 @@ class InstallController extends Controller
                 symlink(base_path('cms-content/themes'), public_path('themes'));
             }
 
-            // 1c. Register the bundled default theme as active, if not already present
-            \Cms\Core\Models\Theme::firstOrCreate(
-                ['slug' => 'default'],
-                ['name' => 'Default', 'version' => '1.0.0', 'author' => 'LaraCMS', 'is_active' => true]
-            );
+            // 1c. Register the bundled default theme as active
+            update_cms_option('active_theme', 'default');
 
             // 2. Save site settings in cms_options
             update_cms_option('site_title', $request->input('site_title'));
@@ -214,6 +211,10 @@ class InstallController extends Controller
                     'email_verified_at' => now(),
                 ]
             );
+
+            // Create Administrator role and assign it to the user
+            $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Administrator']);
+            $user->assignRole($adminRole);
 
             // 4. Generate App Key if not already generated
             if (empty(env('APP_KEY'))) {

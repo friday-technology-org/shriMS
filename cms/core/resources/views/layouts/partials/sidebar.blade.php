@@ -213,6 +213,77 @@
             </div>
             @endhasrole
 
+            @php
+                $themeMenus = config('cms.admin_menus', []);
+            @endphp
+            @if(count($themeMenus) > 0)
+                <!-- Theme Pages -->
+                @foreach($themeMenus as $menu)
+                    @php
+                        $isActive = request()->routeIs('cms.admin.theme.' . $menu['slug']) || 
+                                    collect($menu['submenus'])->contains(fn($sub) => request()->routeIs('cms.admin.theme.' . $sub['slug']));
+                    @endphp
+                    @hasrole($menu['role'])
+                    <div class="sidemenu-item rounded-xl relative {{ $isActive ? 'bg-color-brands' : '' }}">
+                        @if(count($menu['submenus']) > 0)
+                            <input class="sr-only peer" type="checkbox" value="{{ $menu['slug'] }}" name="sidemenu" id="theme_{{ $menu['slug'] }}">
+                            <label class="flex items-center justify-between w-full cursor-pointer py-[17px] px-[21px] focus:outline-none peer-checked:border-transparent" for="theme_{{ $menu['slug'] }}">
+                                <div class="flex items-center gap-[10px]">
+                                    @php
+                                        $activeTheme = \Cms\Core\Models\Option::get('active_theme', 'default');
+                                        $themeIconPath = base_path('cms-content/themes/' . $activeTheme . '/assets/images/icons/' . ($menu['icon'] ?? 'icon-setting-2.svg'));
+                                    @endphp
+                                    @if(str_contains($menu['icon'] ?? 'icon-setting-2.svg', '.'))
+                                        @if(file_exists($themeIconPath))
+                                            <span class="theme-svg-icon flex items-center justify-center w-[24px] h-[24px] {{ $isActive ? 'brightness-0 invert' : '' }}">
+                                                {!! file_get_contents($themeIconPath) !!}
+                                            </span>
+                                        @else
+                                            <img src="{{ asset('assets/images/icons/' . ($menu['icon'] ?? 'icon-setting-2.svg')) }}" class="{{ $isActive ? 'brightness-0 invert' : '' }}" alt="side menu icon">
+                                        @endif
+                                    @else
+                                        <i class="{{ $menu['icon'] }} text-[24px] w-[24px] text-center {{ $isActive ? 'text-white' : 'text-gray-500 dark:text-gray-dark-500' }}"></i>
+                                    @endif
+                                    <span class="text-normal font-semibold sidemenu-title {{ $isActive ? 'text-white' : 'text-gray-500 dark:text-gray-dark-500' }}">{{ $menu['title'] }}</span>
+                                </div>
+                            </label><img class="absolute right-2 transition-all duration-150 caret-icon pointer-events-none peer-checked:rotate-180 top-[22px]" src="{{ asset('assets/images/icons/icon-arrow-down.svg') }}" alt="caret icon">
+                            <div class="hidden peer-checked:block">
+                                <ul class="text-gray-300 child-menu z-10 pl-[53px]">
+                                    <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal {{ request()->routeIs('cms.admin.theme.' . $menu['slug']) ? 'text-white font-bold' : '' }}" href="{{ route('cms.admin.theme.' . $menu['slug']) }}">{{ $menu['title'] }}</a></li>
+                                    @foreach($menu['submenus'] as $submenu)
+                                        @hasrole($submenu['role'])
+                                        <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal {{ request()->routeIs('cms.admin.theme.' . $submenu['slug']) ? 'text-white font-bold' : '' }}" href="{{ route('cms.admin.theme.' . $submenu['slug']) }}">{{ $submenu['title'] }}</a></li>
+                                        @endhasrole
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <a href="{{ route('cms.admin.theme.' . $menu['slug']) }}" class="flex items-center justify-between w-full cursor-pointer py-[17px] px-[21px] hover:bg-gray-50 dark:hover:bg-gray-dark-100 rounded-xl">
+                                <div class="flex items-center gap-[10px]">
+                                    @php
+                                        $activeTheme = \Cms\Core\Models\Option::get('active_theme', 'default');
+                                        $themeIconPath = base_path('cms-content/themes/' . $activeTheme . '/assets/images/icons/' . ($menu['icon'] ?? 'icon-setting-2.svg'));
+                                    @endphp
+                                    @if(str_contains($menu['icon'] ?? 'icon-setting-2.svg', '.'))
+                                        @if(file_exists($themeIconPath))
+                                            <span class="theme-svg-icon flex items-center justify-center w-[24px] h-[24px] {{ $isActive ? 'brightness-0 invert' : '' }}">
+                                                {!! file_get_contents($themeIconPath) !!}
+                                            </span>
+                                        @else
+                                            <img src="{{ asset('assets/images/icons/' . ($menu['icon'] ?? 'icon-setting-2.svg')) }}" class="{{ $isActive ? 'brightness-0 invert' : '' }}" alt="side menu icon">
+                                        @endif
+                                    @else
+                                        <i class="{{ $menu['icon'] }} text-[24px] w-[24px] text-center {{ $isActive ? 'text-white' : 'text-gray-500 dark:text-gray-dark-500' }}"></i>
+                                    @endif
+                                    <span class="text-normal font-semibold sidemenu-title {{ $isActive ? 'text-white' : 'text-gray-500 dark:text-gray-dark-500' }}">{{ $menu['title'] }}</span>
+                                </div>
+                            </a>
+                        @endif
+                    </div>
+                    @endhasrole
+                @endforeach
+            @endif
+
         </div>
     </div>
     <div class="rounded-xl bg-neutral pt-4 flex items-center gap-5 mt-5 sidebar-control pr-[18px] pb-[13px] pl-[19px] dark:bg-dark-neutral-border">

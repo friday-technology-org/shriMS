@@ -320,12 +320,12 @@ if (!function_exists('set_transient')) {
         $optKey = '_transient_' . $key;
         $timeoutKey = '_transient_timeout_' . $key;
 
-        cms_option_set($optKey, json_encode($value));
+        update_cms_option($optKey, json_encode($value));
 
         if ($expiration > 0) {
-            cms_option_set($timeoutKey, time() + $expiration);
+            update_cms_option($timeoutKey, time() + $expiration);
         } else {
-            cms_option_set($timeoutKey, 0);
+            update_cms_option($timeoutKey, 0);
         }
 
         return true;
@@ -364,7 +364,7 @@ if (!function_exists('delete_transient')) {
         $timeoutKey = '_transient_timeout_' . $key;
 
         // Delete from database directly (cms_options table has a deleteMeta or delete key? Let's use direct DB delete or option set to null)
-        // Wait, does cms_option_set(key, null) delete it? Let's check how option set is implemented. Or we can just set to null, or run a query.
+        // Wait, does update_cms_option(key, null) delete it? Let's check how option set is implemented. Or we can just set to null, or run a query.
         // Let's run a query to delete them from options table to save space.
         \Illuminate\Support\Facades\DB::table('cms_options')->whereIn('option_name', [$optKey, $timeoutKey])->delete();
         return true;

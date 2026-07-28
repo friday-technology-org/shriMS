@@ -16,7 +16,19 @@ class FieldGroupController extends Controller
 
     public function create()
     {
-        return view('cms-core::field-groups.create');
+        $postTypes = \Cms\Core\Models\PostType::all();
+        $pages = \Cms\Core\Models\Post::where('post_type', 'page')->get(['id', 'title']);
+        $templates = function_exists('cms_get_available_templates') ? cms_get_available_templates() : [];
+        $taxonomies = \Cms\Core\Models\Taxonomy::all();
+        
+        $locationOptions = [
+            'post_types' => $postTypes,
+            'pages' => $pages,
+            'templates' => $templates,
+            'taxonomies' => $taxonomies,
+        ];
+
+        return view('cms-core::field-groups.create', compact('locationOptions'));
     }
 
     public function store(Request $request)
@@ -30,6 +42,9 @@ class FieldGroupController extends Controller
 
         // Standardize location_rules format, e.g. [['param' => 'post_type', 'operator' => '==', 'value' => 'page']]
         $locationRules = $validated['location_rules'] ?? [['param' => 'post_type', 'operator' => '==', 'value' => 'post']];
+        if (is_array($locationRules)) {
+            $locationRules = array_values($locationRules);
+        }
 
         $group = FieldGroup::create([
             'title' => $validated['title'],
@@ -49,6 +64,7 @@ class FieldGroupController extends Controller
                     'name' => $field['name'],
                     'type' => $field['type'] ?? 'text',
                     'instructions' => $field['instructions'] ?? '',
+                    'settings' => $field['settings'] ?? null,
                     'sort_order' => $index,
                 ]);
             }
@@ -60,7 +76,20 @@ class FieldGroupController extends Controller
     public function edit(FieldGroup $fieldGroup)
     {
         $fieldGroup->load('fields');
-        return view('cms-core::field-groups.edit', compact('fieldGroup'));
+
+        $postTypes = \Cms\Core\Models\PostType::all();
+        $pages = \Cms\Core\Models\Post::where('post_type', 'page')->get(['id', 'title']);
+        $templates = function_exists('cms_get_available_templates') ? cms_get_available_templates() : [];
+        $taxonomies = \Cms\Core\Models\Taxonomy::all();
+        
+        $locationOptions = [
+            'post_types' => $postTypes,
+            'pages' => $pages,
+            'templates' => $templates,
+            'taxonomies' => $taxonomies,
+        ];
+
+        return view('cms-core::field-groups.edit', compact('fieldGroup', 'locationOptions'));
     }
 
     public function update(Request $request, FieldGroup $fieldGroup)
@@ -73,6 +102,9 @@ class FieldGroupController extends Controller
         ]);
 
         $locationRules = $validated['location_rules'] ?? [['param' => 'post_type', 'operator' => '==', 'value' => 'post']];
+        if (is_array($locationRules)) {
+            $locationRules = array_values($locationRules);
+        }
 
         $fieldGroup->update([
             'title' => $validated['title'],
@@ -93,6 +125,7 @@ class FieldGroupController extends Controller
                     'name' => $field['name'],
                     'type' => $field['type'] ?? 'text',
                     'instructions' => $field['instructions'] ?? '',
+                    'settings' => $field['settings'] ?? null,
                     'sort_order' => $index,
                 ]);
             }

@@ -13,7 +13,7 @@
                 <div class="flex items-center gap-x-1"><img src="{{ asset('assets/images/icons/icon-home-2.svg') }}" alt="home icon"><span class="capitalize text-gray-500 dark:text-gray-dark-500">Home</span></div><img src="{{ asset('assets/images/icons/icon-arrow-right.svg') }}" alt="arrow right icon"><span class="capitalize text-color-brands">{{ $cpt->plural_label }}</span><img src="{{ asset('assets/images/icons/icon-arrow-right.svg') }}" alt="arrow right icon"><span class="capitalize text-color-brands">Edit {{ strtolower($cpt->singular_label) }}</span>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ url($content->slug) }}" target="_blank" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 border-neutral-bg bg-gray-200 font-medium text-gray-500 dark:border-dark-neutral-bg py-[7px] px-[14px] dark:bg-gray-dark-200 text-[12px] leading-[18px] dark:text-gray-dark-500 hover:bg-gray-200 dark:hover:bg-gray-dark-200 hover:border-gray-300 dark:hover:border-gray-dark-300 flex items-center gap-2">
+                <a href="{{ $content->permalink }}" target="_blank" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 border-neutral-bg bg-gray-200 font-medium text-gray-500 dark:border-dark-neutral-bg py-[7px] px-[14px] dark:bg-gray-dark-200 text-[12px] leading-[18px] dark:text-gray-dark-500 hover:bg-gray-200 dark:hover:bg-gray-dark-200 hover:border-gray-300 dark:hover:border-gray-dark-300 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
@@ -45,10 +45,20 @@
             
             <!-- Left Column: Content -->
             <div class="xl:w-[70%]">
-            <div class="mb-12">
+            <div class="mb-6">
                 <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">{{ $cpt->singular_label }} title</p>
                 <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] sm:min-w-[252px]">
                     <input name="title" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="text" placeholder="Add title" value="{{ old('title', $content->title) }}" required>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Permalink (Slug)</p>
+                <div class="flex items-stretch border rounded-lg border-[#E8EDF2] dark:border-[#313442] overflow-hidden sm:min-w-[252px]">
+                    <div class="flex items-center px-4 bg-gray-50 dark:bg-dark-neutral-border border-r border-[#E8EDF2] dark:border-[#313442] text-sm text-gray-500 select-none">
+                        {{ url('/') }}/{{ $cpt->name === 'post' || $cpt->name === 'page' ? '' : $cpt->name . '/' }}
+                    </div>
+                    <input name="slug" class="flex-1 input bg-transparent text-sm leading-4 text-gray-800 dark:text-white py-4 px-3 focus:outline-none placeholder:text-gray-400" type="text" placeholder="{{ strtolower($cpt->singular_label) }}-slug" value="{{ old('slug', $content->slug) }}">
                 </div>
             </div>
             
@@ -95,7 +105,7 @@
 
             <!-- Page Attributes / Template -->
             @php $templates = cms_get_available_templates(); @endphp
-            @if(count($templates) > 0)
+            @if(count($templates) > 0 && $cpt->name === 'page')
             <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg mb-[25px]">
                 <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
                     <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Page Attributes</p>

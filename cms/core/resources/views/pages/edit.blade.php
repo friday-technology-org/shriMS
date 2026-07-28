@@ -37,10 +37,17 @@
             
             <!-- Left Column: Content -->
             <div class="xl:w-[70%]">
-            <div class="mb-12">
+            <div class="mb-6">
                 <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Page title</p>
                 <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] sm:min-w-[252px]">
                     <input name="title" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="text" placeholder="Add title" value="{{ old('title', $page->title) }}" required>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Permalink (Slug)</p>
+                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] sm:min-w-[252px]">
+                    <input name="slug" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="text" placeholder="page-slug" value="{{ old('slug', $page->slug) }}">
                 </div>
             </div>
             
@@ -86,6 +93,30 @@
             </div>
             <!-- Taxonomies Checklists -->
             @include('cms-core::layouts.partials.taxonomies')
+
+            <!-- Page Attributes -->
+            @php
+                $templates = cms_get_available_templates();
+                $currentTemplate = $page->getMeta('_cms_page_template');
+            @endphp
+            @if(count($templates) > 0)
+            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border pb-5 mb-[15px] dark:bg-dark-neutral-bg">
+                <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] mb-[20px] dark:bg-dark-neutral-border">
+                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Page Attributes</p>
+                </div>
+                <div class="px-5">
+                    <p class="text-gray-1100 text-sm font-semibold mb-2 dark:text-gray-dark-1100">Template</p>
+                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
+                        <select name="meta[_cms_page_template]" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none px-[13px]">
+                            <option value="" class="bg-white dark:bg-dark-neutral-bg">Default Template</option>
+                            @foreach($templates as $view => $name)
+                                <option value="{{ $view }}" class="bg-white dark:bg-dark-neutral-bg" {{ $currentTemplate === $view ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            @endif
 
             <!-- Featured Image Meta Box -->
             <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg overflow-hidden"

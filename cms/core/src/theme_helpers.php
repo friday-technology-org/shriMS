@@ -1,6 +1,29 @@
 <?php
 
 use Cms\Core\Models\Post;
+use Cms\Core\Models\Option;
+
+if (!function_exists('get_template_directory_uri')) {
+    /**
+     * Get the URI of the current theme's directory.
+     */
+    function get_template_directory_uri(): string
+    {
+        $themeSlug = Option::get('active_theme', 'default');
+        return url('themes/' . $themeSlug);
+    }
+}
+
+if (!function_exists('theme_asset')) {
+    /**
+     * Get the URL for an asset located in the active theme.
+     * Example: theme_asset('assets/css/style.css')
+     */
+    function theme_asset(string $path): string
+    {
+        return get_template_directory_uri() . '/' . ltrim($path, '/');
+    }
+}
 
 if (!function_exists('cms_loop')) {
     /**
@@ -557,10 +580,8 @@ if (!function_exists('cms_get_available_templates')) {
     function cms_get_available_templates(): array
     {
         try {
-            $activeTheme = \Cms\Core\Models\Theme::where('is_active', true)->first();
-            if (!$activeTheme) return [];
-
-            $path = base_path('cms-content/themes/' . $activeTheme->slug);
+            $activeThemeSlug = cms_option('active_theme', 'default');
+            $path = base_path('cms-content/themes/' . $activeThemeSlug);
             if (!is_dir($path)) return [];
 
             $templates = [];
@@ -581,5 +602,77 @@ if (!function_exists('cms_get_available_templates')) {
         } catch (\Exception $e) {
             return [];
         }
+    }
+}
+
+if (!function_exists('cms_add_admin_menu')) {
+    /**
+     * Register a custom admin dashboard page with an MVC controller.
+     */
+    function cms_add_admin_menu(string $title, string $slug, string $role, $controllerAction, string $icon = 'icon-setting-2.svg')
+    {
+        $menus = \Illuminate\Support\Facades\Config::get('cms.admin_menus', []);
+        $menus[$slug] = [
+            'title' => $title,
+            'slug' => $slug,
+            'role' => $role,
+            'icon' => $icon,
+            'controllerAction' => $controllerAction,
+            'submenus' => []
+        ];
+        \Illuminate\Support\Facades\Config::set('cms.admin_menus', $menus);
+        
+        \Illuminate\Support\Facades\Route::middleware(['web', 'auth', 'role:'.$role])
+            ->prefix('admin')
+            ->match(['get', 'post', 'put', 'patch', 'delete'], $slug . '/{any?}', function() use ($controllerAction, $title) {
+                $content = app()->call($controllerAction);
+                if ($content instanceof \Symfony\Component\HttpFoundation\Response && !$content instanceof \Illuminate\Http\Response) {
+                    return $content;
+                }
+                if ($content instanceof \Illuminate\Contracts\Support\Renderable) {
+                    $content = $content->render();
+                } elseif ($content instanceof \Illuminate\Http\Response) {
+                    $content = $content->getContent();
+                }
+                return view('cms-core::layouts.theme-page', compact('content', 'title'));
+            })
+            ->where('any', '.*')
+            ->name('cms.admin.theme.' . $slug);
+    }
+}
+
+if (!function_exists('cms_add_admin_submenu')) {
+    /**
+     * Register a custom admin dashboard sub-page with an MVC controller.
+     */
+    function cms_add_admin_submenu(string $parentSlug, string $title, string $slug, string $role, $controllerAction)
+    {
+        $menus = \Illuminate\Support\Facades\Config::get('cms.admin_menus', []);
+        if (isset($menus[$parentSlug])) {
+            $menus[$parentSlug]['submenus'][] = [
+                'title' => $title,
+                'slug' => $slug,
+                'role' => $role,
+                'controllerAction' => $controllerAction,
+            ];
+            \Illuminate\Support\Facades\Config::set('cms.admin_menus', $menus);
+        }
+        
+        \Illuminate\Support\Facades\Route::middleware(['web', 'auth', 'role:'.$role])
+            ->prefix('admin')
+            ->match(['get', 'post', 'put', 'patch', 'delete'], $slug . '/{any?}', function() use ($controllerAction, $title) {
+                $content = app()->call($controllerAction);
+                if ($content instanceof \Symfony\Component\HttpFoundation\Response && !$content instanceof \Illuminate\Http\Response) {
+                    return $content;
+                }
+                if ($content instanceof \Illuminate\Contracts\Support\Renderable) {
+                    $content = $content->render();
+                } elseif ($content instanceof \Illuminate\Http\Response) {
+                    $content = $content->getContent();
+                }
+                return view('cms-core::layouts.theme-page', compact('content', 'title'));
+            })
+            ->where('any', '.*')
+            ->name('cms.admin.theme.' . $slug);
     }
 }

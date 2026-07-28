@@ -37,10 +37,17 @@
             
             <!-- Left Column: Content -->
             <div class="xl:w-[70%]">
-            <div class="mb-12">
+            <div class="mb-6">
                 <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Post title</p>
                 <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] sm:min-w-[252px]">
                     <input name="title" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="text" placeholder="Add title" value="{{ old('title', $post->title) }}" required>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Permalink (Slug)</p>
+                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] sm:min-w-[252px]">
+                    <input name="slug" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="text" placeholder="post-slug" value="{{ old('slug', $post->slug) }}">
                 </div>
             </div>
             

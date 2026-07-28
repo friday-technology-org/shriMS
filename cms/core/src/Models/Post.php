@@ -59,7 +59,18 @@ class Post extends Model
     public function getMeta($key, $default = null)
     {
         $meta = $this->meta()->where('meta_key', $key)->first();
-        return $meta ? $meta->meta_value : $default;
+        if (!$meta) {
+            return $default;
+        }
+
+        $value = $meta->meta_value;
+        
+        // Try to decode JSON for repeater fields or structured data
+        if (is_string($value) && is_array(json_decode($value, true)) && (json_last_error() == JSON_ERROR_NONE)) {
+            return json_decode($value, true);
+        }
+
+        return $value;
     }
 
     /**
@@ -78,7 +89,7 @@ class Post extends Model
     {
         return $this->meta()->updateOrCreate(
             ['meta_key' => $key],
-            ['meta_value' => $value]
+            ['meta_value' => is_array($value) ? json_encode($value) : $value]
         );
     }
 
@@ -97,10 +108,13 @@ class Post extends Model
 
     public function getPermalinkAttribute(): string
     {
-        if ($this->post_type === 'post' || $this->post_type === 'page') {
-            return url($this->slug . '/url');
+        if ($this->post_type === 'page' && cms_option('page_on_front') == $this->id) {
+            return url('/');
         }
-        return url($this->post_type . '/' . $this->slug . '/url');
+        if ($this->post_type === 'post' || $this->post_type === 'page') {
+            return url($this->slug);
+        }
+        return url($this->post_type . '/' . $this->slug);
     }
 
     public function comments()

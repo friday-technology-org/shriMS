@@ -8,19 +8,19 @@ use Illuminate\Routing\Controller;
 
 class PageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pages = Post::where('post_type', 'page')->with('author')->latest()->paginate(20);
-        return view('cms-core::pages.index', compact('pages'));
+        $query = Post::where('post_type', 'page')->with('author');
+        if ($search = $request->input('search')) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+        $pages = $query->latest()->paginate(20)->appends($request->only('search'));
+        return view('cms-core::pages.index', compact('pages', 'search'));
     }
 
     public function create()
     {
-        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
-            ->whereJsonContains('location_rules', ['param' => 'post_type', 'operator' => '==', 'value' => 'page'])
-            ->with('fields')
-            ->orderBy('sort_order')
-            ->get();
+        $fieldGroups = \Cms\Core\Models\FieldGroup::getForPost('page');
             
         return view('cms-core::pages.create', compact('fieldGroups'));
     }
@@ -55,7 +55,7 @@ class PageController extends Controller
             $page->terms()->sync($request->input('terms'));
         }
 
-        return redirect()->route('cms.pages.index')->with('success', 'Page created successfully.');
+        return redirect()->route('cms.pages.edit', $page->id)->with('success', 'Page created successfully.');
     }
 
     public function edit(Post $page)
@@ -65,11 +65,7 @@ class PageController extends Controller
             abort(404);
         }
 
-        $fieldGroups = \Cms\Core\Models\FieldGroup::where('is_active', true)
-            ->whereJsonContains('location_rules', ['param' => 'post_type', 'operator' => '==', 'value' => 'page'])
-            ->with('fields')
-            ->orderBy('sort_order')
-            ->get();
+        $fieldGroups = \Cms\Core\Models\FieldGroup::getForPost('page', $page);
 
         return view('cms-core::pages.edit', compact('page', 'fieldGroups'));
     }
@@ -107,7 +103,7 @@ class PageController extends Controller
             $page->terms()->detach();
         }
 
-        return redirect()->route('cms.pages.index')->with('success', 'Page updated successfully.');
+        return redirect()->route('cms.pages.edit', $page->id)->with('success', 'Page updated successfully.');
     }
 
     public function destroy(Post $page)

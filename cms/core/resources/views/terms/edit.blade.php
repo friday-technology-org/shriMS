@@ -54,6 +54,10 @@
             </div>
             @endif
 
+            @if($fieldGroups && $fieldGroups->count() > 0)
+                @include('cms-core::layouts.partials.custom-fields', ['post' => $term])
+            @endif
+
             <div class="mb-8">
                 <p class="text-gray-1100 text-base leading-4 font-medium capitalize mb-[10px] dark:text-gray-dark-1100">Description</p>
                 <textarea name="description" class="textarea w-full text-gray-800 dark:text-white resize-none rounded-lg bg-transparent border border-[#E8EDF2] dark:border-[#313442] p-4 min-h-[120px] focus:outline-none placeholder:text-inherit" rows="4">{{ old('description', $term->description) }}</textarea>

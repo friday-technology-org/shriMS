@@ -23,11 +23,7 @@ class FrontendController extends Controller
         // Remove trailing slash if present
         $slug = trim($path, '/');
 
-        // Check if the route has the /url suffix
-        $hasUrlSuffix = str_ends_with($slug, '/url');
-        if ($hasUrlSuffix) {
-            $slug = substr($slug, 0, -4);
-        }
+        // (URL suffix logic removed)
 
         if (empty($slug)) {
             return $this->renderHomepage();
@@ -59,8 +55,8 @@ class FrontendController extends Controller
         }
 
         if ($post) {
-            if (!$hasUrlSuffix) {
-                return redirect($post->permalink, 301);
+            if ($post->post_type === 'page' && cms_option('page_on_front') == $post->id) {
+                return redirect('/', 301);
             }
             return $this->renderPost($post);
         }

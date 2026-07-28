@@ -28,12 +28,12 @@
     </div>
     @endif
 
-    <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl search-input-shadow flex items-center justify-between flex-col py-[18px] pl-[28px] pr-[19px] mb-[38px] gap-[10px] sm:flex-row">
-    <div class="flex items-center"><img src="{{ asset('assets/images/icons/icon-search-normal.svg') }}" alt="seacrh icon">
-        <input class="input w-full bg-transparent outline-none h-5 text-gray-400 text-sm leading-4 focus:!outline-none placeholder:text-gray-400 dark:placeholder:text-gray-dark-400 pl-[11px]" type="text" placeholder="Search post">
+    <form action="{{ route('cms.posts.index') }}" method="GET" class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl search-input-shadow flex items-center justify-between flex-col py-[18px] pl-[28px] pr-[19px] mb-[38px] gap-[10px] sm:flex-row">
+    <div class="flex items-center w-full"><img src="{{ asset('assets/images/icons/icon-search-normal.svg') }}" alt="search icon">
+        <input name="search" value="{{ $search ?? '' }}" class="input w-full bg-transparent outline-none h-5 text-gray-800 text-sm leading-4 focus:!outline-none placeholder:text-gray-400 dark:text-white dark:placeholder:text-gray-dark-400 pl-[11px]" type="text" placeholder="Search post">
     </div>
-    <button class="btn text-sm h-fit min-h-fit capitalize leading-4 border-0 px-6 bg-color-brands rounded-lg py-[11.5px] hover:bg-color-brands">Search Article</button>
-    </div>
+    <button type="submit" class="btn text-sm h-fit min-h-fit capitalize leading-4 border-0 px-6 bg-color-brands rounded-lg py-[11.5px] hover:bg-color-brands text-white">Search Article</button>
+    </form>
 
     <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl mb-9 overflow-x-scroll scrollbar-hide pl-[29px] pr-[22px] pb-[26px] pt-[17px] xl:overflow-x-hidden">
     <table class="w-full border-separate border-spacing-y-[15px] min-w-[1000px]">
@@ -57,7 +57,7 @@
             </td>
             <td class="border-y border-neutral dark:border-dark-neutral-bg">
             <div class="flex items-center gap-x-3">
-                <img src="{{ asset('assets/images/cms-avt-1.png') }}" class="w-8 h-8 rounded-full" alt="avatar">
+                <img src="{{ $post->author?->avatar_url ?? asset('assets/images/cms-avt-1.png') }}" class="w-8 h-8 rounded-full" alt="avatar">
                 <div class="flex flex-col gap-y-[7px]">
                 <h4 class="leading-4 text-gray-1100 text-[14px] dark:text-gray-dark-1100">{{ $post->author->name ?? 'Unknown' }}</h4>
                 </div>

@@ -53,4 +53,9 @@ class Term extends Model
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
+
+    public function getMeta($key, $default = null)
+    {
+        return $this->metadata[$key] ?? $default;
+    }
 }
