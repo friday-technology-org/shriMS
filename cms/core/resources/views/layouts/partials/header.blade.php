@@ -1,6 +1,11 @@
 <header class="flex items-center justify-between flex-wrap bg-neutral-bg p-5 gap-5 md:py-6 md:pl-[25px] md:pr-[38px] lg:flex-nowrap dark:bg-dark-neutral-bg lg:gap-0"><a class="hidden logo" href="index.html"><img class="md:mr-[100px] lg:mr-[133px]" src="{{ asset('assets/images/icons/icon-logo.svg') }}" alt="Frox logo"></a>
-        <div class="bg-gray-100 flex rounded-xl w-full m-0 py-[14px] px-[18px] xl:w-[360px] dark:bg-gray-dark-100 lg:max-w-[250px] xl:max-w-[360px] lg:mr-[47px] lg:ml-6 order-last lg:order-first"><img src="{{ asset('assets/images/icons/icon-search-normal.svg') }}" alt="seacrh icon">
-          <input class="input w-full bg-transparent outline-none pl-2 h-5 text-gray-300 focus:!outline-none placeholder:text-gray-300 dark:placeholder:text-gray-dark-300 placeholder:font-semibold" type="text" placeholder="Search"><img src="{{ asset('assets/images/icons/icon-microphone-2.svg') }}" alt="microphone icon">
+        <div class="bg-gray-100 flex rounded-xl m-0 py-[14px] px-[18px] dark:bg-gray-dark-100 lg:mr-[47px] lg:ml-6 order-last lg:order-first transition-colors hover:bg-gray-200 dark:hover:bg-gray-dark-200">
+          <a href="{{ url('/') }}" target="_blank" class="flex items-center gap-2 text-gray-500 dark:text-gray-dark-500 hover:text-color-brands font-semibold text-sm w-full h-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            View Website
+          </a>
         </div>
         <div class="flex items-center order-2 user-noti gap-[30px] xl:gap-[48px] lg:order-3 lg:mr-0">
           <div class="dropdown dropdown-end">

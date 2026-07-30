@@ -27,6 +27,22 @@ class CmsInstallCommand extends Command
 
         $this->info('Running database migrations...');
         Artisan::call('migrate --force');
+        Artisan::call('db:seed', ['--class' => '\\Cms\\Core\\Database\\Seeders\\CmsRolesAndPermissionsSeeder', '--force' => true]);
+
+        $this->info('Creating admin user...');
+        $user = \Cms\Core\Models\User::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => 'Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make($password),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Administrator']);
+        $user->assignRole($adminRole);
+
+        update_cms_option('site_title', $siteName);
 
         $this->info('Generating Application Key...');
         Artisan::call('key:generate');

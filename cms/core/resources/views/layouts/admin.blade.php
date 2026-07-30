@@ -27,6 +27,18 @@
       @include('cms-core::layouts.partials.sidebar')
       @include('cms-core::layouts.partials.header')
       <main class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pt-[42px] px-[23px] pb-[28px]">
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
+                <span class="block sm:inline font-semibold">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
+                <span class="block sm:inline font-semibold">{{ session('error') }}</span>
+            </div>
+        @endif
+
         @yield('content')
       </main>
     </div>

@@ -29,7 +29,7 @@
     <div class="flex gap-5 flex-col xl:flex-row" x-data="customizerPreview()" @input="onFormInput">
 
         {{-- Left: Settings --}}
-        <div class="xl:w-[45%] flex flex-col gap-5">
+        <div class="xl:w-[30%] flex flex-col gap-5">
 
             <form action="{{ route('cms.customizer.update') }}" method="POST" class="flex flex-col gap-5">
                 @csrf
@@ -38,7 +38,7 @@
                 <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
                     <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px] mb-5">Site Branding &amp; Logos</p>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                    <div class="flex flex-col gap-5 mb-5">
                         @foreach([
                             'logo_header' => 'Header Logo',
                             'logo_header_dark' => 'Header Logo (Dark Mode)',
@@ -103,6 +103,42 @@
                     </div>
                 </div>
 
+                {{-- Social Media Links --}}
+                <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
+                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px] mb-5">Social Media Links</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        @foreach(['facebook' => 'Facebook', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'linkedin' => 'LinkedIn', 'youtube' => 'YouTube'] as $key => $label)
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-dark-500 mb-2">{{ $label }} URL</p>
+                            <input type="url" name="social_{{ $key }}" value="{{ $settings['social_' . $key] }}" class="input w-full bg-transparent text-sm text-gray-800 dark:text-white h-10 rounded-lg border border-[#E8EDF2] dark:border-[#313442] focus:outline-none px-[13px]" placeholder="https://...">
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Contact Information --}}
+                <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
+                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px] mb-5">Contact Information</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-dark-500 mb-2">Email Address</p>
+                            <input type="email" name="contact_email" value="{{ $settings['contact_email'] }}" class="input w-full bg-transparent text-sm text-gray-800 dark:text-white h-10 rounded-lg border border-[#E8EDF2] dark:border-[#313442] focus:outline-none px-[13px]" placeholder="info@example.com">
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-dark-500 mb-2">Phone Number</p>
+                            <input type="text" name="contact_phone" value="{{ $settings['contact_phone'] }}" class="input w-full bg-transparent text-sm text-gray-800 dark:text-white h-10 rounded-lg border border-[#E8EDF2] dark:border-[#313442] focus:outline-none px-[13px]" placeholder="+1 234 567 8900">
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-dark-500 mb-2">Physical Address</p>
+                        <input type="text" name="contact_address" value="{{ $settings['contact_address'] }}" class="input w-full bg-transparent text-sm text-gray-800 dark:text-white h-10 rounded-lg border border-[#E8EDF2] dark:border-[#313442] focus:outline-none px-[13px]" placeholder="123 Main St, City, Country">
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-dark-500 mb-2">Map Link (Google Maps URL)</p>
+                        <input type="url" name="contact_map_link" value="{{ $settings['contact_map_link'] }}" class="input w-full bg-transparent text-sm text-gray-800 dark:text-white h-10 rounded-lg border border-[#E8EDF2] dark:border-[#313442] focus:outline-none px-[13px]" placeholder="https://maps.google.com/...">
+                    </div>
+                </div>
+
                 {{-- Custom CSS / JS --}}
                 <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
                     <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px] mb-5">Custom CSS &amp; JS</p>
@@ -146,7 +182,7 @@
         </div>
 
         {{-- Right: live iframe preview --}}
-        <div class="xl:w-[55%]">
+        <div class="xl:w-[70%]">
             <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl overflow-hidden sticky top-5">
                 <div class="bg-neutral py-[15px] pl-[18px] dark:bg-dark-neutral-border">
                     <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Live Preview</p>

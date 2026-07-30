@@ -8,16 +8,28 @@ if (!function_exists('is_cms_installed')) {
      */
     function is_cms_installed(): bool
     {
-        if (file_exists(storage_path('app/.installed'))) {
-            return true;
-        }
-
         if (app()->runningUnitTests()) {
             return false;
         }
 
+        $installedFileExists = file_exists(storage_path('app/.installed'));
+
         try {
-            if (\Illuminate\Support\Facades\Schema::hasTable('users') && \Illuminate\Support\Facades\DB::table('users')->count() > 0) {
+            $hasUsers = \Illuminate\Support\Facades\Schema::hasTable('users');
+            $hasSessions = \Illuminate\Support\Facades\Schema::hasTable('sessions');
+
+            // If lock file exists but tables are missing, remove lock to trigger install
+            if ($installedFileExists && (!$hasUsers || !$hasSessions)) {
+                @unlink(storage_path('app/.installed'));
+                return false;
+            }
+
+            if ($installedFileExists && $hasUsers && $hasSessions) {
+                return true;
+            }
+
+            // Recover lock file if tables exist but lock file was deleted
+            if (!$installedFileExists && $hasUsers && \Illuminate\Support\Facades\DB::table('users')->count() > 0) {
                 @file_put_contents(storage_path('app/.installed'), json_encode([
                     'installed_at' => now()->toDateTimeString(),
                     'version' => '1.0.0',
@@ -26,6 +38,10 @@ if (!function_exists('is_cms_installed')) {
                 return true;
             }
         } catch (\Exception $e) {
+            // DB connection failed
+            if ($installedFileExists) {
+                @unlink(storage_path('app/.installed'));
+            }
             return false;
         }
 
@@ -166,10 +182,17 @@ if (!function_exists('cms_favicon')) {
     /**
      * Get the generated favicon/site-icon asset URLs, keyed by asset name
      * (favicon_32, apple_touch, android_192, android_512, ico, mask_icon).
+     * If a type is provided, returns only the URL for that type.
      */
-    function cms_favicon(): array
+    function cms_favicon(?string $type = null)
     {
-        return cms_option('customizer_favicons', []);
+        $favicons = cms_option('customizer_favicons', []);
+
+        if ($type) {
+            return $favicons[$type] ?? null;
+        }
+
+        return $favicons;
     }
 }
 
@@ -188,6 +211,41 @@ if (!function_exists('cms_nav_menu')) {
         } catch (\Throwable $e) {
             return '';
         }
+    }
+}
+
+if (!function_exists('cms_menu_items')) {
+    /**
+     * Get the menu items for a given location as a tree structure (Collection/array).
+     * Useful for building custom menu HTML structures in themes.
+     */
+    function cms_menu_items(string $location)
+    {
+        try {
+            $menu = \Cms\Core\Models\Menu::where('location', $location)->first();
+            return $menu ? $menu->tree() : [];
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+}
+
+if (!function_exists('bloginfo')) {
+    /**
+     * Retrieves information about the current site, similar to WordPress.
+     * 
+     * @param string $show The information to retrieve (e.g. 'name', 'description')
+     */
+    function bloginfo(string $show = 'name'): string
+    {
+        return match ($show) {
+            'name' => (string) cms_option('site_title', config('app.name')),
+            'description' => (string) cms_option('site_tagline', ''),
+            'admin_email' => (string) cms_option('admin_email', ''),
+            'language' => (string) app()->getLocale(),
+            'url' => (string) url('/'),
+            default => '',
+        };
     }
 }
 

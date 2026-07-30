@@ -21,7 +21,69 @@
                                 <p class="text-xs text-gray-500 dark:text-gray-dark-500 mb-2">{{ $field->instructions }}</p>
                             @endif
 
-                            @if($field->type === 'textarea')
+                            @if($field->type === 'group')
+                                @php
+                                    $subFields = $field->settings['sub_fields'] ?? [];
+                                @endphp
+                                <div class="pl-4 border-l-2 border-neutral dark:border-dark-neutral-border space-y-6 my-4">
+                                    @foreach($subFields as $subField)
+                                        @php
+                                            $subMetaValue = $metaValue[$subField['name']] ?? '';
+                                        @endphp
+                                        <div class="group-subfield">
+                                            <p class="text-gray-1100 text-sm leading-4 font-medium capitalize mb-[8px] dark:text-gray-dark-1100">
+                                                {{ $subField['label'] }}
+                                            </p>
+
+                                            @if($subField['type'] === 'textarea')
+                                                <textarea name="meta[{{ $field->name }}][{{ $subField['name'] }}]" class="textarea w-full text-gray-800 dark:text-white resize-y rounded-lg bg-transparent border border-[#E8EDF2] dark:border-[#313442] p-4 min-h-[100px] focus:outline-none placeholder:text-inherit">{{ $subMetaValue }}</textarea>
+                                            
+                                            @elseif($subField['type'] === 'wysiwyg')
+                                                @include('cms-core::layouts.partials.wysiwyg-editor', ['name' => "meta[{$field->name}][{$subField['name']}]", 'fieldId' => "meta_{$field->name}_{$subField['name']}", 'value' => $subMetaValue, 'height' => '200px'])
+                                            
+                                            @elseif($subField['type'] === 'number')
+                                                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442]">
+                                                    <input name="meta[{{ $field->name }}][{{ $subField['name'] }}]" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white py-3 focus:outline-none pl-[13px]" type="number" value="{{ $subMetaValue }}">
+                                                </div>
+                                            
+                                            @elseif($subField['type'] === 'url')
+                                                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442]">
+                                                    <input name="meta[{{ $field->name }}][{{ $subField['name'] }}]" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white py-3 focus:outline-none pl-[13px]" type="url" value="{{ $subMetaValue }}">
+                                                </div>
+
+                                            @elseif($subField['type'] === 'image' || $subField['type'] === 'file')
+                                                @php
+                                                    $existingMedia = null;
+                                                    if ($subMetaValue && is_numeric($subMetaValue)) {
+                                                        $existingMedia = \Cms\Core\Models\Media::find((int) $subMetaValue);
+                                                    }
+                                                    $existingMediaId   = $existingMedia ? $existingMedia->id : 'null';
+                                                    $existingMediaUrl  = $existingMedia ? "'" . addslashes($existingMedia->thumbnailUrl('medium')) . "'" : 'null';
+                                                @endphp
+                                                <div x-data="{ imageId: {{ $existingMediaId }}, imageUrl: {{ $existingMediaUrl }}, pickImage() { window.openMediaPicker((media) => { this.imageId = media.id; this.imageUrl = media.medium_url || media.url; }); }, clearImage() { this.imageId = null; this.imageUrl = null; } }" class="flex items-center gap-4">
+                                                    <input type="hidden" name="meta[{{ $field->name }}][{{ $subField['name'] }}]" x-model="imageId">
+                                                    <div x-show="imageUrl" class="relative flex-shrink-0">
+                                                        <div class="w-16 h-16 rounded-xl overflow-hidden border border-[#E8EDF2] dark:border-[#313442] bg-gray-100">
+                                                            <img :src="imageUrl" alt="Selected" class="w-full h-full object-cover">
+                                                        </div>
+                                                        <button type="button" @click="clearImage()" class="absolute -top-1.5 -right-1.5 w-5 h-5 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow transition-colors"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                                                    </div>
+                                                    <div class="flex flex-col gap-1.5 min-w-0">
+                                                        <p x-show="!imageId" class="text-xs text-gray-400 dark:text-gray-dark-500">No media selected</p>
+                                                        <button type="button" @click="pickImage()" class="self-start btn normal-case transition-all text-xs py-[4px] px-[10px] bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 rounded"><span x-text="imageId ? 'Change' : 'Select'"></span></button>
+                                                    </div>
+                                                </div>
+                                            
+                                            @else
+                                                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442]">
+                                                    <input name="meta[{{ $field->name }}][{{ $subField['name'] }}]" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white py-3 focus:outline-none pl-[13px]" type="text" value="{{ $subMetaValue }}">
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                            @elseif($field->type === 'textarea')
                                 <textarea name="meta[{{ $field->name }}]" id="meta_{{ $field->name }}" class="textarea w-full text-gray-800 dark:text-white resize-y rounded-lg bg-transparent border border-[#E8EDF2] dark:border-[#313442] p-4 min-h-[100px] focus:outline-none placeholder:text-inherit" {{ $field->required ? 'required' : '' }}>{{ $metaValue }}</textarea>
                             
                             @elseif($field->type === 'wysiwyg')
@@ -32,7 +94,12 @@
                                     <input name="meta[{{ $field->name }}]" id="meta_{{ $field->name }}" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="number" value="{{ $metaValue }}" {{ $field->required ? 'required' : '' }}>
                                 </div>
                             
-                            @elseif($field->type === 'image')
+                            @elseif($field->type === 'url')
+                                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442]">
+                                    <input name="meta[{{ $field->name }}]" id="meta_{{ $field->name }}" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-4 focus:outline-none pl-[13px] placeholder:text-inherit" type="url" value="{{ $metaValue }}" {{ $field->required ? 'required' : '' }}>
+                                </div>
+
+                            @elseif($field->type === 'image' || $field->type === 'file')
                                 @php
                                     $existingMedia = null;
                                     if ($metaValue && is_numeric($metaValue)) {
@@ -93,7 +160,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                 </svg>
-                                                <span x-text="imageId ? 'Change Image' : 'Select Image'"></span>
+                                                <span x-text="imageId ? 'Change {{ ucfirst($field->type) }}' : 'Select {{ ucfirst($field->type) }}'"></span>
                                             </span>
                                         </button>
                                     </div>
@@ -108,11 +175,18 @@
                                 @endphp
                                 <div class="border border-neutral rounded-lg p-4 bg-gray-50 dark:bg-[#1f2130] dark:border-dark-neutral-border"
                                      x-data="repeaterField({{ json_encode($rows) }}, {{ json_encode($subFields) }}, '{{ $field->name }}')">
-                                    <div class="space-y-4">
+                                    <div class="space-y-4" x-ref="sortableContainer">
                                         <template x-for="(row, index) in rows" :key="row._id">
                                             <div class="relative bg-white dark:bg-dark-neutral-bg p-5 border border-[#E8EDF2] dark:border-[#313442] rounded-lg shadow-sm group">
                                                 <div class="flex justify-between items-center mb-4 pb-2 border-b border-[#E8EDF2] dark:border-[#313442]">
-                                                    <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Row <span x-text="index + 1"></span></span>
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="cursor-move repeater-drag-handle text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors" title="Drag to reorder">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                                                            </svg>
+                                                        </div>
+                                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Row <span x-text="index + 1"></span></span>
+                                                    </div>
                                                     <button type="button" @click="removeRow(index)" class="flex items-center gap-1 text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-300 rounded px-3 py-1.5 transition-colors text-xs font-bold whitespace-nowrap">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                                         Remove Row
@@ -123,8 +197,8 @@
                                                         <div class="flex flex-col">
                                                             <label class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5" x-text="subField.label"></label>
                                                             
-                                                            <!-- Text / Number -->
-                                                            <template x-if="subField.type === 'text' || subField.type === 'number'">
+                                                            <!-- Text / Number / URL -->
+                                                            <template x-if="subField.type === 'text' || subField.type === 'number' || subField.type === 'url'">
                                                                 <input :type="subField.type" :name="`meta[${fieldName}][${index}][${subField.name}]`" x-model="row[subField.name]" class="input w-full bg-transparent text-sm rounded border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none dark:text-white">
                                                             </template>
                                                             
@@ -133,12 +207,12 @@
                                                                 <textarea :name="`meta[${fieldName}][${index}][${subField.name}]`" x-model="row[subField.name]" class="textarea w-full bg-transparent text-sm rounded border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none dark:text-white min-h-[80px]"></textarea>
                                                             </template>
                                                             
-                                                            <!-- Image -->
-                                                            <template x-if="subField.type === 'image'">
+                                                            <!-- Image / File -->
+                                                            <template x-if="subField.type === 'image' || subField.type === 'file'">
                                                                 <div class="flex flex-col gap-2">
                                                                     <div class="flex items-center gap-2">
                                                                         <input type="text" :name="`meta[${fieldName}][${index}][${subField.name}]`" x-model="row[subField.name]" class="input flex-1 bg-transparent text-sm rounded border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none dark:text-white" placeholder="Media ID">
-                                                                        <button type="button" @click="pickImage(row, subField.name)" class="btn normal-case px-3 py-1.5 bg-color-brands text-white rounded text-xs hover:bg-[#9785FF]">Pick</button>
+                                                                        <button type="button" @click="pickImage(row, subField.name)" class="btn normalcase px-3 py-1.5 bg-color-brands text-white rounded text-xs hover:bg-[#9785FF]">Pick</button>
                                                                     </div>
                                                                 </div>
                                                             </template>
@@ -174,6 +248,7 @@
     </div>
 
     @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
     function repeaterField(initialRows, subFields, fieldName) {
         return {
@@ -181,6 +256,20 @@
             subFields: subFields || [],
             fieldName: fieldName,
             
+            init() {
+                this.$nextTick(() => {
+                    if (typeof Sortable !== 'undefined' && this.$refs.sortableContainer) {
+                        new Sortable(this.$refs.sortableContainer, {
+                            handle: '.repeater-drag-handle',
+                            animation: 150,
+                            onEnd: (evt) => {
+                                const item = this.rows.splice(evt.oldIndex, 1)[0];
+                                this.rows.splice(evt.newIndex, 0, item);
+                            }
+                        });
+                    }
+                });
+            },
             addRow() {
                 let newRow = { _id: Math.random().toString(36).substr(2, 9) };
                 this.subFields.forEach(sf => {

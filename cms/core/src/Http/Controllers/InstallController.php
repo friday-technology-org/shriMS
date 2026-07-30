@@ -2,7 +2,7 @@
 
 namespace Cms\Core\Http\Controllers;
 
-use App\Models\User;
+use Cms\Core\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -183,6 +183,9 @@ class InstallController extends Controller
         try {
             // 1. Run migrations
             Artisan::call('migrate', ['--force' => true]);
+            
+            // 1a. Run seeders
+            Artisan::call('db:seed', ['--class' => '\\Cms\\Core\\Database\\Seeders\\CmsRolesAndPermissionsSeeder', '--force' => true]);
 
             // 1b. Symlink cms-content/{uploads,themes} into public/ so their files are web-reachable
             if (!file_exists(public_path('uploads'))) {

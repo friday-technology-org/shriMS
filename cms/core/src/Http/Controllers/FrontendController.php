@@ -135,6 +135,8 @@ class FrontendController extends Controller
                      ->latest('published_at')
                      ->paginate(10);
 
+        cms_loop()->setup($posts->items());
+
         return view('theme::index', compact('posts'));
     }
 
@@ -145,6 +147,9 @@ class FrontendController extends Controller
      */
     protected function renderPost(Post $post)
     {
+        cms_loop()->setup($post);
+        cms_loop()->thePost();
+
         $candidates = $post->post_type === 'page'
             ? ['theme::page-' . $post->slug, 'theme::page', 'theme::single', 'theme::index']
             : ['theme::single-' . $post->post_type, 'theme::single', 'theme::index'];
@@ -166,6 +171,7 @@ class FrontendController extends Controller
     protected function renderTermArchive(Term $term)
     {
         $posts = $term->posts()->where('status', 'published')->latest('published_at')->paginate(10);
+        cms_loop()->setup($posts->items());
 
         if (view()->exists('theme::archive')) {
             return view('theme::archive', ['term' => $term, 'posts' => $posts]);
@@ -180,6 +186,8 @@ class FrontendController extends Controller
                      ->where('status', 'published')
                      ->latest('published_at')
                      ->paginate(10);
+
+        cms_loop()->setup($posts->items());
 
         if (view()->exists('theme::archive')) {
             return view('theme::archive', ['postType' => $postType, 'posts' => $posts]);

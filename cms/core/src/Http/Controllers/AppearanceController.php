@@ -34,6 +34,15 @@ class AppearanceController extends Controller
             'custom_css' => cms_option('customizer_custom_css', ''),
             'custom_js_header' => cms_option('customizer_custom_js_header', ''),
             'custom_js_footer' => cms_option('customizer_custom_js_footer', ''),
+            'social_facebook' => cms_option('customizer_social_facebook', ''),
+            'social_instagram' => cms_option('customizer_social_instagram', ''),
+            'social_tiktok' => cms_option('customizer_social_tiktok', ''),
+            'social_linkedin' => cms_option('customizer_social_linkedin', ''),
+            'social_youtube' => cms_option('customizer_social_youtube', ''),
+            'contact_email' => cms_option('customizer_contact_email', ''),
+            'contact_phone' => cms_option('customizer_contact_phone', ''),
+            'contact_address' => cms_option('customizer_contact_address', ''),
+            'contact_map_link' => cms_option('customizer_contact_map_link', ''),
         ];
 
         $favicons = cms_option('customizer_favicons', []);
@@ -56,6 +65,15 @@ class AppearanceController extends Controller
             'custom_css' => 'nullable|string',
             'custom_js_header' => 'nullable|string',
             'custom_js_footer' => 'nullable|string',
+            'social_facebook' => 'nullable|string|max:255',
+            'social_instagram' => 'nullable|string|max:255',
+            'social_tiktok' => 'nullable|string|max:255',
+            'social_linkedin' => 'nullable|string|max:255',
+            'social_youtube' => 'nullable|string|max:255',
+            'contact_email' => 'nullable|email|max:255',
+            'contact_phone' => 'nullable|string|max:50',
+            'contact_address' => 'nullable|string',
+            'contact_map_link' => 'nullable|string',
         ]);
 
         foreach ($validated as $key => $value) {

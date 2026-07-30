@@ -125,6 +125,12 @@ See the `CONTRIBUTING.md` for guidelines. Follow PSR-12 coding standards, write 
 
 ### Theme Helper Functions
 
+- `cms_logo(string $type = 'header')` – Returns the URL for a customizer logo ('header', 'header_dark', 'footer', 'header_2x').
+- `cms_favicon(?string $type = null)` – Returns the URL for a specific favicon type, or the full array if no type is given.
+- `cms_nav_menu(string $location)` – Renders the menu assigned to a location as HTML.
+- `cms_menu_items(string $location)` – Retrieves menu items as an array/Collection for custom loop rendering.
+- `cms_widget_area(string $areaKey)` – Renders active widgets assigned to the given widget area.
+- `bloginfo(string $show = 'name')` – Retrieves site information ('name', 'description', 'url', etc.) configured in settings.
 - `cms_loop()` – Retrieves the global ThemeLoop instance.
 - `have_posts()` – Checks if there are posts left in the loop.
 - `the_post()` – Advances the loop to the next post.
