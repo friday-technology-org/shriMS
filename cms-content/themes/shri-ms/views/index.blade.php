@@ -1,5 +1,8 @@
 @extends('theme::layouts.app')
 @section('content')
+    @php
+        $banner = get_field('home_page_banner_content');
+    @endphp
     <!-- banner-section -->
     <section class="banner-section">
         <div class="bg-layer" style="background-image: url({{ theme_asset('assets/images/icons/banner-1.png') }});"></div>
@@ -8,8 +11,8 @@
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-sm-12 content-column">
                     <div class="content-box">
-                        <h1>{{ get_field('heading') }}</h1>
-                        <div class="text">{{ get_field('banner_text') }}</div>
+                        <h1>{{ $banner['heading'] }}</h1>
+                        <div class="text">{{ $banner['description'] }}</div>
                         <div class="btn-box"><a
                                 href="{{ get_field('banner_button_link') }}">{{ get_field('banner_button_text') }}</a></div>
                     </div>

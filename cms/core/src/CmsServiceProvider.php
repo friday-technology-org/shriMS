@@ -148,6 +148,9 @@ class CmsServiceProvider extends ServiceProvider
                 \Cms\Core\Console\Commands\CmsMakeThemeCommand::class,
                 \Cms\Core\Console\Commands\CmsMakePluginCommand::class,
                 \Cms\Core\Console\Commands\CmsMakeCptCommand::class,
+                \Cms\Core\Console\Commands\CmsThemeMakeControllerCommand::class,
+                \Cms\Core\Console\Commands\CmsThemeMakeModelCommand::class,
+                \Cms\Core\Console\Commands\CmsThemeMakeMigrationCommand::class,
                 \Cms\Core\Console\Commands\CmsCacheClearCommand::class,
                 \Cms\Core\Console\Commands\CmsMediaRegenerateCommand::class,
                 \Cms\Core\Console\Commands\CmsUserCreateCommand::class,
@@ -187,6 +190,11 @@ class CmsServiceProvider extends ServiceProvider
             $functionsPath = $activePath . '/functions.php';
             if (file_exists($functionsPath)) {
                 require_once $functionsPath;
+            }
+
+            $migrationsPath = $activePath . '/Migrations';
+            if (is_dir($migrationsPath)) {
+                $this->loadMigrationsFrom($migrationsPath);
             }
         }
 

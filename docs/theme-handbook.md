@@ -140,3 +140,19 @@ php artisan cms:make:theme my-new-theme
 ```
 
 This will automatically generate the entire folder structure, `theme.json`, MVC scaffolding (Controllers/Models/Migrations), empty `assets/css` and `assets/js` files, and your master `app.blade.php` layout!
+
+## Theme Developer Scaffolding Commands
+
+Once a theme is created and set as active, you can use specialized Artisan commands to easily scaffold code specifically inside your theme (bypassing the core framework):
+
+- `php artisan cms:theme:make-controller {ControllerName}` - Generates a controller in `cms-content/themes/{active-theme}/Controllers/`.
+- `php artisan cms:theme:make-model {ModelName}` - Generates an Eloquent model in `cms-content/themes/{active-theme}/Models/`.
+- `php artisan cms:theme:make-migration {migration_name}` - Generates a timestamped database migration in `cms-content/themes/{active-theme}/Migrations/`.
+
+All generated files will be placed into the correct directories and assigned the proper dynamic theme namespace (e.g., `Theme\MyCustomTheme\Controllers`).
+
+### Theme Migrations
+You do not need any special commands to run your theme's migrations. Because LaraCMS integrates deeply with Laravel, any migrations located in the active theme's `Migrations/` directory will automatically be detected and executed whenever you run:
+```bash
+php artisan migrate
+```
