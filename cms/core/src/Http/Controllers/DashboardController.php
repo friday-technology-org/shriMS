@@ -18,9 +18,16 @@ class DashboardController extends Controller
         $pagesCount = Post::where('post_type', 'page')->count();
         $cptCount = Post::whereNotIn('post_type', ['post', 'page', 'attachment'])->count();
         $usersCount = User::count();
+        $activeUsers = User::with('roles')
+            ->withCount(['posts' => function ($query) {
+                $query->whereNotIn('post_type', ['attachment', 'page']);
+            }])
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('cms-core::dashboard.index', compact(
-            'postsCount', 'pagesCount', 'cptCount', 'usersCount'
+            'postsCount', 'pagesCount', 'cptCount', 'usersCount', 'activeUsers'
         ));
     }
 }

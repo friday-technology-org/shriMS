@@ -8,7 +8,7 @@
           </a>
         </div>
         <div class="flex items-center order-2 user-noti gap-[30px] xl:gap-[48px] lg:order-3 lg:mr-0">
-          <div class="dropdown dropdown-end">
+          <div class="dropdown dropdown-end hidden">
             <label class="cursor-pointer dropdown-label" tabindex="0">
               <div class="relative w-[26px] h-[26px]"><img class="w-full h-full object-cover" src="{{ asset('assets/images/icons/icon-messages.svg') }}" alt="message icon">
                 <div class="w-2 h-2 bg-fuchsia rounded-full absolute right-[1px] top-[-1px]"></div>
@@ -58,7 +58,7 @@
               </div>
             </ul>
           </div>
-          <div class="dropdown dropdown-end">
+          <div class="dropdown dropdown-end hidden">
             <label class="cursor-pointer dropdown-label" tabindex="0">
               <div class="relative w-[26px] h-[26px]"><img class="w-full h-full object-cover" src="{{ asset('assets/images/icons/icon-notification-bing.svg') }}" alt="notification icon">
                 <div class="w-2 h-2 bg-fuchsia rounded-full absolute right-[1px] top-[-1px]"></div>
