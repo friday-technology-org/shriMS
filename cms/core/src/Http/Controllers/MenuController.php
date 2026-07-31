@@ -17,19 +17,22 @@ use Illuminate\View\View;
 class MenuController extends Controller
 {
     /**
-     * Registered menu locations a menu can be assigned to.
+     * Get registered menu locations.
      */
-    public array $locations = [
-        'primary' => 'Primary Header',
-        'top_bar' => 'Top Bar',
-        'footer' => 'Footer',
-        'mobile_drawer' => 'Mobile Drawer',
-    ];
+    public function getLocations(): array
+    {
+        return apply_filters('cms_menu_locations', [
+            'primary' => 'Primary Header',
+            'top_bar' => 'Top Bar',
+            'footer' => 'Footer',
+            'mobile_drawer' => 'Mobile Drawer',
+        ]);
+    }
 
     public function index(): View
     {
         $menus = Menu::orderBy('name')->get();
-        $locations = $this->locations;
+        $locations = $this->getLocations();
 
         return view('cms-core::menus.index', compact('menus', 'locations'));
     }
@@ -38,7 +41,7 @@ class MenuController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'location' => 'nullable|string|in:' . implode(',', array_keys($this->locations)) . '|unique:menus,location',
+            'location' => 'nullable|string|in:' . implode(',', array_keys($this->getLocations())) . '|unique:menus,location',
         ]);
 
         $menu = Menu::create([
@@ -55,7 +58,7 @@ class MenuController extends Controller
         $tree = $menu->tree();
         $postTypes = PostType::orderBy('plural_label')->get();
         $taxonomies = Taxonomy::orderBy('name')->get();
-        $locations = $this->locations;
+        $locations = $this->getLocations();
 
         return view('cms-core::menus.edit', compact('menu', 'tree', 'postTypes', 'taxonomies', 'locations'));
     }
@@ -64,7 +67,7 @@ class MenuController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'location' => 'nullable|string|in:' . implode(',', array_keys($this->locations)) . '|unique:menus,location,' . $menu->id,
+            'location' => 'nullable|string|in:' . implode(',', array_keys($this->getLocations())) . '|unique:menus,location,' . $menu->id,
             'items_json' => 'nullable|string',
         ]);
 

@@ -31,6 +31,57 @@
         {{-- Left: Settings --}}
         <div class="xl:w-[30%] flex flex-col gap-5">
 
+            {{-- Favicon: its own self-contained upload form, separate from the settings form above --}}
+            <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
+                <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px] mb-5">Favicon &amp; Site Icon</p>
+                <p class="text-xs text-gray-400 dark:text-gray-dark-500 mb-4">Upload a square PNG/SVG (ideally 512×512) to generate the full favicon set.</p>
+
+                @if(!empty($favicons))
+                <div class="flex items-center gap-3 mb-4">
+                    @foreach($favicons as $key => $url)
+                        <img src="{{ $url }}" alt="{{ $key }}" class="w-8 h-8 rounded border border-[#E8EDF2] dark:border-[#313442] bg-white object-contain" title="{{ $key }}">
+                    @endforeach
+                </div>
+                @endif
+
+                <form action="{{ route('cms.customizer.favicon') }}" method="POST" enctype="multipart/form-data" 
+                    x-data="{
+                        fileName: '',
+                        previewUrl: '',
+                        onFileChange(e) {
+                            if (e.target.files.length) {
+                                this.fileName = e.target.files[0].name;
+                                this.previewUrl = URL.createObjectURL(e.target.files[0]);
+                            } else {
+                                this.fileName = '';
+                                this.previewUrl = '';
+                            }
+                        }
+                    }">
+                    @csrf
+                    <input type="file" name="favicon_source" x-ref="fileInput" accept=".png,.jpg,.jpeg,.svg" required class="hidden" @change="onFileChange">
+                    
+                    <div class="flex items-center gap-3">
+                        <div x-show="previewUrl" class="relative flex-shrink-0" style="display: none;">
+                            <div class="w-14 h-14 rounded-lg overflow-hidden border border-[#E8EDF2] dark:border-[#313442] bg-gray-100 dark:bg-[#1f2130]">
+                                <img :src="previewUrl" alt="Favicon Preview" class="w-full h-full object-contain">
+                            </div>
+                            <button type="button" @click="$refs.fileInput.value = ''; fileName = ''; previewUrl = '';" class="absolute -top-1.5 -right-1.5 w-5 h-5 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-full shadow transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                        
+                        <button type="button" @click="$refs.fileInput.click()" class="btn normal-case h-fit min-h-fit border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] border-neutral-bg dark:border-dark-neutral-bg text-white text-xs py-[6px] px-[12px]">
+                            <span x-text="fileName ? 'Change' : 'Select Image'"></span>
+                        </button>
+                        
+                        <button type="submit" class="btn normal-case h-fit min-h-fit border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] border-neutral-bg dark:border-dark-neutral-bg text-white text-xs py-[6px] px-[12px]">
+                            Get favicon set
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <form action="{{ route('cms.customizer.update') }}" method="POST" class="flex flex-col gap-5">
                 @csrf
 
@@ -159,26 +210,7 @@
                 <button type="submit" class="btn normal-case h-fit min-h-fit self-start transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] border-neutral-bg dark:border-dark-neutral-bg font-medium py-[10px] px-[20px] text-sm text-white">Save Changes</button>
             </form>
 
-            {{-- Favicon: its own self-contained upload form, separate from the settings form above --}}
-            <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px]">
-                <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px] mb-2">Favicon &amp; Site Icon</p>
-                <p class="text-xs text-gray-400 dark:text-gray-dark-500 mb-4">Upload a square PNG/SVG (ideally 512×512) to generate the full favicon set.</p>
 
-                @if(!empty($favicons))
-                <div class="flex items-center gap-3 mb-4">
-                    @foreach($favicons as $key => $url)
-                        <img src="{{ $url }}" alt="{{ $key }}" class="w-8 h-8 rounded border border-[#E8EDF2] dark:border-[#313442] bg-white object-contain" title="{{ $key }}">
-                    @endforeach
-                </div>
-                @endif
-
-                <form action="{{ route('cms.customizer.favicon') }}" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    @csrf
-                    <input type="file" name="favicon_source" accept=".png,.jpg,.jpeg,.svg" required
-                        class="text-sm text-gray-500 dark:text-gray-dark-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-color-brands file:text-white hover:file:opacity-90">
-                    <button type="submit" class="btn normal-case h-fit min-h-fit border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] border-neutral-bg dark:border-dark-neutral-bg text-white text-xs py-[8px] px-[14px]">Generate Favicon Set</button>
-                </form>
-            </div>
         </div>
 
         {{-- Right: live iframe preview --}}

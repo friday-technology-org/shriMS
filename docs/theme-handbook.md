@@ -107,6 +107,7 @@ LaraCMS themes are exposed to the public through the `public/themes` symlink dir
 
 - `theme_asset($path)`: Returns the full URL to an asset in the current theme. (e.g., `{{ theme_asset('assets/css/style.css') }}`)
 - `get_template_directory_uri()`: Returns the absolute URL to your active theme's root directory.
+- `get_media_url($id)`: Returns the absolute URL to an uploaded media item given its ID. (e.g., `{{ get_media_url(12) }}`)
 
 ## `functions.php`
 
@@ -115,6 +116,7 @@ If you place a `functions.php` file in the root of your theme, LaraCMS will auto
 - Register Custom Shortcodes
 - Enqueue Assets (CSS/JS)
 - Add Filters and Actions
+- Register Dynamic Menu Locations
 
 ```php
 <?php
@@ -129,6 +131,14 @@ add_shortcode('button', function($atts, $content) {
     $url = $atts['url'] ?? '#';
     return "<a href='{$url}' class='btn'>{$content}</a>";
 });
+
+// Register dynamic menu locations for your theme
+register_nav_menus([
+    'primary'       => 'Primary Header Menu',
+    'footer_1'      => 'Footer Column 1',
+    'footer_2'      => 'Footer Column 2',
+    'mobile_drawer' => 'Mobile Drawer Menu',
+]);
 ```
 
 ## Creating Themes via Artisan

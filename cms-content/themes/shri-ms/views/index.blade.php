@@ -13,16 +13,15 @@
                     <div class="content-box">
                         <h1>{{ $banner['heading'] }}</h1>
                         <div class="text">{{ $banner['description'] }}</div>
-                        <div class="btn-box"><a
-                                href="{{ get_field('banner_button_link') }}">{{ get_field('banner_button_text') }}</a></div>
+                        <div class="btn-box"><a href="{{ $banner['button_link'] }}">{{ $banner['button_text'] }}</a></div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12 image-column">
                     <div class="image-box float-bob-y clearfix">
                         <figure class="image image-1 wow fadeInUp" data-wow-delay="900ms" data-wow-duration="1500ms"><img
-                                src="{{ theme_asset('assets/images/resource/phone-1.png') }}" alt=""></figure>
+                                src="{{ get_media_url($banner['image_1']) }}" alt=""></figure>
                         <figure class="image image-2 wow fadeInUp" data-wow-delay="1500ms" data-wow-duration="1500ms"><img
-                                src="{{ theme_asset('assets/images/resource/phone-2.png') }}" alt=""></figure>
+                                src="{{ get_media_url($banner['image_2']) }}" alt=""></figure>
                     </div>
                 </div>
             </div>

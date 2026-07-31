@@ -3,7 +3,7 @@
 @section('title', 'Add New Field Group - LaraCMS')
 
 @section('content')
-<form action="{{ route('cms.field-groups.store') }}" method="POST">
+<form action="{{ route('cms.field-groups.store') }}" method="POST" id="field-group-form">
     @csrf
     <div>
         <h2 class="capitalize text-gray-1100 font-bold text-[28px] leading-[35px] dark:text-gray-dark-1100 mb-[13px]">Add Field Group</h2>
@@ -109,7 +109,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
+    const form = document.getElementById('field-group-form');
     const container = document.getElementById('fields-container');
     const addBtn = document.getElementById('add-field-btn');
     let fieldCount = 0;

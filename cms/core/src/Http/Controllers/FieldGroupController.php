@@ -10,7 +10,7 @@ class FieldGroupController extends Controller
 {
     public function index()
     {
-        $fieldGroups = FieldGroup::latest()->paginate(20);
+        $fieldGroups = FieldGroup::orderBy('sort_order')->orderBy('id', 'asc')->paginate(20);
         return view('cms-core::field-groups.index', compact('fieldGroups'));
     }
 

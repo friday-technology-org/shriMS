@@ -214,6 +214,19 @@ if (!function_exists('cms_nav_menu')) {
     }
 }
 
+if (!function_exists('register_nav_menus')) {
+    /**
+     * Register navigation menu locations for a theme.
+     * Equivalent to WordPress's register_nav_menus().
+     */
+    function register_nav_menus(array $locations): void
+    {
+        add_filter('cms_menu_locations', function ($existingLocations) use ($locations) {
+            return array_merge($existingLocations, $locations);
+        });
+    }
+}
+
 if (!function_exists('cms_menu_items')) {
     /**
      * Get the menu items for a given location as a tree structure (Collection/array).
@@ -458,3 +471,23 @@ if (!function_exists('cms_locale')) {
     }
 }
 
+if (!function_exists('get_media_url')) {
+    /**
+     * Get the URL for a given media ID.
+     *
+     * @param int|string|null $mediaId
+     * @return string|null
+     */
+    function get_media_url($mediaId): ?string
+    {
+        if (!$mediaId) {
+            return null;
+        }
+
+        try {
+            return \Cms\Core\Models\Media::find($mediaId)?->url();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+}
