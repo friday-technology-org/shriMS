@@ -15,8 +15,17 @@ class SeoHelper
         $siteDesc = cms_option('site_description', 'Just another LaraCMS site');
 
         if ($post) {
-            $seoTitle = $post->getMeta('seo_title') ?: $post->title;
-            $title = $seoTitle . ' - ' . $siteTitle;
+            $seoTitleFormat = $post->getMeta('seo_title');
+            if (empty($seoTitleFormat)) {
+                $seoTitleFormat = '{title} {sep} {sitename}';
+            }
+            
+            $title = str_replace(
+                ['{title}', '{sitename}', '{sep}', '{tagline}'],
+                [$post->title, $siteTitle, '-', $siteDesc],
+                $seoTitleFormat
+            );
+            
             $description = $post->getMeta('seo_description') ?: ($post->excerpt ?: str($post->content)->stripTags()->words(25));
             $robots = $post->getMeta('seo_robots') ?: 'index, follow';
             $url = $post->permalink;

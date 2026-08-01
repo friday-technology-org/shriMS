@@ -676,3 +676,49 @@ if (!function_exists('cms_add_admin_submenu')) {
             ->name('cms.admin.theme.' . $slug);
     }
 }
+
+if (!function_exists('cms_seo_tags')) {
+    /**
+     * Render the SEO tags as HTML for the given post.
+     *
+     * @param \Cms\Core\Models\Post|null $post
+     * @return string
+     */
+    function cms_seo_tags(?\Cms\Core\Models\Post $post = null): string
+    {
+        /** @var \Cms\Core\Services\SeoHelper $seo */
+        $seo = app(\Cms\Core\Services\SeoHelper::class);
+        $tags = $seo->getMetaTags($post);
+        
+        $html = [];
+        if (!empty($tags['title'])) {
+            $html[] = '<title>' . e($tags['title']) . '</title>';
+            $html[] = '<meta property="og:title" content="' . e($tags['title']) . '" />';
+            $html[] = '<meta name="twitter:title" content="' . e($tags['title']) . '" />';
+        }
+        if (!empty($tags['description'])) {
+            $html[] = '<meta name="description" content="' . e($tags['description']) . '" />';
+            $html[] = '<meta property="og:description" content="' . e($tags['description']) . '" />';
+            $html[] = '<meta name="twitter:description" content="' . e($tags['description']) . '" />';
+        }
+        if (!empty($tags['keywords'])) {
+            $html[] = '<meta name="keywords" content="' . e($tags['keywords']) . '" />';
+        }
+        if (!empty($tags['robots'])) {
+            $html[] = '<meta name="robots" content="' . e($tags['robots']) . '" />';
+        }
+        if (!empty($tags['url'])) {
+            $html[] = '<meta property="og:url" content="' . e($tags['url']) . '" />';
+        }
+        if (!empty($tags['image'])) {
+            $html[] = '<meta property="og:image" content="' . e(asset($tags['image'])) . '" />';
+            $html[] = '<meta name="twitter:image" content="' . e(asset($tags['image'])) . '" />';
+            $html[] = '<meta name="twitter:card" content="summary_large_image" />';
+        }
+        if (!empty($tags['og_type'])) {
+            $html[] = '<meta property="og:type" content="' . e($tags['og_type']) . '" />';
+        }
+
+        return implode("\n    ", $html);
+    }
+}

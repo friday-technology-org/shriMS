@@ -74,6 +74,9 @@
 
             <!-- Custom Fields -->
             @include('cms-core::layouts.partials.custom-fields', ['post' => $content])
+            
+            <!-- SEO Fields -->
+            @include('cms-core::layouts.partials.seo-fields', ['model' => $content])
             </div>
 
             <!-- Right Column: Sidebar settings -->
@@ -83,12 +86,12 @@
                 <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Publish</p>
                 </div>
                 
-                <div class="px-5 mb-5">
-                    <p class="text-gray-1100 text-sm font-semibold mb-2 dark:text-gray-dark-1100">Status</p>
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
-                        <select name="status" id="status" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none px-[13px]">
-                            <option value="draft" class="bg-white dark:bg-dark-neutral-bg" {{ old('status', $content->status) == 'draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="published" class="bg-white dark:bg-dark-neutral-bg" {{ old('status', $content->status) == 'published' ? 'selected' : '' }}>Published</option>
+                <div class="px-[18px] flex items-center justify-between mb-5">
+                    <p class="text-gray-1100 text-sm font-semibold m-0 dark:text-gray-dark-1100">Status</p>
+                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-[140px]">
+                        <select name="status" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none px-3">
+                            <option value="draft" class="bg-white dark:bg-dark-neutral-bg" {{ (old('status') ?? $content->status) == 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" class="bg-white dark:bg-dark-neutral-bg" {{ (old('status') ?? $content->status) == 'published' ? 'selected' : '' }}>Published</option>
                         </select>
                     </div>
                 </div>
@@ -98,8 +101,8 @@
                 </div>
                 
                 <div class="flex justify-between px-[18px]">
-                <a href="{{ route('cms.content.index', $cpt->name) }}" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 border-neutral-bg bg-gray-200 font-medium text-gray-500 dark:border-dark-neutral-bg py-[7px] px-[14px] dark:bg-gray-dark-200 text-[12px] leading-[18px] dark:text-gray-dark-500 hover:bg-gray-200 dark:hover:bg-gray-dark-200 hover:border-gray-300 dark:hover:border-gray-dark-300">Cancel</a>
-                <button type="submit" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] dark:hover:border-[#B2A7FF] border-neutral-bg font-medium dark:border-dark-neutral-bg py-[7px] px-[14px] text-[12px] leading-[18px] text-white">Update {{ $cpt->singular_label }}</button>
+                <button type="button" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 border-neutral-bg bg-gray-200 font-medium text-gray-500 dark:border-dark-neutral-bg py-[7px] px-[14px] dark:bg-gray-dark-200 text-[12px] leading-[18px] dark:text-gray-dark-500 hover:bg-gray-200 dark:hover:bg-gray-dark-200 hover:border-gray-300 dark:hover:border-gray-dark-300" onclick="if(confirm('Move to trash?')) { document.getElementById('delete-form').submit(); }">Move to Trash</button>
+                <button type="submit" class="btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] dark:hover:border-[#B2A7FF] border-neutral-bg font-medium dark:border-dark-neutral-bg py-[7px] px-[14px] text-[12px] leading-[18px] text-white">Update</button>
                 </div>
             </div>
 
@@ -125,11 +128,14 @@
             @endif
 
             <!-- Taxonomies Checklists -->
-            @include('cms-core::layouts.partials.taxonomies', ['post' => $content, 'postType' => $cpt->name])
+            @include('cms-core::layouts.partials.taxonomies', ['post' => $content])
 
             <!-- Featured Image Meta Box -->
-            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg overflow-hidden"
-                 x-data="featuredImage({{ $content->featured_image_id ?? 'null' }}, '{{ $content->featuredImage?->thumbnailUrl('medium') ?? '' }}')">
+            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg overflow-hidden" 
+                 x-data="featuredImage(
+                    {{ $content->featured_image_id ? $content->featured_image_id : 'null' }}, 
+                    '{{ $content->featured_image_id && $content->featuredImage ? $content->featuredImage->thumbnailUrl('medium') : '' }}'
+                 )">
                 <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
                     <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">Featured Image</p>
                 </div>
@@ -165,34 +171,7 @@
                     </div>
                 </div>
             </div>
-            <!-- SEO Settings -->
-            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg overflow-hidden" x-data="{}">
-                <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
-                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">SEO Settings</p>
-                </div>
-                <div class="px-5 py-4 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">SEO Title</label>
-                        <input name="meta[seo_title]" class="input w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2" type="text" placeholder="SEO title (optional)" value="{{ old('meta.seo_title', $content->getMeta('seo_title') ?? '') }}" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Meta Description</label>
-                        <textarea name="meta[seo_description]" class="textarea w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2" rows="3" placeholder="Meta description (optional)">{{ old('meta.seo_description', $content->getMeta('seo_description') ?? '') }}</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Keywords (comma separated)</label>
-                        <input name="meta[seo_keywords]" class="input w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2" type="text" placeholder="e.g. laravel, cms, seo" value="{{ old('meta.seo_keywords', $content->getMeta('seo_keywords') ?? '') }}" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Robots</label>
-                        <select name="meta[seo_robots]" class="select w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2">
-                            <option value="index, follow" {{ old('meta.seo_robots', $content->getMeta('seo_robots') ?? 'index, follow') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
-                            <option value="noindex, nofollow" {{ old('meta.seo_robots', $content->getMeta('seo_robots') ?? '') == 'noindex, nofollow' ? 'selected' : '' }}>Noindex, Nofollow</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
+            
             </div>
         </div>
         </div>

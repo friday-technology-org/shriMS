@@ -47,6 +47,9 @@
 
             <!-- Custom Fields -->
             @include('cms-core::layouts.partials.custom-fields')
+
+            <!-- SEO Fields -->
+            @include('cms-core::layouts.partials.seo-fields')
             </div>
 
             <!-- Right Column: Sidebar settings -->

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-    <title>Appway - HTML 5 Template Preview</title>
+    {!! cms_seo_tags($page ?? $post ?? null) !!}
 
     <!-- Fav Icon -->
     <link rel="icon" href="{{ cms_favicon('ico') }}" type="image/x-icon">

@@ -47,6 +47,9 @@
             
             <!-- Custom Fields -->
             @include('cms-core::layouts.partials.custom-fields')
+
+            <!-- SEO Fields -->
+            @include('cms-core::layouts.partials.seo-fields')
             </div>
 
             <!-- Right Column: Sidebar settings -->
@@ -113,34 +116,6 @@
                                 </span>
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SEO Settings -->
-            <div class="border border-neutral rounded-lg bg-neutral-bg dark:border-dark-neutral-border dark:bg-dark-neutral-bg overflow-hidden" x-data="{}">
-                <div class="bg-neutral rounded-t-lg py-[15px] pl-[18px] dark:bg-dark-neutral-border">
-                    <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[14px]">SEO Settings</p>
-                </div>
-                <div class="px-5 py-4 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">SEO Title</label>
-                        <input name="meta[seo_title]" class="input w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2" type="text" placeholder="SEO title (optional)" value="{{ old('meta.seo_title') }}" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Meta Description</label>
-                        <textarea name="meta[seo_description]" class="textarea w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2" rows="3" placeholder="Meta description (optional)">{{ old('meta.seo_description') }}</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Keywords (comma separated)</label>
-                        <input name="meta[seo_keywords]" class="input w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2" type="text" placeholder="e.g. laravel, cms, seo" value="{{ old('meta.seo_keywords') }}" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Robots</label>
-                        <select name="meta[seo_robots]" class="select w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2">
-                            <option value="index, follow" {{ old('meta.seo_robots') == 'index, follow' ? 'selected' : '' }}>Index, Follow</option>
-                            <option value="noindex, nofollow" {{ old('meta.seo_robots') == 'noindex, nofollow' ? 'selected' : '' }}>Noindex, Nofollow</option>
-                        </select>
                     </div>
                 </div>
             </div>

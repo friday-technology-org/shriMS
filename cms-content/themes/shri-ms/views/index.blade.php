@@ -1,7 +1,9 @@
 @extends('theme::layouts.app')
 @section('content')
     @php
-        $banner = get_field('home_page_banner_content');
+        $home = get_field("home_page_content");
+        $banner = $home['banner_content'];
+        $features = $home['features_content'];
     @endphp
     <!-- banner-section -->
     <section class="banner-section">
@@ -29,106 +31,27 @@
     </section>
     <!-- banner-section end -->
 
-
-    <!-- feature-section -->
-    <section class="feature-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-md-12 col-sm-12 image-column">
-                    <div id="iamge_block_01">
-                        <div class="image-box float-bob-y">
-                            <figure class="image wow slideInLeft" data-wow-delay="00ms" data-wow-duration="1500ms"><img
-                                    src="{{ theme_asset('assets/images/resource/phone-3.png') }}" alt=""></figure>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-7 col-md-12 col-sm-12 content-column">
-                    <div id="content_block_01">
-                        <div class="content-box">
-                            <div class="sec-title">
-                                <h2>Amazing Features</h2>
-                                <p>Cumque adipisci anim quisque provident posuere blandit accumsan delectus quam quos
-                                    interdum sociosqu.</p>
-                            </div>
-                            <div class="inner-box wow fadeInUp" data-wow-delay="00ms" data-wow-duration="1500ms">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-12 single-column">
-                                        <div class="single-item">
-                                            <div class="bg-layer"
-                                                style="background-image: url({{ theme_asset('assets/images/resource/case-1.png') }});">
-                                            </div>
-                                            <div class="icon-box"><i class="flaticon-app-1"></i></div>
-                                            <h5><a href="#">Unique Design</a></h5>
-                                            <div class="text">Integer quis mollis lacus maecenas in ornare ex sed
-                                                scelerisque nec elit nec vehicula duis pretium libero</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-12 single-column">
-                                        <div class="single-item wow fadeInUp" data-wow-delay="300ms"
-                                            data-wow-duration="1500ms">
-                                            <div class="bg-layer"
-                                                style="background-image: url({{ theme_asset('assets/images/resource/case-1.png') }});">
-                                            </div>
-                                            <div class="icon-box"><i class="flaticon-target"></i></div>
-                                            <h5><a href="#">Easy And New Project</a></h5>
-                                            <div class="text">Integer quis mollis lacus maecenas in ornare ex sed
-                                                scelerisque nec elit nec vehicula duis pretium libero</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-12 single-column">
-                                        <div class="single-item wow fadeInUp" data-wow-delay="600ms"
-                                            data-wow-duration="1500ms">
-                                            <div class="bg-layer"
-                                                style="background-image: url({{ theme_asset('assets/images/resource/case-1.png') }});">
-                                            </div>
-                                            <div class="icon-box"><i class="flaticon-shipping"></i></div>
-                                            <h5><a href="#">Track Anything</a></h5>
-                                            <div class="text">Integer quis mollis lacus maecenas in ornare ex sed
-                                                scelerisque nec elit nec vehicula duis pretium libero</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-12 single-column">
-                                        <div class="single-item wow fadeInUp" data-wow-delay="900ms"
-                                            data-wow-duration="1500ms">
-                                            <div class="bg-layer"
-                                                style="background-image: url({{ theme_asset('assets/images/resource/case-1.png') }});">
-                                            </div>
-                                            <div class="icon-box"><i class="flaticon-dashboard"></i></div>
-                                            <h5><a href="#">Unlimited Dashboard</a></h5>
-                                            <div class="text">Integer quis mollis lacus maecenas in ornare ex sed
-                                                scelerisque nec elit nec vehicula duis pretium libero</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- feature-section -->
-
-
     <!-- feature-style-two -->
     <section class="feature-style-two centred">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
-                    <div class="feature-block-one wow flipInY animated" data-wow-delay="00ms" data-wow-duration="1500ms">
-                        <div class="inner-box js-tilt">
-                            <div class="hover-content"></div>
-                            <div class="icon-box">
-                                <div class="bg-layer"
-                                    style="background-image: url({{ theme_asset('assets/images/icons/feature-icon-1.png') }});">
+                @foreach($features as $feature)
+                    <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
+                        <div class="feature-block-one wow flipInY animated" data-wow-delay="00ms" data-wow-duration="1500ms">
+                            <div class="inner-box js-tilt">
+                                <div class="hover-content"></div>
+                                <div class="icon-box">
+                                    <div class="bg-layer"
+                                        style="background-image: url({{ theme_asset('assets/images/icons/feature-icon-1.png') }});">
+                                    </div>
+                                    <i class="{{$feature['icon']}}"></i>
                                 </div>
-                                <i class="flaticon-smartphone"></i>
+                                <h5><a href="#">{{$feature['heading']}}</a></h5>
+                                <div class="text">{{$feature['description']}}</div>
                             </div>
-                            <h5><a href="#">Flexiable to Use</a></h5>
-                            <div class="text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</div>
                         </div>
                     </div>
-                </div>
+                @endforeach
                 <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
                     <div class="feature-block-one wow flipInY animated" data-wow-delay="300ms" data-wow-duration="1500ms">
                         <div class="inner-box js-tilt">

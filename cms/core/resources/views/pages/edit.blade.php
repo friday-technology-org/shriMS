@@ -63,6 +63,9 @@
 
             <!-- Custom Fields -->
             @include('cms-core::layouts.partials.custom-fields', ['post' => $page])
+            
+            <!-- SEO Fields -->
+            @include('cms-core::layouts.partials.seo-fields', ['model' => $page])
             </div>
 
             <!-- Right Column: Sidebar settings -->
