@@ -26,14 +26,14 @@ class UpgradeService
         // Mock checking updates from a remote repository API
         return [
             'current_version' => $currentVersion,
-            'latest_version' => '1.1.0',
-            'has_update' => version_compare('1.1.0', $currentVersion, '>'),
+            'latest_version' => '1.0.2',
+            'has_update' => version_compare('1.0.2', $currentVersion, '>'),
             'release_notes' => 'Features stability improvements, new GraphQL options, and bug fixes.',
-            'download_url' => 'https://github.com/lara-cms/core/releases/download/v1.1.0/core.zip',
+            'download_url' => 'https://github.com/friday-technology-org/shri-ms/releases/download/v1.0.2/core.zip',
         ];
     }
 
-    public function performUpgrade(string $zipFilePath = null): array
+    public function performUpgrade(string $zipFilePath = null, string $newVersion = null): array
     {
         if (!File::isDirectory($this->updateDir)) {
             File::makeDirectory($this->updateDir, 0755, true);
@@ -76,8 +76,33 @@ class UpgradeService
             if ($zipFilePath && File::exists($zipFilePath)) {
                 $extractZip = new ZipArchive();
                 if ($extractZip->open($zipFilePath) === true) {
-                    $extractZip->extractTo(base_path('cms/core'));
+                    $tempExtractPath = $this->updateDir . '/temp-extract-' . time();
+                    if (!File::isDirectory($tempExtractPath)) {
+                        File::makeDirectory($tempExtractPath, 0755, true);
+                    }
+                    
+                    $extractZip->extractTo($tempExtractPath);
                     $extractZip->close();
+                    
+                    // Check if there is a single root folder (typical of GitHub release zipballs)
+                    $directories = File::directories($tempExtractPath);
+                    $files = File::files($tempExtractPath);
+                    
+                    $sourcePath = $tempExtractPath;
+                    if (count($directories) === 1 && count($files) === 0) {
+                        $sourcePath = $directories[0];
+                    }
+                    
+                    // If the zip contains the full repository with a cms/core directory, drill down into it
+                    if (File::isDirectory($sourcePath . '/cms/core')) {
+                        $sourcePath = $sourcePath . '/cms/core';
+                    }
+                    
+                    // Move the contents to cms/core
+                    File::copyDirectory($sourcePath, base_path('cms/core'));
+                    
+                    // Clean up the temporary extraction folder
+                    File::deleteDirectory($tempExtractPath);
                 } else {
                     throw new \Exception("Failed to open the update zip file.");
                 }
@@ -94,9 +119,14 @@ class UpgradeService
             // 6. Lift maintenance mode
             Artisan::call('up');
 
+            // 7. Update version.php if new version is provided
+            if ($newVersion) {
+                File::put(base_path('cms/core/version.php'), "<?php return '{$newVersion}';\n");
+            }
+
             return [
                 'success' => true,
-                'message' => 'LaraCMS Core successfully upgraded.',
+                'message' => 'Shri-ms Core successfully upgraded.',
             ];
 
         } catch (\Throwable $e) {
