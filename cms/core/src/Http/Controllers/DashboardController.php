@@ -25,9 +25,14 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
+            
+        $coreVersion = 'Unknown';
+        if (file_exists(base_path('cms/core/version.php'))) {
+            $coreVersion = require base_path('cms/core/version.php');
+        }
 
         return view('cms-core::dashboard.index', compact(
-            'postsCount', 'pagesCount', 'cptCount', 'usersCount', 'activeUsers'
+            'postsCount', 'pagesCount', 'cptCount', 'usersCount', 'activeUsers', 'coreVersion'
         ));
     }
 }

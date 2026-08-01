@@ -18,17 +18,22 @@ class UpgradeService
 
     public function checkVersion(): array
     {
+        $currentVersion = '1.0.0';
+        if (file_exists(base_path('cms/core/version.php'))) {
+            $currentVersion = require base_path('cms/core/version.php');
+        }
+
         // Mock checking updates from a remote repository API
         return [
-            'current_version' => '1.0.0',
+            'current_version' => $currentVersion,
             'latest_version' => '1.1.0',
-            'has_update' => true,
+            'has_update' => version_compare('1.1.0', $currentVersion, '>'),
             'release_notes' => 'Features stability improvements, new GraphQL options, and bug fixes.',
             'download_url' => 'https://github.com/lara-cms/core/releases/download/v1.1.0/core.zip',
         ];
     }
 
-    public function performUpgrade(): array
+    public function performUpgrade(string $zipFilePath = null): array
     {
         if (!File::isDirectory($this->updateDir)) {
             File::makeDirectory($this->updateDir, 0755, true);
@@ -67,22 +72,31 @@ class UpgradeService
                 throw new \Exception("Pre-upgrade backup failed. Cannot initialize backup zip.");
             }
 
-            // 3. Mock package download and Atomic Replacement
-            // In a real upgrade, we download the signed ZIP from download_url and extract it over cms/core
-            // For safety and execution verification, we simulate success
+            // 3. Extract the new core zip
+            if ($zipFilePath && File::exists($zipFilePath)) {
+                $extractZip = new ZipArchive();
+                if ($extractZip->open($zipFilePath) === true) {
+                    $extractZip->extractTo(base_path('cms/core'));
+                    $extractZip->close();
+                } else {
+                    throw new \Exception("Failed to open the update zip file.");
+                }
+            } else {
+                throw new \Exception("No valid update zip file provided.");
+            }
             
             // 4. Run core migrations
             Artisan::call('migrate', ['--force' => true]);
 
             // 5. Clear Caches
-            Artisan::call('cache:clear');
+            Artisan::call('optimize:clear');
 
             // 6. Lift maintenance mode
             Artisan::call('up');
 
             return [
                 'success' => true,
-                'message' => 'LaraCMS Core successfully upgraded to version 1.1.0.',
+                'message' => 'LaraCMS Core successfully upgraded.',
             ];
 
         } catch (\Throwable $e) {

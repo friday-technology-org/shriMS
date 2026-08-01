@@ -13,53 +13,53 @@
 @php
     $height = $height ?? '400px';
 @endphp
-<div class="rounded-lg border border-neutral dark:border-dark-neutral-border overflow-hidden">
-    <div id="quill-container-{{ $fieldId }}" style="min-height: {{ $height }};" class="bg-white"></div>
-</div>
-<textarea name="{{ $name }}" id="{{ $fieldId }}" class="hidden">{{ $value }}</textarea>
-
-<script>
-(function() {
-    const editorEl = document.getElementById('quill-container-{{ $fieldId }}');
-    const hiddenField = document.getElementById('{{ $fieldId }}');
-
-    const quill = new Quill(editorEl, {
-        theme: 'snow',
-        modules: {
-            toolbar: {
-                container: [
-                    [{ header: [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ list: 'ordered' }, { list: 'bullet' }],
-                    ['blockquote', 'code-block'],
-                    ['link', 'image'],
-                    ['clean']
-                ],
-                handlers: {
-                    image: function() {
-                        if (!window.openMediaPicker) return;
-                        window.openMediaPicker((media) => {
-                            const range = quill.getSelection(true);
-                            quill.insertEmbed(range.index, 'image', media.url, 'user');
-                            quill.setSelection(range.index + 1);
-                        });
+<div class="rounded-lg border border-neutral dark:border-dark-neutral-border overflow-hidden"
+     x-data="{
+        initEditor() {
+            const editorEl = this.$refs.quillContainer;
+            const hiddenField = this.$refs.hiddenField;
+            if(!editorEl || editorEl.dataset.initialized) return;
+            editorEl.dataset.initialized = 'true';
+            
+            const quill = new Quill(editorEl, {
+                theme: 'snow',
+                modules: {
+                    toolbar: {
+                        container: [
+                            [{ header: [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ list: 'ordered' }, { list: 'bullet' }],
+                            ['blockquote', 'code-block'],
+                            ['link', 'image'],
+                            ['clean']
+                        ],
+                        handlers: {
+                            image: function() {
+                                if (!window.openMediaPicker) return;
+                                window.openMediaPicker((media) => {
+                                    const range = quill.getSelection(true);
+                                    quill.insertEmbed(range.index, 'image', media.url, 'user');
+                                    quill.setSelection(range.index + 1);
+                                });
+                            }
+                        }
                     }
                 }
+            });
+            quill.clipboard.dangerouslyPasteHTML(hiddenField.value);
+            quill.on('text-change', () => {
+                hiddenField.value = quill.root.innerHTML;
+            });
+            
+            const form = hiddenField.closest('form');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    hiddenField.value = quill.root.innerHTML;
+                });
             }
         }
-    });
-
-    quill.clipboard.dangerouslyPasteHTML(hiddenField.value);
-
-    quill.on('text-change', function() {
-        hiddenField.value = quill.root.innerHTML;
-    });
-
-    const form = hiddenField.closest('form');
-    if (form) {
-        form.addEventListener('submit', function() {
-            hiddenField.value = quill.root.innerHTML;
-        });
-    }
-})();
-</script>
+     }"
+     x-init="$nextTick(() => initEditor())">
+    <div x-ref="quillContainer" style="min-height: {{ $height }};" class="bg-white"></div>
+    <textarea name="{{ $name }}" id="{{ $fieldId }}" class="hidden" x-ref="hiddenField">{{ $value }}</textarea>
+</div>

@@ -96,6 +96,66 @@ if (!function_exists('delete_cms_option')) {
     }
 }
 
+if (!function_exists('format_field_value')) {
+    /**
+     * Recursively format custom field values based on their type definition.
+     */
+    function format_field_value(array $fieldDef, mixed $value): mixed
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        $type = $fieldDef['type'] ?? 'text';
+
+        if ($type === 'image' || $type === 'file') {
+            if (is_numeric($value)) {
+                $media = \Cms\Core\Models\Media::find((int) $value);
+                return $media ? $media->url() : null; // Return full URL directly
+            }
+            return $value;
+        }
+
+        if ($type === 'group') {
+            if (!is_array($value)) return $value;
+            $subFields = $fieldDef['settings']['sub_fields'] ?? [];
+            $formatted = [];
+            
+            foreach ($subFields as $subField) {
+                $subName = $subField['name'] ?? null;
+                if ($subName && array_key_exists($subName, $value)) {
+                    $formatted[$subName] = format_field_value($subField, $value[$subName]);
+                }
+            }
+            return array_merge($value, $formatted);
+        }
+
+        if ($type === 'repeater') {
+            if (!is_array($value)) return $value;
+            $subFields = $fieldDef['settings']['sub_fields'] ?? [];
+            $formattedRows = [];
+
+            foreach ($value as $index => $rowValue) {
+                if (!is_array($rowValue)) {
+                    $formattedRows[$index] = $rowValue;
+                    continue;
+                }
+                $formattedRow = [];
+                foreach ($subFields as $subField) {
+                    $subName = $subField['name'] ?? null;
+                    if ($subName && array_key_exists($subName, $rowValue)) {
+                        $formattedRow[$subName] = format_field_value($subField, $rowValue[$subName]);
+                    }
+                }
+                $formattedRows[$index] = array_merge($rowValue, $formattedRow);
+            }
+            return $formattedRows;
+        }
+
+        return $value;
+    }
+}
+
 if (!function_exists('get_field')) {
     /**
      * Get a custom field (post meta) value for a post.
@@ -115,7 +175,18 @@ if (!function_exists('get_field')) {
 
         try {
             $post = \Cms\Core\Models\Post::find($postId);
-            return $post?->getMeta($key);
+            if (!$post) return null;
+            
+            $value = $post->getMeta($key);
+            
+            if ($value !== null) {
+                // Fetch field definition by its name
+                $field = \Cms\Core\Models\Field::where('name', $key)->first();
+                if ($field) {
+                    return format_field_value($field->toArray(), $value);
+                }
+            }
+            return $value;
         } catch (\Throwable $e) {
             return null;
         }
@@ -482,6 +553,10 @@ if (!function_exists('get_media_url')) {
     {
         if (!$mediaId) {
             return null;
+        }
+
+        if (is_string($mediaId) && filter_var($mediaId, FILTER_VALIDATE_URL)) {
+            return $mediaId;
         }
 
         try {

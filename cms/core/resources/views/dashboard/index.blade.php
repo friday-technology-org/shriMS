@@ -264,7 +264,7 @@
                                     src="{{ asset('assets/images/icons/icon-shield-tick-circle.svg') }}"
                                     alt="shield tick icon">
                                 <p class="text-gray-500 dark:text-gray-dark-500 text-[10px] leading-[15px] max-w-[135px]">
-                                    Congratulation! <br> Your FoxDash CMS is up to date (Versions 4.0.12 LTE)</p>
+                                    Congratulation! <br> Your FoxDash CMS is up to date (Version {{ $coreVersion }})</p>
                             </div>
                             <div class="dropdown dropdown-end translate-x-4 z-10 self-start">
                                 <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"

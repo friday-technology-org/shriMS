@@ -33,12 +33,15 @@
             </div>
 
             <!-- Location Rules -->
-            <div class="mb-12 border border-neutral dark:border-dark-neutral-border rounded-xl p-[20px] bg-neutral-bg dark:bg-dark-neutral-bg" x-data="{ param: 'post_type' }">
-                <h3 class="text-gray-1100 text-lg font-bold mb-4 dark:text-gray-dark-1100">Location Rules</h3>
-                <p class="text-sm text-gray-800 mb-4 dark:text-gray-dark-500">Show this field group if</p>
+            <div class="mb-12 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm bg-white dark:bg-[#161824]" x-data="{ param: 'post_type' }">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1b1e2b]">
+                    <h3 class="text-gray-900 text-base font-semibold dark:text-gray-100 m-0">Location Rules</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-0">Show this field group if</p>
+                </div>
+                <div class="p-6">
                 
-                <div class="flex items-center gap-4">
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full max-w-[200px]">
+                <div class="flex flex-wrap items-center gap-4 md:gap-6">
+                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full flex-1 min-w-[200px]">
                         <select name="location_rules[0][param]" x-model="param" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none px-[13px]">
                             <option value="post_type" class="bg-white dark:bg-dark-neutral-bg">Post Type</option>
                             <option value="page" class="bg-white dark:bg-dark-neutral-bg">Page</option>
@@ -46,13 +49,13 @@
                             <option value="taxonomy" class="bg-white dark:bg-dark-neutral-bg">Taxonomy</option>
                         </select>
                     </div>
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full max-w-[200px]">
+                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full flex-1 min-w-[200px]">
                         <select name="location_rules[0][operator]" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none px-[13px]">
                             <option value="==" class="bg-white dark:bg-dark-neutral-bg">is equal to</option>
                             <option value="!=" class="bg-white dark:bg-dark-neutral-bg">is not equal to</option>
                         </select>
                     </div>
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full max-w-[200px]">
+                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full flex-1 min-w-[200px]">
                         <select x-show="param === 'post_type'" :name="param === 'post_type' ? 'location_rules[0][value]' : ''" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none px-[13px]">
                             @foreach($locationOptions['post_types'] as $pt)
                                 <option value="{{ $pt->name }}" class="bg-white dark:bg-dark-neutral-bg">{{ $pt->singular_label }}</option>
@@ -75,6 +78,7 @@
                         </select>
                     </div>
                 </div>
+                </div> <!-- Closing .p-6 -->
             </div>
 
             <!-- Fields Builder -->
@@ -112,45 +116,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('field-group-form');
     const container = document.getElementById('fields-container');
     const addBtn = document.getElementById('add-field-btn');
-    let fieldCount = 0;
 
-    function addFieldRow(data = {}) {
-        const index = fieldCount++;
+    function createFieldRow(data = {}, isSubField = false) {
         const row = document.createElement('div');
-        row.className = 'field-row border border-neutral dark:border-dark-neutral-border rounded-xl p-[20px] bg-neutral-bg dark:bg-dark-neutral-bg shadow-sm relative';
+        row.className = `field-row-generic bg-white dark:bg-[#161824] border border-[#E8EDF2] dark:border-gray-800 rounded-lg shadow-sm relative overflow-hidden ${isSubField ? 'mt-4' : 'mb-6'}`;
         
+        const dragHandleClass = isSubField ? 'sub-drag-handle' : 'drag-handle';
+        const titleText = isSubField ? 'Sub Field' : 'Field Configuration';
+
         row.innerHTML = `
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-[#E8EDF2] dark:border-[#313442]">
-                <div class="flex items-center gap-3">
-                    <div class="cursor-move drag-handle text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
-                        </svg>
+            <div class="field-content">
+                <div class="flex justify-between items-center py-3 px-5 border-b border-[#E8EDF2] dark:border-gray-800 bg-gray-50 dark:bg-[#1b1e2b]">
+                    <div class="flex items-center gap-3">
+                        <div class="cursor-move ${dragHandleClass} text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded transition-colors" title="Drag to reorder">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-bold text-gray-800 dark:text-gray-200">${titleText}</span>
                     </div>
-                    <span class="text-sm font-bold text-gray-600 dark:text-gray-400">Field Configuration</span>
+                    <button type="button" class="remove-field-btn flex items-center gap-1 text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-300 rounded px-3 py-1.5 transition-colors text-xs font-bold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        Remove
+                    </button>
                 </div>
-                <button type="button" class="remove-field-btn flex items-center gap-1 text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-300 rounded px-3 py-1.5 transition-colors text-xs font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    Remove Field
-                </button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-                <div>
-                    <p class="text-gray-1100 text-xs font-bold capitalize mb-[10px] dark:text-gray-dark-1100">Field Label</p>
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
-                        <input type="text" name="fields[${index}][label]" class="field-label input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none pl-[13px] placeholder:text-inherit" value="${data.label || ''}" required placeholder="e.g. Hero Image">
+                <div class="p-5">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Label</p>
+                        <input type="text" data-name="label" class="field-label input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442] placeholder:text-inherit" value="${data.label || ''}" required placeholder="Field Label">
                     </div>
-                </div>
-                <div>
-                    <p class="text-gray-1100 text-xs font-bold capitalize mb-[10px] dark:text-gray-dark-1100">Field Name (slug)</p>
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
-                        <input type="text" name="fields[${index}][name]" class="field-name input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none pl-[13px] placeholder:text-inherit" value="${data.name || ''}" required placeholder="e.g. hero_image">
+                    <div>
+                        <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Name (slug)</p>
+                        <input type="text" data-name="name" class="field-name input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442] placeholder:text-inherit" value="${data.name || ''}" required placeholder="field_name" data-modified="${data.name ? 'true' : ''}">
                     </div>
-                </div>
-                <div>
-                    <p class="text-gray-1100 text-xs font-bold capitalize mb-[10px] dark:text-gray-dark-1100">Field Type</p>
-                    <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
-                        <select name="fields[${index}][type]" class="field-type-select select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none px-[13px]">
+                    <div>
+                        <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Type</p>
+                        <select data-name="type" class="field-type-select select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none px-[13px] border rounded border-[#E8EDF2] dark:border-[#313442]">
                             <option value="text" ${data.type === 'text' ? 'selected' : ''} class="bg-white dark:bg-dark-neutral-bg">Text</option>
                             <option value="textarea" ${data.type === 'textarea' ? 'selected' : ''} class="bg-white dark:bg-dark-neutral-bg">Textarea</option>
                             <option value="wysiwyg" ${data.type === 'wysiwyg' ? 'selected' : ''} class="bg-white dark:bg-dark-neutral-bg">WYSIWYG Editor</option>
@@ -163,32 +165,31 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select>
                     </div>
                 </div>
-            </div>
-            <div>
-                <p class="text-gray-1100 text-xs font-bold capitalize mb-[10px] dark:text-gray-dark-1100">Instructions (optional)</p>
-                <div class="input-group border rounded-lg border-[#E8EDF2] dark:border-[#313442] w-full">
-                    <input type="text" name="fields[${index}][instructions]" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-3 focus:outline-none pl-[13px] placeholder:text-inherit" value="${data.instructions || ''}" placeholder="Instructions for authors">
+                ${!isSubField ? `
+                <div class="mb-4">
+                    <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Instructions (optional)</p>
+                    <input type="text" data-name="instructions" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442] placeholder:text-inherit" value="${data.instructions || ''}" placeholder="Instructions for authors">
                 </div>
-            </div>
-            
-            <div class="sub-fields-container mt-4 p-4 bg-gray-50 dark:bg-[#252734] border border-[#E8EDF2] dark:border-[#313442] rounded-lg ${(data.type === 'repeater' || data.type === 'group') ? 'block' : 'hidden'}">
-                <p class="sub-fields-title text-gray-1100 text-sm font-bold capitalize mb-[15px] dark:text-gray-dark-1100">${data.type === 'repeater' ? 'Repeater Sub-Fields' : 'Group Sub-Fields'}</p>
-                <div class="sub-fields-list space-y-4 mb-4"></div>
-                <button type="button" class="add-sub-field-btn btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] text-white py-[6px] px-[12px] rounded flex items-center gap-2 text-xs whitespace-nowrap">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                    Add Sub-Field
-                </button>
+                ` : ''}
+                
+                <div class="sub-fields-container mt-4 p-4 bg-gray-50 dark:bg-[#252734] border border-[#E8EDF2] dark:border-[#313442] rounded-lg ${(data.type === 'repeater' || data.type === 'group') ? 'block' : 'hidden'}">
+                    <p class="sub-fields-title text-gray-1100 text-sm font-bold capitalize mb-[15px] dark:text-gray-dark-1100">${data.type === 'repeater' ? 'Repeater Sub-Fields' : 'Group Sub-Fields'}</p>
+                    <div class="sub-fields-list mb-4 pl-4 border-l-2 border-[#E8EDF2] dark:border-[#313442] min-h-[10px]"></div>
+                    <button type="button" class="add-sub-field-btn btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] text-white py-[6px] px-[16px] rounded flex items-center gap-2 text-sm whitespace-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Add Sub-Field
+                    </button>
+                </div>
+                </div> <!-- Closing .p-5 -->
             </div>
         `;
 
-        // Auto-generate name from label
         const labelInput = row.querySelector('.field-label');
         const nameInput = row.querySelector('.field-name');
         const typeSelect = row.querySelector('.field-type-select');
         const subFieldsContainer = row.querySelector('.sub-fields-container');
         const subFieldsList = row.querySelector('.sub-fields-list');
         const addSubFieldBtn = row.querySelector('.add-sub-field-btn');
-        let subIndex = 0;
         
         labelInput.addEventListener('input', function() {
             if (!nameInput.dataset.modified) {
@@ -208,10 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const titleEl = subFieldsContainer.querySelector('.sub-fields-title');
                 if (titleEl) titleEl.innerText = this.value === 'repeater' ? 'Repeater Sub-Fields' : 'Group Sub-Fields';
                 if (subFieldsList.children.length === 0) {
-                    addSubField(index, subIndex++, subFieldsList);
+                    subFieldsList.appendChild(createFieldRow({}, true));
                 }
                 
-                // Initialize sortable for sub-fields if not already
                 if (!subFieldsList.sortableInstance && typeof Sortable !== 'undefined') {
                     subFieldsList.sortableInstance = new Sortable(subFieldsList, {
                         handle: '.sub-drag-handle',
@@ -229,15 +229,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         addSubFieldBtn.addEventListener('click', function() {
-            addSubField(index, subIndex++, subFieldsList);
+            subFieldsList.appendChild(createFieldRow({}, true));
         });
 
         // Load existing sub-fields if any
         if ((data.type === 'repeater' || data.type === 'group') && data.settings && data.settings.sub_fields) {
             data.settings.sub_fields.forEach(subData => {
-                addSubField(index, subIndex++, subFieldsList, subData);
+                subFieldsList.appendChild(createFieldRow(subData, true));
             });
-            // Init sortable if loaded with data
             if (!subFieldsList.sortableInstance && typeof Sortable !== 'undefined') {
                 subFieldsList.sortableInstance = new Sortable(subFieldsList, {
                     handle: '.sub-drag-handle',
@@ -246,74 +245,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        container.appendChild(row);
-    }
-
-    function addSubField(parentIndex, sIndex, containerList, subData = {}) {
-        const subRow = document.createElement('div');
-        subRow.className = 'sub-field-row flex flex-col md:flex-row gap-4 items-center bg-white dark:bg-dark-neutral-bg p-4 border border-[#E8EDF2] dark:border-[#313442] rounded-lg relative';
-        
-        subRow.innerHTML = `
-                <div class="flex-shrink-0 cursor-move sub-drag-handle text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors self-end md:self-auto mb-[2px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
-                    </svg>
-                </div>
-                <div class="flex items-end gap-4 relative w-full">
-                    <div class="flex-1">
-                        <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Label</p>
-                        <input type="text" name="fields[${parentIndex}][settings][sub_fields][${sIndex}][label]" class="sub-label input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442]" value="${subData.label || ''}" required placeholder="Sub Field Label">
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Name</p>
-                        <input type="text" name="fields[${parentIndex}][settings][sub_fields][${sIndex}][name]" class="sub-name input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442]" value="${subData.name || ''}" required placeholder="sub_field_name" data-modified="${subData.name ? 'true' : ''}">
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Type</p>
-                        <select name="fields[${parentIndex}][settings][sub_fields][${sIndex}][type]" class="select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none px-[13px] border rounded border-[#E8EDF2] dark:border-[#313442]">
-                            <option value="text" ${subData.type === 'text' ? 'selected' : ''}>Text</option>
-                            <option value="textarea" ${subData.type === 'textarea' ? 'selected' : ''}>Textarea</option>
-                            <option value="wysiwyg" ${subData.type === 'wysiwyg' ? 'selected' : ''}>WYSIWYG Editor</option>
-                            <option value="image" ${subData.type === 'image' ? 'selected' : ''}>Image</option>
-                            <option value="number" ${subData.type === 'number' ? 'selected' : ''}>Number</option>
-                            <option value="url" ${subData.type === 'url' ? 'selected' : ''}>URL</option>
-                            <option value="file" ${subData.type === 'file' ? 'selected' : ''}>File</option>
-                        </select>
-                    </div>
-                    <button type="button" class="remove-sub-field-btn flex-shrink-0 text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 p-2 rounded transition-colors" title="Remove Sub-field">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                    </button>
-                </div>
-        `;
-
-        const subLabelInput = subRow.querySelector('.sub-label');
-        const subNameInput = subRow.querySelector('.sub-name');
-        
-        subLabelInput.addEventListener('input', function() {
-            if (!subNameInput.dataset.modified) {
-                let slug = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/(^_|_$)/g, '');
-                subNameInput.value = slug;
-            }
-        });
-        
-        subNameInput.addEventListener('input', function() {
-            this.dataset.modified = true;
-        });
-
-        subRow.querySelector('.remove-sub-field-btn').addEventListener('click', function() {
-            subRow.remove();
-        });
-
-        containerList.appendChild(subRow);
+        return row;
     }
 
     addBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        addFieldRow();
+        container.appendChild(createFieldRow());
     });
     
     // Add initial field
-    addFieldRow();
+    container.appendChild(createFieldRow());
 
     // Initialize top-level sortable
     if (typeof Sortable !== 'undefined') {
@@ -323,25 +264,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // On form submit, update field indexes so they match DOM order
-    form.addEventListener('submit', function(e) {
-        const fieldRows = container.querySelectorAll('.field-row');
-        fieldRows.forEach((row, i) => {
-            // Update main inputs
-            const inputs = row.querySelectorAll('[name^="fields["]');
+    function updateFieldNames(containerEl, prefix) {
+        const fieldRows = containerEl.children;
+        Array.from(fieldRows).forEach((row, i) => {
+            if (!row.classList.contains('field-row-generic')) return;
+            
+            const currentPrefix = `${prefix}[${i}]`;
+            
+            // Get inputs that belong strictly to this field, not its children
+            const inputs = Array.from(row.querySelectorAll('[data-name]')).filter(el => el.closest('.field-row-generic') === row);
             inputs.forEach(input => {
-                input.name = input.name.replace(/^fields\[\d+\]/, `fields[${i}]`);
+                const propName = input.getAttribute('data-name');
+                input.name = `${currentPrefix}[${propName}]`;
             });
-
-            // Update sub-fields inside this row
-            const subFieldRows = row.querySelectorAll('.sub-field-row');
-            subFieldRows.forEach((subRow, sIndex) => {
-                const subInputs = subRow.querySelectorAll(`[name^="fields[${i}][settings][sub_fields]["]`);
-                subInputs.forEach(subInput => {
-                    subInput.name = subInput.name.replace(/\[settings\]\[sub_fields\]\[\d+\]/, `[settings][sub_fields][${sIndex}]`);
-                });
-            });
+            
+            // Update sub-fields container if exists
+            const subList = Array.from(row.querySelectorAll('.sub-fields-list')).find(el => el.closest('.field-row-generic') === row);
+            if (subList) {
+                updateFieldNames(subList, `${currentPrefix}[settings][sub_fields]`);
+            }
         });
+    }
+
+    // On form submit, update field indexes so they match DOM order and nesting
+    form.addEventListener('submit', function(e) {
+        updateFieldNames(container, 'fields');
     });
 });
 </script>
