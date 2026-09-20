@@ -1,168 +1,154 @@
 # LaraCMS Theme Handbook
 
-Welcome to the LaraCMS Theme Developer Handbook! LaraCMS themes use standard Laravel Blade templating mixed with classic WordPress-style concepts (like `theme.json`, the Template Hierarchy, and Page Templates).
+Welcome to the LaraCMS Theme Handbook! If you're coming from a WordPress background, you'll feel right at home. LaraCMS offers a deeply familiar, WordPress-style templating system powered by Laravel Blade.
 
-## Directory Structure
+## Table of Contents
+1. [Theme Structure](#theme-structure)
+2. [Activation](#activation)
+3. [The Loop](#the-loop)
+4. [Theme Helpers Reference](#theme-helpers-reference)
+5. [Menus and Widgets](#menus-and-widgets)
 
-Themes live inside the `cms-content/themes/` directory.
+---
 
-```text
-cms-content/
-  └── themes/
-      └── my-custom-theme/
-          ├── theme.json
-          ├── functions.php
-          ├── screenshot.png
-          ├── Controllers/
-          │   └── ExampleController.php
-          ├── Models/
-          │   └── ExampleModel.php
-          ├── Migrations/
-          │   └── 2026_01_01_000000_create_theme_examples_table.php
-          ├── assets/
-          │   ├── css/
-          │   │   └── style.css
-          │   └── js/
-          │       └── script.js
-          └── views/
-              ├── index.blade.php
-              ├── single.blade.php
-              ├── page.blade.php
-              ├── 404.blade.php
-              ├── layouts/
-              │   └── app.blade.php
-              └── templates/
-                  └── landing.blade.php
+## Theme Structure
+
+All themes must reside in the `cms-content/themes/` directory.
+
+A standard theme directory looks like this:
+
+```
+cms-content/themes/my-theme/
+├── theme.json           # Theme metadata
+├── assets/              # CSS, JS, Images
+└── views/
+    ├── index.blade.php  # The main template
+    ├── single.blade.php # Single post template
+    ├── page.blade.php   # Static page template
+    └── layouts/
+        └── main.blade.php
 ```
 
-## `theme.json`
+---
 
-Every theme requires a `theme.json` file in its root directory. This tells LaraCMS how to identify your theme.
+## The Loop
 
-```json
-{
-    "name": "My Custom Theme",
-    "slug": "my-custom-theme",
-    "description": "A beautiful, modern LaraCMS theme.",
-    "version": "1.0.0",
-    "author": "Your Name"
-}
-```
+The cornerstone of LaraCMS theming is "The Loop". Instead of manually looping over arrays of `$posts` passed from controllers, you can use the familiar `have_posts()` and `the_post()` global state managers.
 
-## Template Hierarchy
-
-LaraCMS automatically routes frontend requests to the most specific Blade view available in your theme. Views are prefixed with the `theme::` namespace.
-
-When resolving a URL (like a Post, Page, or Custom Post Type), LaraCMS checks your theme's `views/` directory in this order:
-
-### For Pages:
-1. `page-{slug}.blade.php` (e.g. `page-about-us.blade.php`)
-2. `page.blade.php`
-3. `single.blade.php`
-4. `index.blade.php` (Fallback)
-
-### For Other Post Types (Posts, Portfolios, etc.):
-1. `single-{post_type}.blade.php` (e.g. `single-portfolio.blade.php`)
-2. `single.blade.php`
-3. `index.blade.php` (Fallback)
-
-### For Archives (Categories/Tags):
-1. `archive-{taxonomy}.blade.php` (e.g. `archive-category.blade.php`)
-2. `archive.blade.php`
-3. `index.blade.php` (Fallback)
-
-## Page Templates
-
-Just like WordPress, LaraCMS supports completely custom Page Templates that users can select from a dropdown in the Admin UI.
-
-To create a Page Template, create a new `.blade.php` file anywhere in your theme (e.g. `views/templates/landing.blade.php`) and add this special comment block at the very top:
+**Example `index.blade.php`:**
 
 ```blade
-@php
-/* Template Name: Landing Page */
-@endphp
+@extends('layouts.main')
 
-@extends('theme::layouts.master')
 @section('content')
-  <!-- Your custom layout -->
+    @if (have_posts())
+        <div class="post-list">
+            @while (have_posts())
+                @php the_post(); @endphp
+                
+                <article class="post">
+                    <h2><a href="{{ the_permalink() }}">{{ the_title() }}</a></h2>
+                    
+                    @if(has_post_thumbnail())
+                        <img src="{{ the_post_thumbnail_url() }}" alt="{{ the_title() }}">
+                    @endif
+                    
+                    <div class="excerpt">
+                        {{ the_excerpt() }}
+                    </div>
+                    
+                    <div class="meta">
+                        Posted by {{ the_author() }} on {{ the_date('Y-m-d') }}
+                    </div>
+                </article>
+            @endwhile
+        </div>
+        
+        <div class="pagination">
+            {!! the_posts_navigation() !!}
+        </div>
+    @else
+        <p>No posts found.</p>
+    @endif
 @endsection
 ```
 
-LaraCMS will detect this file, populate it in the **Page Attributes** dropdown in the editor, and securely override the Template Hierarchy to load it when selected. Note that Page Templates can only be applied to the `page` post type.
+---
 
-## MVC within Themes
+## Theme Helpers Reference
 
-LaraCMS supports full MVC (Model-View-Controller) development directly inside your themes! 
+LaraCMS provides a massive suite of WordPress-compatible global helpers that you can use anywhere in your Blade templates.
 
-To prevent class collisions between different themes, LaraCMS automatically generates a dynamic StudlyCase namespace based on your theme's slug (e.g., `namespace Theme\MyCustomTheme\Controllers;`).
+### Core Helpers
+*   `cms_logo(string $type = 'header')` – Returns the URL for a customizer logo.
+*   `cms_favicon(?string $type = null)` – Returns the URL for the favicon.
+*   `bloginfo(string $show = 'name')` – Retrieves site information ('name', 'description', 'url').
+*   `home_url()` - Retrieves the site's home URL.
 
-Controllers should be explicitly loaded in your `functions.php`:
-```php
-require_once __DIR__ . '/Controllers/ExampleController.php';
+### The Loop Helpers
+*   `cms_loop()` – Retrieves the global ThemeLoop instance.
+*   `have_posts()` – Checks if there are posts left in the loop.
+*   `the_post()` – Advances the loop to the next post.
+*   `wp_reset_postdata()` – Resets global post data back to the main query.
+*   `get_post($post = null)` – Returns a Post model instance.
+
+### Post Data Helpers
+*   `get_the_title($post = null)` / `the_title($post = null)` – Post Title.
+*   `get_the_content($post = null)` / `the_content($post = null)` – Parsed Post Content (executes shortcodes).
+*   `get_the_excerpt($post = null)` / `the_excerpt($post = null)` – Post Excerpt.
+*   `get_the_permalink($post = null)` / `the_permalink($post = null)` – Post URL.
+*   `the_date(string $format = 'F j, Y', $post = null)` – Post Publish Date.
+
+### Media & Thumbnails
+*   `has_post_thumbnail($post = null)` – Boolean check for featured image.
+*   `get_the_post_thumbnail_url($post = null)` / `the_post_thumbnail_url($post = null)` – Featured Image URL.
+
+### Author Helpers
+*   `get_the_author($post = null)` / `the_author($post = null)` – Author's display name.
+*   `get_the_author_avatar_url($post = null)` / `the_author_avatar_url($post = null)` – Author Avatar.
+*   `the_author_posts_link($post = null)` – HTML link to author's archive.
+
+### Taxonomy Helpers
+*   `get_the_category($post = null)` / `the_category($separator = ', ', $post = null)` – Categories.
+*   `get_the_tags($post = null)` / `the_tags($before = '', $separator = ', ', $after = '', $post = null)` – Tags.
+
+### Archive Context Helpers
+*   `is_singular($post_type = null)` – Check if viewing a single post.
+*   `is_post_type_archive($post_type = null)` – Check if viewing an archive.
+*   `get_post_type_archive_link(string $post_type)` – Returns the URL for an archive.
+*   `the_archive_title()` – Outputs the auto-generated archive title.
+*   `the_archive_description()` – Outputs the archive description.
+
+### Comments
+*   `get_comments_number($post = null)` – Returns comment count.
+*   `the_comments($post = null)` – Renders the comment list view.
+*   `comment_form($post = null)` – Outputs the comment submission form.
+
+### SEO & Open Graph
+*   `get_page_seo(string $slug): array` – Returns generated SEO meta tags.
+*   `og_title()`, `og_description()`, `og_image()`, `og_url()`, `render_og_tags()` - Open Graph tag generators.
+
+---
+
+## Menus and Widgets
+
+### Menus
+You can render dynamic navigation menus managed from the Admin Dashboard using:
+```blade
+{!! cms_nav_menu('primary-menu') !!}
+```
+If you need raw data to build a custom HTML loop:
+```blade
+@php $items = cms_menu_items('primary-menu'); @endphp
+@foreach($items as $item)
+    <a href="{{ $item->url }}">{{ $item->title }}</a>
+@endforeach
 ```
 
-## Asset Helpers
-
-LaraCMS themes are exposed to the public through the `public/themes` symlink directory. To easily reference your static assets without hardcoding the theme name, use these built-in helpers inside your Blade views:
-
-- `theme_asset($path)`: Returns the full URL to an asset in the current theme. (e.g., `{{ theme_asset('assets/css/style.css') }}`)
-- `get_template_directory_uri()`: Returns the absolute URL to your active theme's root directory.
-- `get_media_url($id)`: Returns the absolute URL to an uploaded media item given its ID. (e.g., `{{ get_media_url(12) }}`)
-
-## `functions.php`
-
-If you place a `functions.php` file in the root of your theme, LaraCMS will automatically load it when the theme is active. This is the perfect place to:
-
-- Register Custom Shortcodes
-- Enqueue Assets (CSS/JS)
-- Add Filters and Actions
-- Register Dynamic Menu Locations
-
-```php
-<?php
-
-// Add a custom filter
-add_filter('the_content', function($content) {
-    return $content . '<p>Thanks for reading!</p>';
-});
-
-// Register a custom shortcode
-add_shortcode('button', function($atts, $content) {
-    $url = $atts['url'] ?? '#';
-    return "<a href='{$url}' class='btn'>{$content}</a>";
-});
-
-// Register dynamic menu locations for your theme
-register_nav_menus([
-    'primary'       => 'Primary Header Menu',
-    'footer_1'      => 'Footer Column 1',
-    'footer_2'      => 'Footer Column 2',
-    'mobile_drawer' => 'Mobile Drawer Menu',
-]);
-```
-
-## Creating Themes via Artisan
-
-LaraCMS provides an Artisan command to quickly scaffold a new theme:
-
-```bash
-php artisan cms:make:theme my-new-theme
-```
-
-This will automatically generate the entire folder structure, `theme.json`, MVC scaffolding (Controllers/Models/Migrations), empty `assets/css` and `assets/js` files, and your master `app.blade.php` layout!
-
-## Theme Developer Scaffolding Commands
-
-Once a theme is created and set as active, you can use specialized Artisan commands to easily scaffold code specifically inside your theme (bypassing the core framework):
-
-- `php artisan cms:theme:make-controller {ControllerName}` - Generates a controller in `cms-content/themes/{active-theme}/Controllers/`.
-- `php artisan cms:theme:make-model {ModelName}` - Generates an Eloquent model in `cms-content/themes/{active-theme}/Models/`.
-- `php artisan cms:theme:make-migration {migration_name}` - Generates a timestamped database migration in `cms-content/themes/{active-theme}/Migrations/`.
-
-All generated files will be placed into the correct directories and assigned the proper dynamic theme namespace (e.g., `Theme\MyCustomTheme\Controllers`).
-
-### Theme Migrations
-You do not need any special commands to run your theme's migrations. Because LaraCMS integrates deeply with Laravel, any migrations located in the active theme's `Migrations/` directory will automatically be detected and executed whenever you run:
-```bash
-php artisan migrate
+### Widgets
+To render a sidebar or widget area managed from the backend:
+```blade
+<aside class="sidebar">
+    {!! dynamic_sidebar('main-sidebar') !!}
+</aside>
 ```

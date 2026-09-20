@@ -1,143 +1,145 @@
 # LaraCMS Plugin Handbook
 
-Welcome to the LaraCMS Plugin Developer Handbook! Plugins allow you to extend the core functionality of LaraCMS without modifying core files.
+Welcome to the LaraCMS Plugin Handbook! Plugins are the most powerful way to extend the functionality of LaraCMS without modifying the core system. 
 
-## Directory Structure
+Since LaraCMS is built on Laravel, a plugin is essentially a modularized Laravel Package that hooks into our auto-discovery systems.
 
-Plugins live inside the `cms-content/plugins/` directory.
+## Table of Contents
+1. [Plugin Structure](#plugin-structure)
+2. [Artisan Scaffolding](#artisan-scaffolding)
+3. [Auto-Discovery](#auto-discovery)
+4. [Hooks and Filters API](#hooks-and-filters-api)
+5. [Shortcode API](#shortcode-api)
+
+---
+
+## Plugin Structure
+
+Plugins live in the `cms-content/plugins/` directory.
+
+A typical plugin structure looks like this:
 
 ```
-cms-content/
-  └── plugins/
-      └── my-custom-plugin/
-          ├── plugin.json
-          ├── plugin.php
-          ├── src/
-          │   ├── Controllers/
-          │   └── Models/
-          ├── database/
-          │   └── migrations/
-          └── routes/
-              └── web.php
+cms-content/plugins/my-plugin/
+├── plugin.json                 # Plugin metadata (name, description, version)
+├── cms_plugins.php             # Optional file for registering global hooks/filters
+├── src/
+│   ├── Providers/
+│   │   └── MyPluginServiceProvider.php
+│   ├── Http/
+│   │   └── Controllers/
+│   └── Models/
+├── migrations/                 # Standard Laravel migrations
+├── routes/
+│   └── web.php
+└── resources/
+    └── views/
 ```
 
-## `plugin.json`
+---
 
-Every plugin requires a `plugin.json` file in its root directory. This tells LaraCMS how to identify your plugin.
+## Artisan Scaffolding
 
-```json
+LaraCMS provides dedicated Artisan commands to rapidly scaffold plugin files. This ensures your files have the correct namespace and are placed in the correct `cms-content/plugins/` subdirectory.
+
+*   **Create a Plugin Controller:**
+    ```bash
+    php artisan cms:plugin:make-controller your-plugin-slug Admin/DashboardController
+    ```
+*   **Create a Plugin Model:**
+    ```bash
+    php artisan cms:plugin:make-model your-plugin-slug Invoice
+    ```
+    *Tip: Add `-m` to automatically generate a linked migration!*
+    
+*   **Create a standalone Migration:**
+    ```bash
+    php artisan cms:plugin:make-migration your-plugin-slug create_invoices_table --create=invoices
+    ```
+
+---
+
+## Auto-Discovery
+
+To make development as frictionless as possible, LaraCMS automatically discovers specific files in your plugin directory when the plugin is activated:
+
+### Migrations
+Any standard Laravel migration placed inside the `migrations/` folder (e.g., `cms-content/plugins/your-plugin-slug/migrations/`) will automatically be executed when you run the global `php artisan migrate` command. There is no need to manually register migration paths in your Service Provider.
+
+### Service Providers
+If your `plugin.json` specifies a primary service provider, LaraCMS will boot it automatically. Inside your provider, you can register standard Laravel routes and views:
+
+```php
+public function boot()
 {
-    "name": "My Custom Plugin",
-    "slug": "my-custom-plugin",
-    "description": "Extends LaraCMS with amazing new features.",
-    "version": "1.0.0",
-    "author": "Your Name"
+    $this->loadViewsFrom(__DIR__.'/../resources/views', 'myplugin');
+    $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 }
 ```
 
-## `plugin.php`
+---
 
-The `plugin.php` file is the main entry point for your plugin. It must return a class that extends `Cms\Core\Support\PluginBase`.
+## Hooks and Filters API
 
-```php
-<?php
+The Hooks and Filters API is how plugins communicate with the LaraCMS core and with other plugins. 
 
-use Cms\Core\Support\PluginBase;
+*   **Action Hooks (`add_action`)**: Inject code or HTML at specific points during execution.
+*   **Filters (`add_filter`)**: Intercept and modify data arrays or strings before they are processed.
 
-return new class extends PluginBase
-{
-    /**
-     * Run when the plugin is activated.
-     */
-    public function activate(): void
-    {
-        // Run migrations, set default options, etc.
-        $this->runMigrations();
-    }
-
-    /**
-     * Run when the plugin is deactivated.
-     */
-    public function deactivate(): void
-    {
-        // Clean up cron jobs, etc.
-    }
-
-    /**
-     * Run when the plugin is completely uninstalled.
-     */
-    public function uninstall(): void
-    {
-        // Remove database tables, options, etc.
-    }
-
-    /**
-     * Run on every request when the plugin is active.
-     * This is where you register hooks, post types, etc.
-     */
-    public function boot(): void
-    {
-        $this->registerHooks();
-        $this->registerPostTypes();
-    }
-};
-```
-
-## Action and Filter Hooks
-
-LaraCMS supports a robust, WordPress-style hook system.
-
-### Actions
-Actions allow you to add custom code at specific points in the execution lifecycle.
+### Modifying Dashboard Data
+To modify the core statistics data or to inject your own variables into the admin dashboard:
 
 ```php
-// Registering an action
-add_action('user.registered', function($userArray) {
-    // Send a welcome email
+add_filter('cms_dashboard_data', function($data) {
+    // Modify existing core data
+    $data['postsCount'] = 999;
+    
+    // Inject your custom data
+    $data['active_invoices'] = 15;
+    
+    return $data;
 });
-
-// Firing an action (in core or your own code)
-do_action('user.registered', $user->toArray());
 ```
 
-### Filters
-Filters allow you to intercept, modify, and return data before it is rendered or saved.
+### Injecting Dashboard Widgets
+You can inject HTML or Blade Views directly into the dashboard without editing core files.
+
+*   `cms_dashboard_widgets_top`: Injects widgets at the very top of the dashboard.
+*   `cms_dashboard_widgets`: Injects widgets below the main statistics section.
 
 ```php
-// Registering a filter
-add_filter('the_content', function($content) {
-    return $content . '<p>Appended by My Custom Plugin!</p>';
+add_action('cms_dashboard_widgets', function() {
+    // Render a view from your plugin
+    echo view('myplugin::admin.dashboard-widget')->render();
 });
-
-// Applying a filter (in core or your own code)
-$content = apply_filters('the_content', $post->content);
 ```
 
-## Registering Custom Post Types (CPTs)
+---
 
-Plugins can dynamically register new Post Types. Since LaraCMS uses a generic `posts` table (like WordPress), you only need to register the configuration in the database or via the admin UI. The `ContentController` will automatically handle routing and CRUD operations.
+## Shortcode API
 
-You can register a CPT during activation:
+LaraCMS provides a fully WordPress-compatible Shortcode API for registering dynamic content tags that users can place in the WYSIWYG editor.
+
+### Registering a Shortcode
+Use `add_shortcode` in your `cms_plugins.php` or Service Provider:
 
 ```php
-public function activate(): void
-{
-    \Cms\Core\Models\PostType::firstOrCreate([
-        'name' => 'portfolio',
-        'singular_label' => 'Portfolio',
-        'plural_label' => 'Portfolios',
-        'icon' => 'folder',
-        'supports' => ['title', 'editor', 'thumbnail', 'excerpt']
-    ]);
-}
+add_shortcode('invoice_tracker', function($atts, $content = null) {
+    // Merge user attributes with defaults
+    $a = shortcode_atts([
+        'id' => '0',
+        'theme' => 'light'
+    ], $atts);
+    
+    // Query database or render view
+    return view('myplugin::shortcodes.invoice', ['id' => $a['id']])->render();
+});
 ```
 
-## Creating Plugins via Artisan
+When a user types `[invoice_tracker id="592"]` into a post, LaraCMS will automatically parse it and render your blade view!
 
-LaraCMS provides an Artisan command to quickly scaffold a new plugin:
-
-```bash
-php artisan cms:make-plugin my-new-plugin
+### Manual Parsing
+If you have a string of text from a custom database column and want to parse shortcodes inside it:
+```php
+$html = do_shortcode($customText);
 ```
-
-This will generate the folder structure, a `plugin.json`, and a boilerplate `plugin.php` for you!
