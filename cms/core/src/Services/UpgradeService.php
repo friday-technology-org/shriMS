@@ -23,13 +23,39 @@ class UpgradeService
             $currentVersion = require base_path('cms/core/version.php');
         }
 
-        // Mock checking updates from a remote repository API
+        try {
+            // Check updates from the live GitHub repository API
+            $response = Http::withHeaders([
+                'Accept' => 'application/vnd.github.v3+json',
+                'User-Agent' => 'LaraCMS-AutoUpdater',
+            ])->timeout(10)->get('https://api.github.com/repos/friday-technology-org/shriMS/releases/latest');
+
+            if ($response->successful()) {
+                $release = $response->json();
+                $latestVersion = ltrim($release['tag_name'] ?? '1.0.0', 'v');
+                
+                // Get the zipball URL provided by GitHub for the release
+                $downloadUrl = $release['zipball_url'] ?? '';
+
+                return [
+                    'current_version' => $currentVersion,
+                    'latest_version' => $latestVersion,
+                    'has_update' => version_compare($latestVersion, $currentVersion, '>'),
+                    'release_notes' => $release['body'] ?? 'No release notes provided.',
+                    'download_url' => $downloadUrl,
+                ];
+            }
+        } catch (\Exception $e) {
+            logger()->error('Failed to check for updates: ' . $e->getMessage());
+        }
+
+        // Fallback if API fails (e.g., rate limit, network issue, or no releases yet)
         return [
             'current_version' => $currentVersion,
-            'latest_version' => '1.0.2',
-            'has_update' => version_compare('1.0.2', $currentVersion, '>'),
-            'release_notes' => 'Features stability improvements, new GraphQL options, and bug fixes.',
-            'download_url' => 'https://github.com/friday-technology-org/shri-ms/releases/download/v1.0.2/core.zip',
+            'latest_version' => $currentVersion,
+            'has_update' => false,
+            'release_notes' => 'Unable to check for updates at this time or no releases found.',
+            'download_url' => '',
         ];
     }
 

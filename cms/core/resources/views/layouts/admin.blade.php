@@ -26,7 +26,7 @@
     <div class="wrapper min-h-screen w-full mx-auto text-gray-900 font-normal grid scrollbar-hide grid-cols-[257px,1fr] grid-rows-[auto,1fr]" id="layout">
       @include('cms-core::layouts.partials.sidebar')
       @include('cms-core::layouts.partials.header')
-      <main class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pt-[42px] px-[23px] pb-[28px]">
+      <main class="overflow-x-scroll scrollbar-hide flex flex-col pt-[42px] px-[23px] pb-[28px]">
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
                 <span class="block sm:inline font-semibold">{{ session('success') }}</span>
