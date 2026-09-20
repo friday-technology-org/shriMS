@@ -1,0 +1,7 @@
+{
+    "name": "Dummy Plugin",
+    "slug": "dummy-plugin",
+    "version": "0.1.0",
+    "description": "A dummy plugin for testing.",
+    "author": "Antigravity"
+}
