@@ -18,12 +18,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('success') }}</span>
-    </div>
-    @endif
-
     {{-- System Health Checklist (Full Width) --}}
     <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl p-6">
         <h3 class="text-gray-1100 text-lg font-bold mb-4 dark:text-white">System Diagnostics</h3>

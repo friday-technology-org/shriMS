@@ -5,8 +5,7 @@
 @section('content')
 
     <div>
-        <h2 class="capitalize text-gray-1100 font-bold text-[28px] leading-[35px] dark:text-gray-dark-1100 mb-[13px]">CMS
-            Dashboard</h2>
+        <h2 class="capitalize text-gray-1100 font-bold text-[28px] leading-[35px] dark:text-gray-dark-1100 mb-[13px]">Dashboard</h2>
         <div class="flex justify-between flex-col gap-y-2 sm:flex-row mb-[34px]">
             <div class="flex items-center text-xs gap-x-[11px]">
                 <div class="flex items-center gap-x-1"><img src="{{ asset('assets/images/icons/icon-home-2.svg') }}"
@@ -16,6 +15,11 @@
             </div>
         </div>
         <section>
+            <!-- Hook for plugins to inject custom widgets at the top of the dashboard -->
+            <div class="cms-dashboard-widgets-top w-full mb-6 empty:hidden">
+                @php do_action('cms_dashboard_widgets_top') @endphp
+            </div>
+
             <div
                 class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border p-7 rounded-2xl mb-6">
                 <div class="grid grid-cols-1 gap-x-[22.75px] gap-y-[24.21px] xl:grid-cols-4 lg:grid-cols-2">
@@ -312,6 +316,12 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Hook for plugins to inject custom widgets in the middle of the dashboard -->
+            <div class="cms-dashboard-widgets w-full mb-10 empty:hidden">
+                @php do_action('cms_dashboard_widgets') @endphp
+            </div>
+
             <div class="flex justify-between gap-6 mb-10 flex-col xl:flex-row">
 
                 <div
@@ -953,16 +963,11 @@
         <div class="w-full bg-neutral h-[1px] dark:bg-dark-neutral-border mb-[25px]"></div>
         <div class="flex items-center justify-between text-desc text-gray-400 flex-wrap gap-5 dark:text-gray-dark-400">
             <div class="flex items-center gap-2 flex-wrap">
-                <p> <span>© 2022 -</span><span class="text-color-brands">&nbsp;Frox</span><span>&nbsp;Dashboard</span></p>
+                <p> <span>&copy; {{ date('Y') }}</span><span class="text-color-brands">&nbsp;{{ cms_option('site_name', 'LaraCMS') }}</span></p>
                 <div class="bg-color-brands rounded-full hidden w-[2px] h-[2px] md:block"></div>
-                <p> <span>Made by</span><a class="text-color-brands" href="https://alithemes.com"
-                        target="_blank">&nbsp;AliThemes</a></p>
+                <p> <span>Crafted by</span><a class="text-color-brands" href="https://fridaytechnology.net"
+                        target="_blank">&nbsp;Friday Technology</a></p>
             </div>
-            <div class="flex items-center gap-[15px]"><a class="transition-colors duration-300 hover:text-color-brands"
-                    href="#">About</a><a class="transition-colors duration-300 hover:text-color-brands"
-                    href="#">Careers</a><a class="transition-colors duration-300 hover:text-color-brands"
-                    href="#">Policy</a><a class="transition-colors duration-300 hover:text-color-brands"
-                    href="#">Contact</a></div>
         </div>
     </footer>
 

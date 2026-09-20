@@ -1,6 +1,6 @@
-<aside class="bg-white row-span-2 border-r border-neutral relative flex flex-col justify-between p-[25px] dark:bg-dark-neutral-bg dark:border-dark-neutral-border"> 
+<aside class="bg-white row-span-2 border-r border-neutral sticky top-0 h-screen overflow-y-auto scrollbar-hide flex flex-col justify-between p-[25px] dark:bg-dark-neutral-bg dark:border-dark-neutral-border">
     <div class="absolute p-2 border-neutral right-0 border bg-white rounded-full cursor-pointer duration-300 translate-x-1/2 hover:opacity-75 dark:bg-dark-neutral-bg dark:border-dark-neutral-border" id="sidebar-btn"><img src="{{ asset('assets/images/icons/icon-arrow-left.svg') }}" alt="left chevron icon"></div>
-    <div><a class="mb-10" href="{{ route('cms.dashboard') }}"> <img class="logo-maximize" src="{{ asset('assets/images/icons/icon-logo.svg') }}" alt="Frox logo"><img class="logo-minimize ml-[10px]" src="{{ asset('assets/images/icons/icon-favicon.svg') }}" alt="Frox logo"></a>
+    <div><a class="mb-10" href="{{ route('cms.dashboard') }}"> <img class="logo-maximize w-[130px] h-[35px] object-contain" src="{{ get_media_url(cms_option('admin_dashboard_logo')) ?? asset('assets/images/icons/icon-logo.svg') }}" alt="Admin logo"><img class="logo-minimize ml-[10px] w-[32px] h-[32px] object-contain" src="{{ get_media_url(cms_option('admin_dashboard_favicon')) ?? asset('assets/images/icons/icon-favicon.svg') }}" alt="Admin icon"></a>
         <div class="pt-[106px] lg:pt-[35px] pb-[18px]">
             
             <!-- Dashboard -->
@@ -184,7 +184,6 @@
                     <ul class="text-gray-300 child-menu z-10 pl-[53px]">
                         <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal" href="{{ route('cms.settings.index') }}">General Settings</a></li>
                         <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal" href="{{ route('cms.translations.index') }}">Translations</a></li>
-                        <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal" href="{{ route('cms.network.index') }}">Multisite Network</a></li>
                         <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal" href="{{ route('cms.updates.index') }}">Core Updates</a></li>
                         <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal" href="{{ route('cms.api-tokens.index') }}">API Tokens</a></li>
                         <li class="pb-2 transition-opacity duration-150 hover:opacity-75"><a class="text-normal" href="{{ route('cms.settings.logs404') }}">404 Monitor</a></li>

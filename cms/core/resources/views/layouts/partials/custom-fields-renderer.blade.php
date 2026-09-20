@@ -18,7 +18,7 @@
 @endphp
 <div class="field-wrapper border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm bg-white dark:bg-[#161824]">
     <div class="field-header px-5 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1b1e2b]">
-        <p class="text-gray-800 text-sm leading-5 font-semibold capitalize dark:text-gray-200 m-0">
+        <p class="text-gray-800 text-sm leading-5 font-semibold capitalize dark:text-white m-0">
             {{ $label }}
             @if($required) <span class="text-red-500">*</span> @endif
         </p>
@@ -116,7 +116,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
                                     </svg>
                                 </div>
-                                <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Row <span class="row-label-index">{{ $index + 1 }}</span></span>
+                                <span class="text-sm font-bold text-gray-700 dark:text-white">Row <span class="row-label-index">{{ $index + 1 }}</span></span>
                             </div>
                             <button type="button" @click="$event.target.closest('.repeater-row').remove(); updateNames($refs.sortableContainer)" class="flex items-center gap-1 text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-300 rounded px-3 py-1.5 transition-colors text-xs font-bold whitespace-nowrap">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -151,7 +151,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
                                 </svg>
                             </div>
-                            <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Row <span class="row-label-index"></span></span>
+                            <span class="text-sm font-bold text-gray-700 dark:text-white">Row <span class="row-label-index"></span></span>
                         </div>
                         <button type="button" @click="$event.target.closest('.repeater-row').remove(); updateNames($refs.sortableContainer)" class="flex items-center gap-1 text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:hover:text-red-300 rounded px-3 py-1.5 transition-colors text-xs font-bold whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>

@@ -11,7 +11,7 @@
 
   <!-- Site Information Group -->
   <div class="border border-[#E8EDF2] dark:border-[#1B254B] rounded-xl overflow-hidden shadow-sm">
-    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-white">
       Site Information
     </div>
     <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
@@ -43,7 +43,7 @@
 
   <!-- Admin Credentials Group -->
   <div class="border border-[#E8EDF2] dark:border-[#1B254B] rounded-xl overflow-hidden shadow-sm">
-    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-white">
       Super Administrator Credentials
     </div>
     <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">

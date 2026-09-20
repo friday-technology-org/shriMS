@@ -19,13 +19,13 @@
 
   <!-- Requirements Table -->
   <div class="border border-[#E8EDF2] dark:border-[#1B254B] rounded-xl overflow-hidden shadow-sm">
-    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-white">
       PHP Environment & Extensions
     </div>
     <div class="divide-y divide-[#E8EDF2] dark:divide-[#1B254B] text-sm">
       @foreach($requirements as $key => $item)
         <div class="flex items-center justify-between px-4 py-3">
-          <span class="text-gray-700 dark:text-gray-300 font-medium">
+          <span class="text-gray-700 dark:text-white font-medium">
             {{ $item['name'] }}
             @if(isset($item['current']))
               <span class="text-xs text-gray-400">({{ $item['current'] }})</span>
@@ -47,13 +47,13 @@
 
   <!-- Permissions Table -->
   <div class="border border-[#E8EDF2] dark:border-[#1B254B] rounded-xl overflow-hidden shadow-sm">
-    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+    <div class="bg-[#F8FAFC] dark:bg-[#0D1536] px-4 py-3 border-b border-[#E8EDF2] dark:border-[#1B254B] font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-white">
       Directory Permissions
     </div>
     <div class="divide-y divide-[#E8EDF2] dark:divide-[#1B254B] text-sm">
       @foreach($permissions as $key => $item)
         <div class="flex items-center justify-between px-4 py-3">
-          <span class="text-gray-700 dark:text-gray-300 font-medium">{{ $item['name'] }}</span>
+          <span class="text-gray-700 dark:text-white font-medium">{{ $item['name'] }}</span>
           @if($item['pass'])
             <span class="inline-flex items-center gap-1 text-green-600 dark:text-green-400 text-xs font-bold px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-900">
               ✓ Writable

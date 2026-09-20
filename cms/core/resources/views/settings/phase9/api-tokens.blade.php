@@ -15,12 +15,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('success') }}</span>
-    </div>
-    @endif
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {{-- Generate Token --}}
         <div class="lg:col-span-1 bg-white dark:bg-dark-neutral-bg border border-neutral dark:border-dark-neutral-border p-6 rounded-2xl">
@@ -28,7 +22,7 @@
             <form action="{{ route('cms.api-tokens.store') }}" method="POST">
                 @csrf
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Token Name</label>
+                    <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Token Name</label>
                     <input type="text" name="name" placeholder="e.g. Mobile App, Headless Frontend" class="w-full border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white" required>
                 </div>
                 <button type="submit" class="w-full text-center text-sm font-semibold py-3 px-5 rounded-xl bg-color-brands text-white hover:opacity-90">Generate Token</button>

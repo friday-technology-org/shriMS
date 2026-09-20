@@ -37,7 +37,7 @@
                         {{ $log->user ? $log->user->name : 'System / Guest' }}
                     </td>
                     <td class="py-4 border-y border-neutral dark:border-dark-neutral-bg text-xs">
-                        <span class="px-2 py-0.5 bg-gray-100 dark:bg-dark-neutral-border text-gray-700 dark:text-gray-300 rounded font-mono">{{ $log->event }}</span>
+                        <span class="px-2 py-0.5 bg-gray-100 dark:bg-dark-neutral-border text-gray-700 dark:text-white rounded font-mono">{{ $log->event }}</span>
                     </td>
                     <td class="py-4 border-y border-neutral dark:border-dark-neutral-bg text-sm text-gray-600 dark:text-gray-dark-400">
                         {{ $log->description }}

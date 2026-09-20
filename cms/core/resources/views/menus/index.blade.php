@@ -15,17 +15,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('error') }}</span>
-    </div>
-    @endif
     @if($errors->any())
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
         <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
@@ -77,11 +66,11 @@
                         <td class="px-5 py-4 text-sm text-gray-500 dark:text-gray-dark-500">{{ $menu->location ? ($locations[$menu->location] ?? $menu->location) : '—' }}</td>
                         <td class="px-5 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('cms.menus.edit', $menu) }}" class="text-color-brands text-xs font-medium hover:opacity-75">Edit</a>
-                                <form action="{{ route('cms.menus.destroy', $menu) }}" method="POST" onsubmit="return confirm('Delete this menu?');">
+                                <a href="{{ route('cms.menus.edit', $menu) }}" class="btn normal-case h-fit min-h-fit border-0 bg-[#E8EDF2] hover:bg-gray-300 dark:bg-[#313442] dark:hover:bg-gray-600 text-gray-800 dark:text-white text-xs py-[6px] px-[12px] rounded-lg">Edit</a>
+                                <form action="{{ route('cms.menus.destroy', $menu) }}" method="POST" onsubmit="return confirm('Delete this menu?');" class="m-0">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 text-xs font-medium hover:opacity-75">Delete</button>
+                                    <button type="submit" class="btn normal-case h-fit min-h-fit border-0 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 text-xs py-[6px] px-[12px] rounded-lg">Delete</button>
                                 </form>
                             </div>
                         </td>

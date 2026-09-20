@@ -60,7 +60,17 @@ class PluginManager
             $activePlugins = PluginModel::where('is_active', true)->get();
 
             foreach ($activePlugins as $plugin) {
-                $mainFilePath = $this->pluginsPath . '/' . $plugin->slug . '/plugin.php';
+                $pluginDir = $this->pluginsPath . '/' . $plugin->slug;
+                
+                // Auto-load plugin migrations if the directory exists
+                $migrationsPath = $pluginDir . '/migrations';
+                if (is_dir($migrationsPath)) {
+                    app()->afterResolving('migrator', function ($migrator) use ($migrationsPath) {
+                        $migrator->path($migrationsPath);
+                    });
+                }
+
+                $mainFilePath = $pluginDir . '/plugin.php';
                 if (File::isFile($mainFilePath)) {
                     require_once $mainFilePath;
                 }

@@ -15,18 +15,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('error') }}</span>
-    </div>
-    @endif
-
     {{-- Status Tabs --}}
     <div class="flex gap-4 mb-6 border-b border-[#E8EDF2] dark:border-[#313442] pb-3">
         <a href="{{ route('cms.comments.index', ['status' => 'all']) }}" class="text-sm font-semibold {{ $status === 'all' ? 'text-color-brands border-b-2 border-color-brands' : 'text-gray-500 hover:text-gray-700' }} pb-2 px-1">All</a>

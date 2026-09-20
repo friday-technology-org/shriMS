@@ -17,12 +17,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-    @endif
-
     <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl px-[25px] py-[25px] mb-9">
         <div class="flex justify-between items-center mb-5">
             <p class="text-gray-1100 leading-4 font-semibold dark:text-gray-dark-1100 text-[16px]">Revision History for: {{ $content->title }}</p>
@@ -70,11 +64,11 @@
                                         <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 text-left">
                                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="modal-title">Revision Preview: {{ $revision->created_at->format('M d, Y h:i A') }}</h3>
                                             <div class="mb-4">
-                                                <h4 class="font-semibold text-gray-700 dark:text-gray-300">Title:</h4>
+                                                <h4 class="font-semibold text-gray-700 dark:text-white">Title:</h4>
                                                 <p class="text-gray-600 dark:text-gray-400 border p-2 rounded">{{ $revision->title }}</p>
                                             </div>
                                             <div>
-                                                <h4 class="font-semibold text-gray-700 dark:text-gray-300">Content:</h4>
+                                                <h4 class="font-semibold text-gray-700 dark:text-white">Content:</h4>
                                                 <div class="prose dark:prose-invert max-w-none border p-4 rounded bg-gray-50 dark:bg-gray-900 overflow-y-auto max-h-[50vh]">
                                                     {!! $revision->content !!}
                                                 </div>

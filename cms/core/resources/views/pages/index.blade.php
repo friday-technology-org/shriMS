@@ -15,18 +15,6 @@
         <a href="{{ route('cms.pages.create') }}" class="btn flex items-center w-fit normal-case bg-color-brands h-auto border-white rounded-2xl border-gray-100 gap-x-[10.5px] border-[4px] hover:border-[#B2A7FF] hover:bg-color-brands dark:border-black dark:hover:border-[#B2A7FF] p-[17.5px]"><img src="{{ asset('assets/images/icons/icon-add.svg') }}" alt="add icon"><span class="text-white font-semibold text-[14px] leading-[21px]">Add New Page</span></a>
     </div>
     </div>
-    
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('error') }}</span>
-    </div>
-    @endif
 
     <form action="{{ route('cms.pages.index') }}" method="GET" class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl search-input-shadow flex items-center justify-between flex-col py-[18px] pl-[28px] pr-[19px] mb-[38px] gap-[10px] sm:flex-row">
     <div class="flex items-center w-full"><img src="{{ asset('assets/images/icons/icon-search-normal.svg') }}" alt="search icon">

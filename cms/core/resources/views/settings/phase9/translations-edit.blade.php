@@ -17,12 +17,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('success') }}</span>
-    </div>
-    @endif
-
     <div class="bg-white dark:bg-dark-neutral-bg border border-neutral dark:border-dark-neutral-border p-6 rounded-2xl">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-lg font-bold text-gray-1100 dark:text-white pb-3">Translation Keys</h3>

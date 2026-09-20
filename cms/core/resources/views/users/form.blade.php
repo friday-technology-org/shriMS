@@ -88,7 +88,7 @@
                                     <input type="checkbox" name="roles[]" value="{{ $role->name }}" 
                                            {{ in_array($role->name, old('roles', $userRoles ?? [])) ? 'checked' : '' }}
                                            class="rounded border-gray-300 text-color-brands shadow-sm focus:border-color-brands focus:ring focus:ring-color-brands focus:ring-opacity-50">
-                                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ ucfirst($role->name) }}</span>
+                                    <span class="ml-2 text-sm text-gray-700 dark:text-white">{{ ucfirst($role->name) }}</span>
                                 </label>
                                 @endforeach
                             </div>

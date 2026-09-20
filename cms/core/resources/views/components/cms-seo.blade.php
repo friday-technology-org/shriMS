@@ -31,7 +31,7 @@
 <!-- GDPR Cookie Banner Integration -->
 @if(cms_option('gdpr_cookie_consent_enabled', false))
 <div id="cms-gdpr-banner" class="fixed bottom-5 left-5 right-5 md:left-auto md:max-w-md bg-white dark:bg-dark-neutral-bg shadow-2xl border border-neutral dark:border-dark-neutral-border rounded-2xl p-5 z-[99999] flex flex-col gap-3 transition-transform duration-300 translate-y-0">
-    <div class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
+    <div class="text-sm text-gray-800 dark:text-white leading-relaxed">
         {!! cms_option('gdpr_cookie_consent_text', 'We use cookies to improve your experience on our site.') !!}
     </div>
     <div class="flex gap-2 self-end">

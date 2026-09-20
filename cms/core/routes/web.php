@@ -25,7 +25,7 @@ Route::middleware(['web'])->group(function () {
             Route::put('profile', [\Cms\Core\Http\Controllers\ProfileController::class, 'update'])->name('cms.profile.update');
 
             // API Tokens (All authenticated users can generate/manage API tokens)
-            Route::get('profile/api-tokens', [\Cms\Core\Http\Controllers\ApiController::class, 'getTokens'])->name('cms.api-tokens.index');
+            Route::get('profile/api-tokens', [\Cms\Core\Http\Controllers\SettingsController::class, 'apiTokens'])->name('cms.api-tokens.index');
             Route::post('profile/api-tokens', [\Cms\Core\Http\Controllers\ApiController::class, 'generateToken'])->name('cms.api-tokens.store');
             Route::delete('profile/api-tokens/{id}', [\Cms\Core\Http\Controllers\ApiController::class, 'revokeToken'])->name('cms.api-tokens.destroy');
 
@@ -130,10 +130,6 @@ Route::middleware(['web'])->group(function () {
                 Route::get('settings/translations/{locale}', [\Cms\Core\Http\Controllers\TranslationController::class, 'edit'])->name('cms.translations.edit');
                 Route::post('settings/translations/{locale}/update', [\Cms\Core\Http\Controllers\TranslationController::class, 'update'])->name('cms.translations.update');
 
-                Route::get('settings/network', [\Cms\Core\Http\Controllers\NetworkController::class, 'index'])->name('cms.network.index');
-                Route::post('settings/network', [\Cms\Core\Http\Controllers\NetworkController::class, 'store'])->name('cms.network.store');
-                Route::post('settings/network/{id}/toggle', [\Cms\Core\Http\Controllers\NetworkController::class, 'toggleActive'])->name('cms.network.toggle');
-                Route::delete('settings/network/{id}', [\Cms\Core\Http\Controllers\NetworkController::class, 'destroy'])->name('cms.network.destroy');
 
                 Route::get('settings/updates', [\Cms\Core\Http\Controllers\UpgradeController::class, 'index'])->name('cms.updates.index');
                 Route::post('settings/updates/run', [\Cms\Core\Http\Controllers\UpgradeController::class, 'upgrade'])->name('cms.updates.run');

@@ -115,7 +115,7 @@
                 </div>
                 <div class="px-5 py-4 space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Template</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-1">Template</label>
                         <select name="meta[_cms_page_template]" class="select w-full bg-transparent text-sm rounded-lg border border-[#E8EDF2] dark:border-[#313442] p-2 focus:outline-none">
                             <option value="" class="bg-white dark:bg-dark-neutral-bg">Default Template</option>
                             @foreach($templates as $file => $name)

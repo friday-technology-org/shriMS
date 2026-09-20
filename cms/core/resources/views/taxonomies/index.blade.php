@@ -15,12 +15,6 @@
         <a href="{{ route('cms.taxonomies.create') }}" class="btn flex items-center w-fit normal-case bg-color-brands h-auto border-white rounded-2xl border-gray-100 gap-x-[10.5px] border-[4px] hover:border-[#B2A7FF] hover:bg-color-brands dark:border-black dark:hover:border-[#B2A7FF] p-[17.5px]"><img src="{{ asset('assets/images/icons/icon-add.svg') }}" alt="add icon"><span class="text-white font-semibold text-[14px] leading-[21px]">Add New Taxonomy</span></a>
     </div>
     </div>
-    
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-    @endif
 
     <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl mb-9 overflow-x-scroll scrollbar-hide pl-[29px] pr-[22px] pb-[26px] pt-[17px] xl:overflow-x-hidden">
     <table class="w-full border-separate border-spacing-y-[15px] min-w-[1000px]">

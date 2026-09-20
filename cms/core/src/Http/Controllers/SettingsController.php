@@ -23,6 +23,15 @@ class SettingsController extends Controller
     }
 
     /**
+     * Display API Tokens management page.
+     */
+    public function apiTokens(): View
+    {
+        $tokens = \Cms\Core\Models\ApiToken::where('user_id', auth()->id() ?: 1)->get();
+        return view('cms-core::settings.phase9.api-tokens', compact('tokens'));
+    }
+
+    /**
      * Update CMS settings options.
      */
     public function update(Request $request): RedirectResponse

@@ -88,6 +88,24 @@ php artisan migrate
 - `src/Providers/MyPluginServiceProvider.php` – registers routes, commands, assets.
 - `cms_plugins.php` – optional file to load plugin helpers.
 
+### Plugin Artisan Commands
+
+LaraCMS provides dedicated Artisan commands to rapidly scaffold files directly into your plugin's directory with the correct namespaces.
+
+- **Create a Plugin Controller:**
+  `php artisan cms:plugin:make-controller your-plugin-slug Admin/DashboardController`
+- **Create a Plugin Model:**
+  `php artisan cms:plugin:make-model your-plugin-slug Invoice`
+- **Create a Model with a Migration:**
+  `php artisan cms:plugin:make-model your-plugin-slug Invoice -m`
+- **Create a standalone Migration:**
+  `php artisan cms:plugin:make-migration your-plugin-slug create_invoices_table --create=invoices`
+
+### Plugin Migrations
+
+Migrations for plugins are **auto-discovered**. Simply place standard Laravel migration files inside your plugin's `migrations/` folder (e.g., `cms-content/plugins/your-plugin-slug/migrations/`). 
+When you run `php artisan migrate`, Laravel will automatically detect and execute them if the plugin is active.
+
 ## Building a Plugin Compatible with LaraCMS
 
 1. Create a Laravel package.
@@ -105,6 +123,64 @@ public function boot()
 ```
 
 4. Register your plugin in `config/app.php` or via auto‑discovery.
+
+## Extending the Admin Dashboard
+
+LaraCMS provides WordPress-style Action Hooks and Filters allowing plugins to dynamically inject data or HTML widgets directly into the core CMS admin dashboard.
+
+### 1. Modifying Dashboard Data
+To modify the core statistics data (like Posts Count or Pages Count) or to inject your own variables into the dashboard view, hook into `cms_dashboard_data`:
+
+```php
+add_filter('cms_dashboard_data', function($data) {
+    // Modify existing data
+    $data['postsCount'] = 999;
+    
+    // Inject custom data for your widgets
+    $data['custom_plugin_data'] = 150;
+    
+    return $data;
+});
+```
+
+### 2. Injecting Dashboard Widgets
+You can inject HTML or Blade Views directly into the dashboard using `do_action` hooks without editing the core files.
+
+**Available Dashboard Hooks:**
+- `cms_dashboard_widgets_top` : Injects widgets at the very top of the dashboard.
+- `cms_dashboard_widgets` : Injects widgets below the main statistics section.
+
+**Example Usage:**
+```php
+add_action('cms_dashboard_widgets', function() {
+    // Echo raw HTML directly
+    echo '<div class="bg-white p-4 rounded-xl border border-neutral mb-6"><h3>Custom Plugin Widget</h3></div>';
+    
+    // Or render a custom Blade view from your plugin
+    // echo view('my-plugin::admin.dashboard-widget')->render();
+});
+```
+
+## Translations & Localization
+
+LaraCMS includes a built-in visual Translations Editor that seamlessly hooks into Laravel's native JSON localization system.
+
+### How to Use Translations
+When building Themes or Plugins, you do not need to create nested PHP array files. You simply use standard Laravel translation string helpers in your Blade templates:
+
+```blade
+<h1>{{ __('Welcome to our application') }}</h1>
+<button>@lang('Submit Form')</button>
+```
+
+### Managing Translations visually
+Instead of manually editing JSON files, administrators can translate these strings directly from the CMS:
+1. Go to **Settings -> Translations** in the admin dashboard.
+2. Enter a new locale code (e.g. `fr`, `es`).
+3. Click "Edit Translation Strings" next to the language.
+4. The CMS will automatically scan your themes and plugins, find every string wrapped in `__()` or `@lang()`, and present a UI for you to enter the translated equivalents!
+
+The translations are securely saved into `cms-content/languages/{locale}.json` so they are never overwritten by core updates.
 
 ## Roadmap
 
@@ -171,6 +247,23 @@ See the `CONTRIBUTING.md` for guidelines. Follow PSR-12 coding standards, write 
 - Pagination: `the_posts_navigation($paginator = null)`.
 
 These functions provide WordPress‑style templating utilities throughout LaraCMS.
+
+### Shortcode API
+
+LaraCMS provides a fully WordPress-compatible Shortcode API for registering dynamic content tags.
+
+- `add_shortcode(string $tag, callable $callback)` – Registers a new shortcode. The callback receives `$atts`, `$content`, and `$tag`.
+- `do_shortcode(string $content)` – Parses and renders all registered shortcodes within the given content. (This is automatically applied to `the_content()`).
+- `shortcode_atts(array $pairs, array $atts)` – Combines user attributes with known attributes and fills in defaults.
+- `strip_shortcodes(string $content)` – Removes all registered shortcode tags from the content (useful for excerpts).
+
+**Example:**
+```php
+add_shortcode('greeting', function($atts, $content = null) {
+    $a = shortcode_atts(['name' => 'World'], $atts);
+    return "Hello {$a['name']}! " . ($content ? "Message: $content" : "");
+});
+```
 
 
 

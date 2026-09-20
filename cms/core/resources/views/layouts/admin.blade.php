@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Shri-ms Dashboard')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
-    <link rel="icon" href="{{ asset('assets/images/icons/icon-favicon.svg') }}" type="image/x-icon" sizes="16x16">
+    <link rel="icon" href="{{ get_media_url(cms_option('admin_dashboard_favicon')) ?? asset('assets/images/icons/icon-favicon.svg') }}" type="image/x-icon" sizes="16x16">
     <link rel="stylesheet" href="{{ asset('assets/styles/tailwind.min.css') }}?v=5.0">
     <link rel="stylesheet" href="{{ asset('assets/styles/style.min.css') }}?v=5.0">
     <link rel="stylesheet" href="{{ asset('assets/styles/cms-admin-extra.css') }}?v=1.0">
@@ -23,7 +23,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
   <body class="w-screen relative overflow-x-hidden min-h-screen bg-gray-100 scrollbar-hide cms-dashboard-page dark:bg-[#000]">
-    <div class="wrapper mx-auto text-gray-900 font-normal grid scrollbar-hide grid-cols-[257px,1fr] grid-rows-[auto,1fr]" id="layout">
+    <div class="wrapper min-h-screen w-full mx-auto text-gray-900 font-normal grid scrollbar-hide grid-cols-[257px,1fr] grid-rows-[auto,1fr]" id="layout">
       @include('cms-core::layouts.partials.sidebar')
       @include('cms-core::layouts.partials.header')
       <main class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pt-[42px] px-[23px] pb-[28px]">

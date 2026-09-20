@@ -15,18 +15,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('error') }}</span>
-    </div>
-    @endif
-
     <div class="bg-white dark:bg-dark-neutral-bg border border-neutral dark:border-dark-neutral-border p-6 rounded-2xl">
         <h3 class="text-lg font-bold text-gray-1100 dark:text-white border-b border-[#E8EDF2] dark:border-[#313442] pb-3 mb-4">Shri-ms Update Status</h3>
         
@@ -50,7 +38,7 @@
             <form action="{{ route('cms.updates.run') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Or Upload Update ZIP (For Testing)</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Or Upload Update ZIP (For Testing)</label>
                     <div class="w-full border-2 border-dashed border-[#E8EDF2] dark:border-[#313442] hover:border-color-brands dark:hover:border-color-brands rounded-xl p-8 transition-colors cursor-pointer relative group">
                         <input type="file" name="update_zip" accept=".zip" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" id="updateZipFile" onchange="document.getElementById('updateFileNameDisplay').innerText = this.files[0] ? this.files[0].name : 'Choose a file or drag it here';">
                         <div class="flex flex-col items-center gap-3">

@@ -24,18 +24,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('error') }}</span>
-    </div>
-    @endif
-
     {{-- Backups list table (Full Width) --}}
     <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-2xl p-6 overflow-x-scroll scrollbar-hide xl:overflow-x-hidden">
         <table class="w-full border-separate border-spacing-y-[12px] min-w-[700px]">

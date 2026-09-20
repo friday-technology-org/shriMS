@@ -16,18 +16,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative mb-4" role="alert">
-        <span class="block sm:inline font-semibold">{{ session('error') }}</span>
-    </div>
-    @endif
-
     <div class="space-y-6">
         {{-- Horizontal Tabs Bar (Full Width) --}}
         <div class="w-full flex flex-row flex-wrap gap-2 bg-neutral-bg dark:bg-dark-neutral-bg border border-neutral dark:border-dark-neutral-border p-3 rounded-2xl">
@@ -47,15 +35,43 @@
                 <div id="tab-content-general" class="setting-tab-content space-y-6">
                     <h3 class="text-lg font-bold text-gray-1100 dark:text-white border-b border-[#E8EDF2] dark:border-[#313442] pb-3 mb-4">General Settings</h3>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Site Title</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Site Title</label>
                         <input type="text" name="site_title" value="{{ cms_option('site_title') }}" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Site Tagline</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Site Tagline</label>
                         <input type="text" name="site_tagline" value="{{ cms_option('site_tagline') }}" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white">
                     </div>
+                    
+                    <div class="pt-4 border-t border-[#E8EDF2] dark:border-[#313442]">
+                        <h4 class="text-md font-bold text-gray-1100 dark:text-white mb-4">Admin Dashboard Branding</h4>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Dashboard Logo</label>
+                            <div class="flex items-center gap-4">
+                                <img id="admin-logo-preview" src="{{ get_media_url(cms_option('admin_dashboard_logo')) ?? asset('assets/images/icons/icon-logo.svg') }}" class="w-[150px] h-[40px] object-contain bg-gray-50 dark:bg-[#1e202c] rounded-lg p-2 border border-[#E8EDF2] dark:border-[#313442]">
+                                <input type="hidden" name="admin_dashboard_logo" id="admin-logo-input" value="{{ cms_option('admin_dashboard_logo') }}">
+                                <button type="button" onclick="openCmsMediaPicker(false, (media) => {
+                                    document.getElementById('admin-logo-input').value = media[0].id;
+                                    document.getElementById('admin-logo-preview').src = media[0].url;
+                                })" class="px-4 py-2 bg-neutral dark:bg-dark-neutral-border text-gray-800 dark:text-white border border-[#E8EDF2] dark:border-[#313442] hover:opacity-75 rounded-lg text-sm font-semibold">Select Logo</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Dashboard Favicon (Small Icon)</label>
+                            <div class="flex items-center gap-4">
+                                <img id="admin-favicon-preview" src="{{ get_media_url(cms_option('admin_dashboard_favicon')) ?? asset('assets/images/icons/icon-favicon.svg') }}" class="w-[40px] h-[40px] object-contain bg-gray-50 dark:bg-[#1e202c] rounded-lg p-2 border border-[#E8EDF2] dark:border-[#313442]">
+                                <input type="hidden" name="admin_dashboard_favicon" id="admin-favicon-input" value="{{ cms_option('admin_dashboard_favicon') }}">
+                                <button type="button" onclick="openCmsMediaPicker(false, (media) => {
+                                    document.getElementById('admin-favicon-input').value = media[0].id;
+                                    document.getElementById('admin-favicon-preview').src = media[0].url;
+                                })" class="px-4 py-2 bg-neutral dark:bg-dark-neutral-border text-gray-800 dark:text-white border border-[#E8EDF2] dark:border-[#313442] hover:opacity-75 rounded-lg text-sm font-semibold">Select Favicon</button>
+                            </div>
+                        </div>
+                    </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Timezone</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Timezone</label>
                         <select name="site_timezone" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white dark:bg-dark-neutral-bg">
                             @foreach(timezone_identifiers_list() as $tz)
                                 <option value="{{ $tz }}" {{ cms_option('site_timezone', 'UTC') === $tz ? 'selected' : '' }}>{{ $tz }}</option>
@@ -63,7 +79,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">My Admin Language (Per-User Locale)</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">My Admin Language (Per-User Locale)</label>
                         <select name="user_locale" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white dark:bg-dark-neutral-bg">
                             @foreach(['en' => 'English', 'fr' => 'French (Français)', 'es' => 'Spanish (Español)', 'de' => 'German (Deutsch)', 'ar' => 'Arabic (العربية) - RTL'] as $code => $label)
                                 <option value="{{ $code }}" {{ (auth()->user()->locale ?? 'en') === $code ? 'selected' : '' }}>{{ $label }}</option>
@@ -71,7 +87,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">SEO Fallback Share Image (URL)</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">SEO Fallback Share Image (URL)</label>
                         <input type="url" name="seo_fallback_image" value="{{ cms_option('seo_fallback_image') }}" placeholder="https://example.com/fallback.png" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white">
                     </div>
                 </div>
@@ -80,18 +96,18 @@
                 <div id="tab-content-reading" class="setting-tab-content space-y-6 hidden">
                     <h3 class="text-lg font-bold text-gray-1100 dark:text-white border-b border-[#E8EDF2] dark:border-[#313442] pb-3 mb-4">Reading & Homepage</h3>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Homepage Displays</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Homepage Displays</label>
                         <div class="flex items-center gap-4 mt-2">
-                            <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-white">
                                 <input type="radio" name="show_on_front" value="posts" class="mr-2" {{ cms_option('show_on_front', 'posts') === 'posts' ? 'checked' : '' }} onchange="toggleHomepageDropdowns()"> Your latest posts
                             </label>
-                            <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-white">
                                 <input type="radio" name="show_on_front" value="page" class="mr-2" {{ cms_option('show_on_front') === 'page' ? 'checked' : '' }} onchange="toggleHomepageDropdowns()"> A static page
                             </label>
                         </div>
                     </div>
                     <div id="homepage-selection" class="{{ cms_option('show_on_front') === 'page' ? '' : 'hidden' }}">
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Homepage Page</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Homepage Page</label>
                         <select name="page_on_front" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white dark:bg-dark-neutral-bg">
                             <option value="">— Select a Page —</option>
                             @foreach(\Cms\Core\Models\Post::where('post_type', 'page')->where('status', 'published')->get() as $p)
@@ -105,13 +121,13 @@
                 <div id="tab-content-discussion" class="setting-tab-content space-y-6 hidden">
                     <h3 class="text-lg font-bold text-gray-1100 dark:text-white border-b border-[#E8EDF2] dark:border-[#313442] pb-3 mb-4">Discussion Settings</h3>
                     <div class="flex flex-col gap-4">
-                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-white">
                             <input type="checkbox" name="comments_enabled" value="1" class="mr-2" {{ cms_option('comments_enabled', true) ? 'checked' : '' }}> Allow people to submit comments on new posts
                         </label>
-                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-white">
                             <input type="checkbox" name="comments_require_approval" value="1" class="mr-2" {{ cms_option('comments_require_approval', true) ? 'checked' : '' }}> Comment must be manually approved
                         </label>
-                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-white">
                             <input type="checkbox" name="comments_notify_author" value="1" class="mr-2" {{ cms_option('comments_notify_author', true) ? 'checked' : '' }}> Email post authors when a new comment is posted
                         </label>
                     </div>
@@ -132,18 +148,18 @@
                     
                     {{-- Cookie Banner Options --}}
                     <div class="space-y-4">
-                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <label class="inline-flex items-center text-sm font-semibold text-gray-700 dark:text-white">
                             <input type="checkbox" name="gdpr_cookie_consent_enabled" value="1" class="mr-2" {{ cms_option('gdpr_cookie_consent_enabled', false) ? 'checked' : '' }}> Enable Cookie Consent Banner
                         </label>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Cookie Banner Message</label>
+                            <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Cookie Banner Message</label>
                             <textarea name="gdpr_cookie_consent_text" rows="3" class="w-full border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white">{{ cms_option('gdpr_cookie_consent_text', 'We use cookies to improve your experience on our site.') }}</textarea>
                         </div>
                     </div>
 
                     {{-- Privacy Policy Page --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Privacy Policy Page</label>
+                        <label class="block text-sm font-semibold text-gray-800 dark:text-white mb-2">Privacy Policy Page</label>
                         <select name="privacy_policy_page_id" class="w-full max-w-lg border border-[#E8EDF2] dark:border-[#313442] bg-transparent rounded-xl p-3 text-sm text-gray-1100 dark:text-white dark:bg-dark-neutral-bg">
                             <option value="">— Select a Page —</option>
                             @foreach(\Cms\Core\Models\Post::where('post_type', 'page')->get() as $p)

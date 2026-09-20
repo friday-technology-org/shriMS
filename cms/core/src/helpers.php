@@ -453,6 +453,40 @@ if (!function_exists('do_shortcode')) {
     }
 }
 
+if (!function_exists('strip_shortcodes')) {
+    /**
+     * Remove all registered shortcodes from the content.
+     */
+    function strip_shortcodes(string $content): string
+    {
+        return app(\Cms\Core\Services\ShortcodeParser::class)->strip($content);
+    }
+}
+
+if (!function_exists('shortcode_atts')) {
+    /**
+     * Combine user attributes with known attributes and fill in defaults when needed.
+     */
+    function shortcode_atts(array $pairs, array $atts, string $shortcode = ''): array
+    {
+        $atts = (array) $atts;
+        $out = [];
+        foreach ($pairs as $name => $default) {
+            if (array_key_exists($name, $atts)) {
+                $out[$name] = $atts[$name];
+            } else {
+                $out[$name] = $default;
+            }
+        }
+        
+        if ($shortcode) {
+            $out = apply_filters("shortcode_atts_{$shortcode}", $out, $pairs, $atts, $shortcode);
+        }
+
+        return $out;
+    }
+}
+
 if (!function_exists('set_transient')) {
     /**
      * Set a transient value with an expiration time in seconds.

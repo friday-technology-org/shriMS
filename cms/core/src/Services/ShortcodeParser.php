@@ -23,20 +23,91 @@ class ShortcodeParser
             return $content;
         }
 
-        // Match [shortcode_name key="val" ...]
-        $pattern = '/\[([a-zA-Z0-9_\-]+)([^\]]*)\]/';
+        $pattern = $this->getRegex();
 
-        return preg_replace_callback($pattern, function ($matches) {
-            $tag = $matches[1];
-            $attrString = $matches[2];
+        return preg_replace_callback("~{$pattern}~s", function (array $matches) {
+            $escapePrefix = $matches[1] ?? '';
+            $tag = $matches[2];
+            $attrString = $matches[3] ?? '';
+            $enclosedContent = $matches[5] ?? null;
+            $escapeSuffix = $matches[6] ?? '';
+
+            // If it's an escaped shortcode like [[tag]], return [tag]
+            if ($escapePrefix === '[' && $escapeSuffix === ']') {
+                return substr($matches[0], 1, -1);
+            }
 
             if (!isset($this->shortcodes[$tag])) {
-                return $matches[0]; // Return unchanged if not registered
+                return $matches[0];
             }
 
             $attributes = $this->parseAttributes($attrString);
-            return call_user_func($this->shortcodes[$tag], $attributes);
+            
+            // Shortcode callback expects: $attributes, $content, $tag
+            return call_user_func($this->shortcodes[$tag], $attributes, $enclosedContent, $tag);
         }, $content);
+    }
+
+    /**
+     * Strip all registered shortcodes from the content.
+     */
+    public function strip(string $content): string
+    {
+        if (empty($this->shortcodes)) {
+            return $content;
+        }
+
+        $pattern = $this->getRegex();
+
+        return preg_replace_callback("~{$pattern}~s", function (array $matches) {
+            // If it's escaped [[tag]], just return the [tag] part
+            if (($matches[1] ?? '') === '[' && ($matches[6] ?? '') === ']') {
+                return substr($matches[0], 1, -1);
+            }
+
+            // Otherwise, replace with empty string
+            return '';
+        }, $content);
+    }
+
+    /**
+     * Generate the regex pattern for finding shortcodes.
+     * This mimics WordPress's get_shortcode_regex().
+     */
+    protected function getRegex(): string
+    {
+        $tagnames = array_keys($this->shortcodes);
+        $tagregexp = join('|', array_map('preg_quote', $tagnames));
+
+        return
+              '\\['                              // Opening bracket
+            . '(\\[?)'                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
+            . "($tagregexp)"                     // 2: Shortcode name
+            . '(?![\\w-])'                       // Not followed by word character or hyphen
+            . '('                                // 3: Unroll the loop: Inside the opening shortcode tag
+            .     '[^\\]\\/]*'                   // Not a closing bracket or forward slash
+            .     '(?:'
+            .         '\\/(?!\\])'               // A forward slash not followed by a closing bracket
+            .         '[^\\]\\/]*'               // Not a closing bracket or forward slash
+            .     ')*?'
+            . ')'
+            . '(?:'
+            .     '(\\/)'                        // 4: Self closing tag ...
+            .     '\\]'                          // ... and closing bracket
+            . '|'
+            .     '\\]'                          // Closing bracket
+            .     '(?:'
+            .         '('                        // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+            .             '[^\\[]*+'             // Not an opening bracket
+            .             '(?:'
+            .                 '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
+            .                 '[^\\[]*+'         // Not an opening bracket
+            .             ')*+'
+            .         ')'
+            .         '\\[\\/\\2\\]'             // Closing shortcode tag
+            .     ')?'
+            . ')'
+            . '(\\]?)';                          // 6: Optional second closing bracket for escaping shortcodes: [[tag]]
     }
 
     /**

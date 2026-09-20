@@ -1,4 +1,4 @@
-<header class="flex items-center justify-between flex-wrap bg-neutral-bg p-5 gap-5 md:py-6 md:pl-[25px] md:pr-[38px] lg:flex-nowrap dark:bg-dark-neutral-bg lg:gap-0"><a class="hidden logo" href="index.html"><img class="md:mr-[100px] lg:mr-[133px]" src="{{ asset('assets/images/icons/icon-logo.svg') }}" alt="Frox logo"></a>
+<header class="flex items-center justify-between flex-wrap bg-neutral-bg p-5 gap-5 md:py-6 md:pl-[25px] md:pr-[38px] lg:flex-nowrap dark:bg-dark-neutral-bg lg:gap-0"><a class="hidden logo" href="{{ route('cms.dashboard') }}"><img class="md:mr-[100px] lg:mr-[133px] w-[130px] h-[35px] object-contain" src="{{ get_media_url(cms_option('admin_dashboard_logo')) ?? asset('assets/images/icons/icon-logo.svg') }}" alt="Admin logo"></a>
         <div class="bg-gray-100 flex rounded-xl m-0 py-[14px] px-[18px] dark:bg-gray-dark-100 lg:mr-[47px] lg:ml-6 order-last lg:order-first transition-colors hover:bg-gray-200 dark:hover:bg-gray-dark-200">
           <a href="{{ url('/') }}" target="_blank" class="flex items-center gap-2 text-gray-500 dark:text-gray-dark-500 hover:text-color-brands font-semibold text-sm w-full h-full">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -145,14 +145,7 @@
                 <div class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-neutral-bg dark:border-b-dark-neutral-bg right-[18px]"></div>
                 <li class="text-gray-500 hover:text-gray-1100 hover:bg-gray-100 dark:text-gray-dark-500 dark:hover:text-gray-dark-1100 dark:hover:bg-gray-dark-100 rounded-lg group p-[15px] pl-[21px]"><a class="flex items-center bg-transparent p-0 gap-[7px]" href="{{ route('cms.profile.edit') }}"> <i class="w-4 h-4 grid place-items-center"><img class="group-hover:filter-black dark:group-hover:filter-white" src="{{ asset('assets/images/icons/icon-user.svg') }}" alt="icon"></i><span>Profile</span></a>
                 </li>
-                <li class="text-gray-500 hover:text-gray-1100 hover:bg-gray-100 dark:text-gray-dark-500 dark:hover:text-gray-dark-1100 dark:hover:bg-gray-dark-100 rounded-lg group p-[15px] pl-[21px]"><a class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <i class="w-4 h-4 grid place-items-center"><img class="group-hover:filter-black dark:group-hover:filter-white" src="{{ asset('assets/images/icons/icon-favorite-chart.svg') }}" alt="icon"></i><span>Dashboard</span></a>
-                </li>
-                <li class="text-gray-500 hover:text-gray-1100 hover:bg-gray-100 dark:text-gray-dark-500 dark:hover:text-gray-dark-1100 dark:hover:bg-gray-dark-100 rounded-lg group p-[15px] pl-[21px]"><a class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <i class="w-4 h-4 grid place-items-center"><img class="group-hover:filter-black dark:group-hover:filter-white" src="{{ asset('assets/images/icons/icon-bitcoin-card.svg') }}" alt="icon"></i><span>Payouts</span></a>
-                </li>
-                <li class="text-gray-500 hover:text-gray-1100 hover:bg-gray-100 dark:text-gray-dark-500 dark:hover:text-gray-dark-1100 dark:hover:bg-gray-dark-100 rounded-lg group p-[15px] pl-[21px]"><a class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <i class="w-4 h-4 grid place-items-center"><img class="group-hover:filter-black dark:group-hover:filter-white" src="{{ asset('assets/images/icons/icon-trade.svg') }}" alt="icon"></i><span>Statement</span></a>
-                </li>
-                <li class="text-gray-500 hover:text-gray-1100 hover:bg-gray-100 dark:text-gray-dark-500 dark:hover:text-gray-dark-1100 dark:hover:bg-gray-dark-100 rounded-lg group p-[15px] pl-[21px]"><a class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <i class="w-4 h-4 grid place-items-center"><img class="group-hover:filter-black dark:group-hover:filter-white" src="{{ asset('assets/images/icons/icon-sun.svg') }}" alt="icon"></i><span>Settings</span></a>
-                </li>
+
                 <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
                 <form id="logout-form" action="{{ route('cms.logout') }}" method="POST" style="display: none;">
                   @csrf

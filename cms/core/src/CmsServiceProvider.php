@@ -40,9 +40,7 @@ class CmsServiceProvider extends ServiceProvider
             return new \Cms\Core\Services\SearchService();
         });
 
-        $this->app->singleton(\Cms\Core\Services\ShortcodeParser::class, function () {
-            return new \Cms\Core\Services\ShortcodeParser();
-        });
+
 
         $this->app->singleton(\Cms\Core\Services\SeoHelper::class, function () {
             return new \Cms\Core\Services\SeoHelper();
@@ -151,6 +149,9 @@ class CmsServiceProvider extends ServiceProvider
                 \Cms\Core\Console\Commands\CmsThemeMakeControllerCommand::class,
                 \Cms\Core\Console\Commands\CmsThemeMakeModelCommand::class,
                 \Cms\Core\Console\Commands\CmsThemeMakeMigrationCommand::class,
+                \Cms\Core\Console\Commands\CmsPluginMakeControllerCommand::class,
+                \Cms\Core\Console\Commands\CmsPluginMakeModelCommand::class,
+                \Cms\Core\Console\Commands\CmsPluginMakeMigrationCommand::class,
                 \Cms\Core\Console\Commands\CmsCacheClearCommand::class,
                 \Cms\Core\Console\Commands\CmsMediaRegenerateCommand::class,
                 \Cms\Core\Console\Commands\CmsUserCreateCommand::class,
