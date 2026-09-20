@@ -119,6 +119,7 @@ Route::middleware(['web'])->group(function () {
                 // Settings & Tools
                 Route::get('settings', [\Cms\Core\Http\Controllers\SettingsController::class, 'index'])->name('cms.settings.index');
                 Route::post('settings', [\Cms\Core\Http\Controllers\SettingsController::class, 'update'])->name('cms.settings.update');
+                Route::post('settings/maintenance/toggle', [\Cms\Core\Http\Controllers\SettingsController::class, 'toggleMaintenance'])->name('cms.maintenance.toggle');
                 Route::post('settings/export', [\Cms\Core\Http\Controllers\SettingsController::class, 'exportData'])->name('cms.settings.export');
                 Route::post('settings/erase', [\Cms\Core\Http\Controllers\SettingsController::class, 'eraseData'])->name('cms.settings.erase');
                 Route::get('settings/logs-404', [\Cms\Core\Http\Controllers\Log404Controller::class, 'index'])->name('cms.settings.logs404');

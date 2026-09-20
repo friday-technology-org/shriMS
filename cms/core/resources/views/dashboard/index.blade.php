@@ -963,7 +963,7 @@
         <div class="w-full bg-neutral h-[1px] dark:bg-dark-neutral-border mb-[25px]"></div>
         <div class="flex items-center justify-between text-desc text-gray-400 flex-wrap gap-5 dark:text-gray-dark-400">
             <div class="flex items-center gap-2 flex-wrap">
-                <p> <span>&copy; {{ date('Y') }}</span><span class="text-color-brands">&nbsp;{{ cms_option('site_name', 'LaraCMS') }}</span></p>
+                <p> <span>&copy; {{ date('Y') }}</span><span class="text-color-brands">&nbsp;{{ cms_option('site_name', config('app.name', 'Laravel')) }}</span></p>
                 <div class="bg-color-brands rounded-full hidden w-[2px] h-[2px] md:block"></div>
                 <p> <span>Crafted by</span><a class="text-color-brands" href="https://fridaytechnology.net"
                         target="_blank">&nbsp;Friday Technology</a></p>

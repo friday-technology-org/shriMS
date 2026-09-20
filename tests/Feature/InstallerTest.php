@@ -56,7 +56,7 @@ class InstallerTest extends TestCase
     public function test_full_installation_process(): void
     {
         $response = $this->post('/install/process', [
-            'site_title' => 'Test LaraCMS',
+            'site_title' => 'Shri-MS',
             'site_tagline' => 'Testing installation process',
             'admin_name' => 'Admin User',
             'admin_email' => 'admin@test.com',

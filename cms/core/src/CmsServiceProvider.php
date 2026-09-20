@@ -101,6 +101,7 @@ class CmsServiceProvider extends ServiceProvider
         $router->pushMiddlewareToGroup('web', CheckInstallation::class);
         $router->pushMiddlewareToGroup('web', \Cms\Core\Http\Middleware\SecurityHeaders::class);
         $router->pushMiddlewareToGroup('web', \Cms\Core\Http\Middleware\PageCache::class);
+        $router->pushMiddlewareToGroup('web', \Cms\Core\Http\Middleware\CheckMaintenanceMode::class);
         
         $router->aliasMiddleware('cms.api.auth', \Cms\Core\Http\Middleware\AuthenticateCmsApi::class);
         $router->aliasMiddleware('cms.locale', \Cms\Core\Http\Middleware\SetLocale::class);

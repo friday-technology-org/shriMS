@@ -1,11 +1,27 @@
 <header class="flex items-center justify-between flex-wrap bg-neutral-bg p-5 gap-5 md:py-6 md:pl-[25px] md:pr-[38px] lg:flex-nowrap dark:bg-dark-neutral-bg lg:gap-0"><a class="hidden logo" href="{{ route('cms.dashboard') }}"><img class="md:mr-[100px] lg:mr-[133px] w-[130px] h-[35px] object-contain" src="{{ get_media_url(cms_option('admin_dashboard_logo')) ?? asset('assets/images/icons/icon-logo.svg') }}" alt="Admin logo"></a>
-        <div class="bg-gray-100 flex rounded-xl m-0 py-[14px] px-[18px] dark:bg-gray-dark-100 lg:mr-[47px] lg:ml-6 order-last lg:order-first transition-colors hover:bg-gray-200 dark:hover:bg-gray-dark-200">
-          <a href="{{ url('/') }}" target="_blank" class="flex items-center gap-2 text-gray-500 dark:text-gray-dark-500 hover:text-color-brands font-semibold text-sm w-full h-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            View Website
-          </a>
+        <div class="flex items-stretch gap-4 lg:mr-[47px] lg:ml-6 order-last lg:order-first h-[50px]">
+            <a href="{{ url('/') }}" target="_blank" class="flex items-center gap-2 bg-gray-100 dark:bg-gray-dark-100 hover:bg-gray-200 dark:hover:bg-gray-dark-200 text-gray-500 dark:text-gray-dark-500 hover:text-color-brands font-semibold text-sm rounded-xl py-[14px] px-[18px] transition-colors h-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                View Website
+            </a>
+
+            @if(auth()->user() && auth()->user()->hasRole('Administrator'))
+            <form action="{{ route('cms.maintenance.toggle') }}" method="POST" class="flex items-center gap-3 bg-gray-100 dark:bg-gray-dark-100 rounded-xl py-[14px] px-[18px] border border-transparent transition-colors h-full {{ function_exists('cms_option') && cms_option('maintenance_mode') == 1 ? '!bg-orange/10 !border-orange/30' : '' }}">
+                @csrf
+                <span class="text-sm font-semibold {{ function_exists('cms_option') && cms_option('maintenance_mode') == 1 ? 'text-orange' : 'text-gray-500 dark:text-gray-dark-500' }}">
+                    {{ function_exists('cms_option') && cms_option('maintenance_mode') == 1 ? 'Maintenance ON' : 'Maintenance Mode' }}
+                </span>
+                <label class="flex items-center cursor-pointer mb-0"> 
+                  <div class="relative"> 
+                    <input class="sr-only peer" type="checkbox" name="maintenance_mode" onchange="this.form.submit()" {{ function_exists('cms_option') && cms_option('maintenance_mode') == 1 ? 'checked' : '' }}>
+                    <div class="block rounded-full w-[40px] h-[24px] bg-gray-300 dark:bg-gray-600 peer-checked:bg-orange"></div>
+                    <div class="dot absolute left-1 top-1 rounded-full transition h-[16px] w-[16px] bg-white"></div>
+                  </div>
+                </label>
+            </form>
+            @endif
         </div>
         <div class="flex items-center order-2 user-noti gap-[30px] xl:gap-[48px] lg:order-3 lg:mr-0">
           <div class="dropdown dropdown-end hidden">
