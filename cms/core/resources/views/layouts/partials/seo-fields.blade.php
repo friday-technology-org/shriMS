@@ -6,10 +6,10 @@
     $seoRobots = isset($model) ? $model->getMeta('seo_robots') : old('meta.seo_robots', 'index, follow');
 @endphp
 
-<div class="mt-8 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm bg-white dark:bg-[#161824]">
-    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1b1e2b]">
-        <h3 class="text-gray-900 text-base font-semibold dark:text-gray-100 m-0">SEO Settings</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-0">Optimize your content for search engines</p>
+<div class="mt-8 border border-neutral dark:border-dark-neutral-border rounded-lg overflow-hidden shadow-sm bg-neutral-bg dark:bg-dark-neutral-bg">
+    <div class="px-6 py-4 border-b border-neutral dark:border-dark-neutral-border bg-neutral dark:bg-dark-neutral-border">
+        <h3 class="text-gray-900 text-base font-semibold dark:text-gray-dark-1100 m-0">SEO Settings</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-dark-500 mt-1 mb-0">Optimize your content for search engines</p>
     </div>
     <div class="p-6">
         <div class="space-y-6">

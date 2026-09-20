@@ -60,6 +60,6 @@
         }
      }"
      x-init="$nextTick(() => initEditor())">
-    <div x-ref="quillContainer" style="min-height: {{ $height }};" class="bg-white"></div>
+    <div x-ref="quillContainer" style="min-height: {{ $height }};"></div>
     <textarea name="{{ $name }}" id="{{ $fieldId }}" class="hidden" x-ref="hiddenField">{{ $value }}</textarea>
 </div>
