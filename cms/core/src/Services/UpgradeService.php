@@ -27,7 +27,7 @@ class UpgradeService
             // Check updates from the live GitHub repository API
             $response = Http::withHeaders([
                 'Accept' => 'application/vnd.github.v3+json',
-                'User-Agent' => 'LaraCMS-AutoUpdater',
+                'User-Agent' => str_replace(' ', '', cms_option('site_name', config('app.name', 'Laravel'))) . '-AutoUpdater',
             ])->timeout(10)->get('https://api.github.com/repos/friday-technology-org/shriMS/releases/latest');
 
             if ($response->successful()) {

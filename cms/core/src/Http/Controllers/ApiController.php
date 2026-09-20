@@ -117,7 +117,7 @@ class ApiController extends Controller
     public function settings()
     {
         return response()->json([
-            'site_name' => cms_option('site_name', 'Shri-ms'),
+            'site_name' => cms_option('site_name', config('app.name', 'Laravel')),
             'site_tagline' => cms_option('site_tagline', 'WordPress-equivalent CMS on Laravel'),
             'site_url' => url('/'),
         ]);

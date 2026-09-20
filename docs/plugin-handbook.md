@@ -1,8 +1,8 @@
-# LaraCMS Plugin Handbook
+# Shri-MS Plugin Handbook
 
-Welcome to the LaraCMS Plugin Handbook! Plugins are the most powerful way to extend the functionality of LaraCMS without modifying the core system. 
+Welcome to the Shri-MS Plugin Handbook! Plugins are the most powerful way to extend the functionality of Shri-MS without modifying the core system. 
 
-Since LaraCMS is built on Laravel, a plugin is essentially a modularized Laravel Package that hooks into our auto-discovery systems.
+Since Shri-MS is built on Laravel, a plugin is essentially a modularized Laravel Package that hooks into our auto-discovery systems.
 
 ## Table of Contents
 1. [Plugin Structure](#plugin-structure)
@@ -40,7 +40,7 @@ cms-content/plugins/my-plugin/
 
 ## Artisan Scaffolding
 
-LaraCMS provides dedicated Artisan commands to rapidly scaffold plugin files. This ensures your files have the correct namespace and are placed in the correct `cms-content/plugins/` subdirectory.
+Shri-MS provides dedicated Artisan commands to rapidly scaffold plugin files. This ensures your files have the correct namespace and are placed in the correct `cms-content/plugins/` subdirectory.
 
 *   **Create a Plugin Controller:**
     ```bash
@@ -61,13 +61,13 @@ LaraCMS provides dedicated Artisan commands to rapidly scaffold plugin files. Th
 
 ## Auto-Discovery
 
-To make development as frictionless as possible, LaraCMS automatically discovers specific files in your plugin directory when the plugin is activated:
+To make development as frictionless as possible, Shri-MS automatically discovers specific files in your plugin directory when the plugin is activated:
 
 ### Migrations
 Any standard Laravel migration placed inside the `migrations/` folder (e.g., `cms-content/plugins/your-plugin-slug/migrations/`) will automatically be executed when you run the global `php artisan migrate` command. There is no need to manually register migration paths in your Service Provider.
 
 ### Service Providers
-If your `plugin.json` specifies a primary service provider, LaraCMS will boot it automatically. Inside your provider, you can register standard Laravel routes and views:
+If your `plugin.json` specifies a primary service provider, Shri-MS will boot it automatically. Inside your provider, you can register standard Laravel routes and views:
 
 ```php
 public function boot()
@@ -81,7 +81,7 @@ public function boot()
 
 ## Hooks and Filters API
 
-The Hooks and Filters API is how plugins communicate with the LaraCMS core and with other plugins. 
+The Hooks and Filters API is how plugins communicate with the Shri-MS core and with other plugins. 
 
 *   **Action Hooks (`add_action`)**: Inject code or HTML at specific points during execution.
 *   **Filters (`add_filter`)**: Intercept and modify data arrays or strings before they are processed.
@@ -118,7 +118,7 @@ add_action('cms_dashboard_widgets', function() {
 
 ## Shortcode API
 
-LaraCMS provides a fully WordPress-compatible Shortcode API for registering dynamic content tags that users can place in the WYSIWYG editor.
+Shri-MS provides a fully WordPress-compatible Shortcode API for registering dynamic content tags that users can place in the WYSIWYG editor.
 
 ### Registering a Shortcode
 Use `add_shortcode` in your `cms_plugins.php` or Service Provider:
@@ -136,7 +136,7 @@ add_shortcode('invoice_tracker', function($atts, $content = null) {
 });
 ```
 
-When a user types `[invoice_tracker id="592"]` into a post, LaraCMS will automatically parse it and render your blade view!
+When a user types `[invoice_tracker id="592"]` into a post, Shri-MS will automatically parse it and render your blade view!
 
 ### Manual Parsing
 If you have a string of text from a custom database column and want to parse shortcodes inside it:

@@ -133,4 +133,16 @@ class SettingsController extends Controller
 
         return redirect()->back()->with('success', 'Personal data has been successfully anonymized.');
     }
+
+    /**
+     * Toggle Maintenance Mode.
+     */
+    public function toggleMaintenance(Request $request): RedirectResponse
+    {
+        $status = $request->has('maintenance_mode') ? '1' : '0';
+        update_cms_option('maintenance_mode', $status);
+        
+        $message = $status === '1' ? 'Maintenance mode enabled.' : 'Maintenance mode disabled.';
+        return redirect()->back()->with('success', $message);
+    }
 }

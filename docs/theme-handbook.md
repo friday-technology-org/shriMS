@@ -1,6 +1,6 @@
-# LaraCMS Theme Handbook
+# Shri-MS Theme Handbook
 
-Welcome to the LaraCMS Theme Handbook! If you're coming from a WordPress background, you'll feel right at home. LaraCMS offers a deeply familiar, WordPress-style templating system powered by Laravel Blade.
+Welcome to the Shri-MS Theme Handbook! If you're coming from a WordPress background, you'll feel right at home. Shri-MS offers a deeply familiar, WordPress-style templating system powered by Laravel Blade.
 
 ## Table of Contents
 1. [Theme Structure](#theme-structure)
@@ -33,7 +33,7 @@ cms-content/themes/my-theme/
 
 ## The Loop
 
-The cornerstone of LaraCMS theming is "The Loop". Instead of manually looping over arrays of `$posts` passed from controllers, you can use the familiar `have_posts()` and `the_post()` global state managers.
+The cornerstone of Shri-MS theming is "The Loop". Instead of manually looping over arrays of `$posts` passed from controllers, you can use the familiar `have_posts()` and `the_post()` global state managers.
 
 **Example `index.blade.php`:**
 
@@ -77,7 +77,7 @@ The cornerstone of LaraCMS theming is "The Loop". Instead of manually looping ov
 
 ## Theme Helpers Reference
 
-LaraCMS provides a massive suite of WordPress-compatible global helpers that you can use anywhere in your Blade templates.
+Shri-MS provides a massive suite of WordPress-compatible global helpers that you can use anywhere in your Blade templates.
 
 ### Core Helpers
 *   `cms_logo(string $type = 'header')` – Returns the URL for a customizer logo.

@@ -1,7 +1,7 @@
-# LaraCMS
+# Shri-MS
 [![License](https://img.shields.io/packagist/l/laravel/framework)](https://opensource.org/licenses/MIT)
 
-**LaraCMS** is a powerful, lightweight, and highly modular content management system built on top of [Laravel](https://laravel.com). Designed for developers who love Laravel but miss the rapid, hook-based extensible ecosystem of WordPress, LaraCMS bridges the gap by offering a WordPress-style theming API, native shortcodes, and a robust plugin architecture, all while strictly adhering to modern Laravel best practices.
+**Shri-MS** is a powerful, lightweight, and highly modular content management system built on top of [Laravel](https://laravel.com). Designed for developers who love Laravel but miss the rapid, hook-based extensible ecosystem of WordPress, Shri-MS bridges the gap by offering a WordPress-style theming API, native shortcodes, and a robust plugin architecture, all while strictly adhering to modern Laravel best practices.
 
 ## 🚀 Key Features
 
@@ -17,7 +17,7 @@
 
 ## 🛠️ Server Requirements
 
-LaraCMS relies on modern PHP and Laravel ecosystem requirements:
+Shri-MS relies on modern PHP and Laravel ecosystem requirements:
 
 *   PHP >= 8.2
 *   Composer
@@ -61,7 +61,7 @@ LaraCMS relies on modern PHP and Laravel ecosystem requirements:
 
 ## 🏗️ Architecture Overview
 
-LaraCMS strictly separates the core framework from user-generated content, ensuring smooth, non-destructive updates.
+Shri-MS strictly separates the core framework from user-generated content, ensuring smooth, non-destructive updates.
 
 *   `cms/core/` – The protected core package. Contains the central CMS logic, admin dashboard views, and base models. **(Do not modify directly)**
 *   `cms-content/themes/` – Where your custom frontend themes reside.
@@ -72,7 +72,7 @@ LaraCMS strictly separates the core framework from user-generated content, ensur
 
 ## 🎨 Theme Development
 
-Themes in LaraCMS are incredibly intuitive, borrowing the best templating patterns from the PHP ecosystem.
+Themes in Shri-MS are incredibly intuitive, borrowing the best templating patterns from the PHP ecosystem.
 
 1. **Create your theme directory:** `cms-content/themes/my-theme/`
 2. **Set up standard views:** Create an `index.blade.php`.
@@ -101,10 +101,10 @@ Themes in LaraCMS are incredibly intuitive, borrowing the best templating patter
 
 ## 🔌 Plugin Development
 
-Plugins extend the core functionality of LaraCMS. A plugin is essentially a standard Laravel package loaded dynamically.
+Plugins extend the core functionality of Shri-MS. A plugin is essentially a standard Laravel package loaded dynamically.
 
 ### Scaffolding Plugins via Artisan
-LaraCMS ships with dedicated Artisan commands to rapidly generate plugin boilerplate:
+Shri-MS ships with dedicated Artisan commands to rapidly generate plugin boilerplate:
 
 *   **Generate a Controller:** `php artisan cms:plugin:make-controller plugin-slug Admin/DashboardController`
 *   **Generate a Model:** `php artisan cms:plugin:make-model plugin-slug Invoice`
@@ -120,7 +120,7 @@ LaraCMS ships with dedicated Artisan commands to rapidly generate plugin boilerp
 
 ## 🪝 Extending the Dashboard (Hooks & Filters)
 
-LaraCMS uses an event-driven architecture that prevents the need for core modifications.
+Shri-MS uses an event-driven architecture that prevents the need for core modifications.
 
 ### 1. Data Injection Filters
 You can modify the core data arrays before they are sent to the Blade views. For example, to add custom statistics to the main dashboard:
@@ -148,19 +148,19 @@ add_action('cms_dashboard_widgets', function() {
 
 ## 🌍 Translations & Localization
 
-LaraCMS includes a fully integrated UI for managing localized strings.
+Shri-MS includes a fully integrated UI for managing localized strings.
 
 1. Write your blade templates using standard Laravel helpers: `{{ __('Welcome') }}` or `@lang('Submit')`.
 2. Navigate to **Settings -> Translations** in the Admin Dashboard.
 3. Add a language locale (e.g., `es` or `fr`).
-4. Click **Edit**. LaraCMS will auto-scan your themes and plugins, extract every translatable string, and present a visual editor to provide translations.
+4. Click **Edit**. Shri-MS will auto-scan your themes and plugins, extract every translatable string, and present a visual editor to provide translations.
 5. Translations are securely saved to `cms-content/languages/` and persist across core updates.
 
 ---
 
 ## 📚 Developer Documentation
 
-For a comprehensive overview of how to build themes and plugins for LaraCMS, please refer to our official handbooks:
+For a comprehensive overview of how to build themes and plugins for Shri-MS, please refer to our official handbooks:
 
 *   📘 **[The Theme Handbook](docs/theme-handbook.md)** - Learn about The Loop, global helpers, and structure.
 *   📗 **[The Plugin Handbook](docs/plugin-handbook.md)** - Learn about Hooks, Filters, Shortcodes, and scaffolding commands.
@@ -217,7 +217,7 @@ For a comprehensive overview of how to build themes and plugins for LaraCMS, ple
 
 ### Shortcode API
 
-LaraCMS provides a fully WordPress-compatible Shortcode API for registering dynamic content tags.
+Shri-MS provides a fully WordPress-compatible Shortcode API for registering dynamic content tags.
 
 *   `add_shortcode(string $tag, callable $callback)` – Registers a new shortcode. The callback receives `$atts`, `$content`, and `$tag`.
 *   `do_shortcode(string $content)` – Parses and renders all registered shortcodes within the given content. (This is automatically applied to `the_content()`).
@@ -248,6 +248,6 @@ We welcome contributions! Please follow standard PSR-12 coding guidelines.
 
 ## 📄 License
 
-LaraCMS is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Shri-MS is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 Crafted with ❤️ by [Friday Technology](https://fridaytechnology.net).
