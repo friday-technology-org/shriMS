@@ -127,3 +127,40 @@
     background-color: #fee2e2;
     color: #b91c1c;
 }
+
+/* Quill Editor Dark Mode Overrides */
+.dark .ql-toolbar.ql-snow,
+.dark .ql-container.ql-snow {
+    border-color: #313442;
+}
+.dark .ql-toolbar.ql-snow {
+    background-color: transparent;
+}
+.dark .ql-toolbar.ql-snow .ql-stroke {
+    stroke: #8B949E;
+}
+.dark .ql-toolbar.ql-snow .ql-fill {
+    fill: #8B949E;
+}
+.dark .ql-toolbar.ql-snow .ql-picker {
+    color: #8B949E;
+}
+.dark .ql-toolbar.ql-snow .ql-picker-options {
+    background-color: #1f2130;
+    border-color: #313442;
+}
+.dark .ql-editor {
+    color: #e2e8f0;
+}
+.dark .ql-editor.ql-blank::before {
+    color: #5A6270;
+}
+/* Ensure the editor area stretches to fill the container so clicking empty space focuses it */
+.ql-container {
+    display: flex;
+    flex-direction: column;
+}
+.ql-editor {
+    flex: 1;
+    min-height: inherit;
+}

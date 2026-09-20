@@ -33,10 +33,10 @@
             </div>
 
             <!-- Location Rules -->
-            <div class="mb-12 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm bg-white dark:bg-[#161824]" x-data="{ param: 'post_type' }">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1b1e2b]">
-                    <h3 class="text-gray-900 text-base font-semibold dark:text-gray-100 m-0">Location Rules</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-0">Show this field group if</p>
+            <div class="mb-12 border border-neutral dark:border-dark-neutral-border rounded-lg overflow-hidden shadow-sm bg-neutral-bg dark:bg-dark-neutral-bg" x-data="{ param: 'post_type' }">
+                <div class="px-6 py-4 border-b border-neutral dark:border-dark-neutral-border bg-neutral dark:bg-dark-neutral-border">
+                    <h3 class="text-gray-900 text-base font-semibold dark:text-gray-dark-1100 m-0">Location Rules</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-dark-500 mt-1 mb-0">Show this field group if</p>
                 </div>
                 <div class="p-6">
                 
@@ -119,14 +119,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createFieldRow(data = {}, isSubField = false) {
         const row = document.createElement('div');
-        row.className = `field-row-generic bg-white dark:bg-[#161824] border border-[#E8EDF2] dark:border-gray-800 rounded-lg shadow-sm relative overflow-hidden ${isSubField ? 'mt-4' : 'mb-6'}`;
+        row.className = `field-row-generic bg-neutral-bg dark:bg-dark-neutral-bg border border-neutral dark:border-dark-neutral-border rounded-lg shadow-sm relative overflow-hidden ${isSubField ? 'mt-4' : 'mb-6'}`;
         
         const dragHandleClass = isSubField ? 'sub-drag-handle' : 'drag-handle';
         const titleText = isSubField ? 'Sub Field' : 'Field Configuration';
 
         row.innerHTML = `
             <div class="field-content">
-                <div class="flex justify-between items-center py-3 px-5 border-b border-[#E8EDF2] dark:border-gray-800 bg-gray-50 dark:bg-[#1b1e2b]">
+                <div class="flex justify-between items-center py-3 px-5 border-b border-neutral dark:border-dark-neutral-border bg-neutral dark:bg-dark-neutral-border">
                     <div class="flex items-center gap-3">
                         <div class="cursor-move ${dragHandleClass} text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded transition-colors" title="Drag to reorder">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,15 +144,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
                         <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Label</p>
-                        <input type="text" data-name="label" class="field-label input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442] placeholder:text-inherit" value="${data.label || ''}" required placeholder="Field Label">
+                        <input type="text" data-name="label" class="field-label input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-neutral dark:border-dark-neutral-border placeholder:text-inherit" value="${data.label || ''}" required placeholder="Field Label">
                     </div>
                     <div>
                         <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Name (slug)</p>
-                        <input type="text" data-name="name" class="field-name input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442] placeholder:text-inherit" value="${data.name || ''}" required placeholder="field_name" data-modified="${data.name ? 'true' : ''}">
+                        <input type="text" data-name="name" class="field-name input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-neutral dark:border-dark-neutral-border placeholder:text-inherit" value="${data.name || ''}" required placeholder="field_name" data-modified="${data.name ? 'true' : ''}">
                     </div>
                     <div>
                         <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Type</p>
-                        <select data-name="type" class="field-type-select select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none px-[13px] border rounded border-[#E8EDF2] dark:border-[#313442]">
+                        <select data-name="type" class="field-type-select select w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none px-[13px] border rounded border-neutral dark:border-dark-neutral-border">
                             <option value="text" ${data.type === 'text' ? 'selected' : ''} class="bg-white dark:bg-dark-neutral-bg">Text</option>
                             <option value="textarea" ${data.type === 'textarea' ? 'selected' : ''} class="bg-white dark:bg-dark-neutral-bg">Textarea</option>
                             <option value="wysiwyg" ${data.type === 'wysiwyg' ? 'selected' : ''} class="bg-white dark:bg-dark-neutral-bg">WYSIWYG Editor</option>
@@ -168,13 +168,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${!isSubField ? `
                 <div class="mb-4">
                     <p class="text-gray-1100 text-xs font-bold capitalize mb-[5px] dark:text-gray-dark-1100">Instructions (optional)</p>
-                    <input type="text" data-name="instructions" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-[#E8EDF2] dark:border-[#313442] placeholder:text-inherit" value="${data.instructions || ''}" placeholder="Instructions for authors">
+                    <input type="text" data-name="instructions" class="input w-full bg-transparent text-sm leading-4 text-gray-800 dark:text-white h-fit min-h-fit py-2 focus:outline-none pl-[13px] border rounded border-neutral dark:border-dark-neutral-border placeholder:text-inherit" value="${data.instructions || ''}" placeholder="Instructions for authors">
                 </div>
                 ` : ''}
                 
-                <div class="sub-fields-container mt-4 p-4 bg-gray-50 dark:bg-[#252734] border border-[#E8EDF2] dark:border-[#313442] rounded-lg ${(data.type === 'repeater' || data.type === 'group') ? 'block' : 'hidden'}">
+                <div class="sub-fields-container mt-4 p-4 bg-neutral dark:bg-dark-neutral-border border border-neutral dark:border-dark-neutral-border rounded-lg ${(data.type === 'repeater' || data.type === 'group') ? 'block' : 'hidden'}">
                     <p class="sub-fields-title text-gray-1100 text-sm font-bold capitalize mb-[15px] dark:text-gray-dark-1100">${data.type === 'repeater' ? 'Repeater Sub-Fields' : 'Group Sub-Fields'}</p>
-                    <div class="sub-fields-list mb-4 pl-4 border-l-2 border-[#E8EDF2] dark:border-[#313442] min-h-[10px]"></div>
+                    <div class="sub-fields-list mb-4 pl-4 border-l-2 border-neutral dark:border-dark-neutral-border min-h-[10px]"></div>
                     <button type="button" class="add-sub-field-btn btn normal-case h-fit min-h-fit transition-all duration-300 border-4 bg-color-brands hover:bg-color-brands hover:border-[#B2A7FF] text-white py-[6px] px-[16px] rounded flex items-center gap-2 text-sm whitespace-nowrap">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                         Add Sub-Field
