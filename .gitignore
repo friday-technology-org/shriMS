@@ -33,3 +33,5 @@ Thumbs.db
 !/cms-content/themes/shri-ms
 /cms-content/uploads/*
 !/cms-content/uploads/.gitkeep
+
+storage/cms-updates/*

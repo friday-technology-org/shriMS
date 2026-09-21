@@ -14,6 +14,17 @@
                     class="capitalize text-color-brands">Dashboard</span>
             </div>
         </div>
+        
+        @if($hasUpdate)
+        <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 dark:bg-[#313442] dark:text-gray-dark-1100 p-4 mb-6 rounded shadow-sm flex items-start gap-4">
+            <img src="{{ asset('assets/images/icons/icon-notification-bing.svg') }}" alt="alert icon" class="w-6 h-6 mt-1 dark:invert">
+            <div>
+                <h4 class="font-bold text-lg mb-1">Update Available!</h4>
+                <p class="text-sm dark:text-gray-dark-500">A new version of Shri-ms <strong>(Version {{ $latestVersion }})</strong> is available. Please contact your administrator to perform the update.</p>
+            </div>
+        </div>
+        @endif
+
         <section>
             <!-- Hook for plugins to inject custom widgets at the top of the dashboard -->
             <div class="cms-dashboard-widgets-top w-full mb-6 empty:hidden">
@@ -33,45 +44,7 @@
                             <div class="translate-x-4">
                                 <canvas class="max-h-[34px]" width="400" height="400" id="incomeChart"></canvas>
                             </div>
-                            <div class="dropdown dropdown-end translate-x-4 z-10 self-start">
-                                <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"
-                                    tabindex="0"><img class="cursor-pointer"
-                                        src="{{ asset('assets/images/icons/icon-toggle.svg') }}" alt="toggle icon">
-                                </label>
-                                <ul class="dropdown-content" tabindex="0">
-                                    <div
-                                        class="relative menu rounded-box dropdown-shadow min-w-[126px] bg-neutral-bg mt-[10px] pt-[14px] pb-[7px] px-4 border border-neutral-border dark:text-gray-dark-500 dark:border-dark-neutral-border dark:bg-dark-neutral-bg">
-                                        <div
-                                            class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-transparent right-[18px]">
-                                        </div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Sales
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Export
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Profit
-                                                    manage</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Revenue
-                                                    report</span></a>
-                                        </li>
-                                        <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#remove"> <span
-                                                    class="text-red text-[11px] leading-4">Remove widget</span></a>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
+
                         </div>
                         <div class="flex items-center justify-between"><span
                                 class="text-gray-500 text-xs dark:text-gray-dark-500">Posts</span>
@@ -90,45 +63,7 @@
                             <div class="translate-x-4">
                                 <canvas class="max-h-[34px]" width="400" height="400" id="cashChart"></canvas>
                             </div>
-                            <div class="dropdown dropdown-end translate-x-4 z-10 self-start">
-                                <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"
-                                    tabindex="0"><img class="cursor-pointer"
-                                        src="{{ asset('assets/images/icons/icon-toggle.svg') }}" alt="toggle icon">
-                                </label>
-                                <ul class="dropdown-content" tabindex="0">
-                                    <div
-                                        class="relative menu rounded-box dropdown-shadow min-w-[126px] bg-neutral-bg mt-[10px] pt-[14px] pb-[7px] px-4 border border-neutral-border dark:text-gray-dark-500 dark:border-dark-neutral-border dark:bg-dark-neutral-bg">
-                                        <div
-                                            class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-transparent right-[18px]">
-                                        </div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Sales
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Export
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Profit
-                                                    manage</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Revenue
-                                                    report</span></a>
-                                        </li>
-                                        <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#remove">
-                                                <span class="text-red text-[11px] leading-4">Remove widget</span></a>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
+
                         </div>
                         <div class="flex items-center justify-between"><span
                                 class="text-gray-500 text-xs dark:text-gray-dark-500">Pages</span>
@@ -147,48 +82,7 @@
                             <div class="translate-x-4">
                                 <canvas class="max-h-[34px]" width="400" height="400" id="purpleChart"></canvas>
                             </div>
-                            <div class="dropdown dropdown-end translate-x-4 z-10 self-start">
-                                <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"
-                                    tabindex="0"><img class="cursor-pointer"
-                                        src="{{ asset('assets/images/icons/icon-toggle.svg') }}" alt="toggle icon">
-                                </label>
-                                <ul class="dropdown-content" tabindex="0">
-                                    <div
-                                        class="relative menu rounded-box dropdown-shadow min-w-[126px] bg-neutral-bg mt-[10px] pt-[14px] pb-[7px] px-4 border border-neutral-border dark:text-gray-dark-500 dark:border-dark-neutral-border dark:bg-dark-neutral-bg">
-                                        <div
-                                            class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-transparent right-[18px]">
-                                        </div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Sales
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Export
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Profit
-                                                    manage</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Revenue
-                                                    report</span></a>
-                                        </li>
-                                        <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#remove">
-                                                <span class="text-red text-[11px] leading-4">Remove widget</span></a>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
+
                         </div>
                         <div class="flex items-center justify-between"><span
                                 class="text-gray-500 text-xs dark:text-gray-dark-500">Custom Post Types</span>
@@ -209,48 +103,7 @@
                             <div class="translate-x-4">
                                 <canvas class="max-h-[34px]" width="400" height="400" id="profitChart"></canvas>
                             </div>
-                            <div class="dropdown dropdown-end translate-x-4 z-10 self-start">
-                                <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"
-                                    tabindex="0"><img class="cursor-pointer"
-                                        src="{{ asset('assets/images/icons/icon-toggle.svg') }}" alt="toggle icon">
-                                </label>
-                                <ul class="dropdown-content" tabindex="0">
-                                    <div
-                                        class="relative menu rounded-box dropdown-shadow min-w-[126px] bg-neutral-bg mt-[10px] pt-[14px] pb-[7px] px-4 border border-neutral-border dark:text-gray-dark-500 dark:border-dark-neutral-border dark:bg-dark-neutral-bg">
-                                        <div
-                                            class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-transparent right-[18px]">
-                                        </div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Sales
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Export
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Profit
-                                                    manage</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Revenue
-                                                    report</span></a>
-                                        </li>
-                                        <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#remove">
-                                                <span class="text-red text-[11px] leading-4">Remove widget</span></a>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
+
                         </div>
                         <div class="flex items-center justify-between"><span
                                 class="text-gray-500 text-xs dark:text-gray-dark-500">Registered Users</span>
@@ -264,54 +117,20 @@
                     <div
                         class="bg-neutral-bg border border-neutral-accent p-5 rounded-[16.079px] dark:bg-dark-neutral-bg dark:border-dark-neutral-border">
                         <div class="flex justify-between">
-                            <div class="flex items-center gap-x-[11px]"><img
-                                    src="{{ asset('assets/images/icons/icon-shield-tick-circle.svg') }}"
-                                    alt="shield tick icon">
-                                <p class="text-gray-500 dark:text-gray-dark-500 text-[10px] leading-[15px] max-w-[135px]">
-                                    Congratulation! <br> Your FoxDash CMS is up to date (Version {{ $coreVersion }})</p>
+                            <div class="flex items-center gap-x-[11px]">
+                                @if($hasUpdate)
+                                    <img src="{{ asset('assets/images/icons/icon-notification-bing.svg') }}" alt="alert icon" class="dark:invert">
+                                    <p class="text-orange-600 dark:text-gray-dark-1100 text-[10px] leading-[15px] max-w-[135px]">
+                                        Update Available! <br> Shri-ms Version {{ $latestVersion }} is out now.
+                                    </p>
+                                @else
+                                    <img src="{{ asset('assets/images/icons/icon-shield-tick-circle.svg') }}" alt="shield tick icon">
+                                    <p class="text-gray-500 dark:text-gray-dark-500 text-[10px] leading-[15px] max-w-[135px]">
+                                        Congratulations! <br> Your Shri-ms is up to date (Version {{ $coreVersion }})
+                                    </p>
+                                @endif
                             </div>
-                            <div class="dropdown dropdown-end translate-x-4 z-10 self-start">
-                                <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"
-                                    tabindex="0"><img class="cursor-pointer"
-                                        src="{{ asset('assets/images/icons/icon-toggle.svg') }}" alt="toggle icon">
-                                </label>
-                                <ul class="dropdown-content" tabindex="0">
-                                    <div
-                                        class="relative menu rounded-box dropdown-shadow min-w-[126px] bg-neutral-bg mt-[10px] pt-[14px] pb-[7px] px-4 border border-neutral-border  dark:text-gray-dark-500 dark:border-dark-neutral-border dark:bg-dark-neutral-bg">
-                                        <div
-                                            class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-transparent right-[18px]">
-                                        </div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Sales
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Export
-                                                    report</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Profit
-                                                    manage</span></a>
-                                        </li>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#">
-                                                <span
-                                                    class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Revenue
-                                                    report</span></a>
-                                        </li>
-                                        <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
-                                        <li class="text-normal mb-[7px]"><a
-                                                class="flex items-center bg-transparent p-0 gap-[7px]" href="#remove">
-                                                <span class="text-red text-[11px] leading-4">Remove widget</span></a>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -324,51 +143,46 @@
 
             <div class="flex justify-between gap-6 mb-10 flex-col xl:flex-row">
 
+                <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-lg pt-5 pl-6 pb-8 pr-[22px] flex-1">
+                    <div class="flex items-center justify-between border-b border-neutral dark:border-dark-neutral-border mb-[24px] pb-[16px]">
+                        <div class="text-base leading-5 text-gray-1100 font-semibold dark:text-gray-dark-1100">Views Over Last 7 Days</div>
+                    </div>
+                    <div class="relative h-[250px] w-full">
+                        <canvas id="viewsGrowthChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-lg pt-5 pl-6 pb-8 pr-[22px] flex-1">
+                    <div class="flex items-center justify-between border-b border-neutral dark:border-dark-neutral-border mb-[24px] pb-[16px]">
+                        <div class="text-base leading-5 text-gray-1100 font-semibold dark:text-gray-dark-1100">Top Performing Content</div>
+                    </div>
+                    <div class="flex flex-col gap-y-[22px]">
+                        @foreach ($topPosts as $post)
+                            <div class="flex justify-between items-center">
+                                <div class="flex flex-col gap-y-[7px]">
+                                    <h4 class="text-gray-1100 text-sm leading-4 dark:text-gray-dark-1100">
+                                        <a href="{{ $post->permalink }}" target="_blank" class="hover:underline">{{ Str::limit($post->title, 40) }}</a>
+                                    </h4>
+                                    <span class="text-gray-400 text-xs dark:text-gray-dark-400 capitalize">{{ $post->post_type }}</span>
+                                </div>
+                                <div class="flex flex-col gap-y-2 items-end">
+                                    <h5 class="text-sm leading-4 text-green font-semibold dark:text-gray-dark-1100">
+                                        {{ number_format($post->views_count) }}
+                                    </h5>
+                                    <span class="text-gray-400 text-xs dark:text-gray-dark-400">views</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
                 <div
-                    class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-lg pt-5 pl-6 pb-8 pr-[22px]">
+                    class="border bg-neutral-bg border-neutral dark:bg-dark-neutral-bg dark:border-dark-neutral-border rounded-lg pt-5 pl-6 pb-8 pr-[22px] flex-1">
                     <div
                         class="flex items-center justify-between border-b border-neutral dark:border-dark-neutral-border mb-[24px] pb-[16px]">
                         <div class="text-base leading-5 text-gray-1100 font-semibold dark:text-gray-dark-1100">New active
                             users</div>
-                        <div class="dropdown dropdown-end ml-auto translate-x-4 z-10">
-                            <label class="cursor-pointer dropdown-label flex items-center justify-between py-2 px-4"
-                                tabindex="0"><img class="cursor-pointer"
-                                    src="{{ asset('assets/images/icons/icon-toggle.svg') }}" alt="toggle icon">
-                            </label>
-                            <ul class="dropdown-content" tabindex="0">
-                                <div
-                                    class="relative menu rounded-box dropdown-shadow min-w-[126px] bg-neutral-bg mt-[10px] pt-[14px] pb-[7px] px-4 border border-neutral-border  dark:text-gray-dark-500 dark:border-dark-neutral-border dark:bg-dark-neutral-bg">
-                                    <div
-                                        class="border-solid border-b-8 border-x-transparent border-x-8 border-t-0 absolute w-[14px] top-[-7px] border-b-transparent right-[18px]">
-                                    </div>
-                                    <li class="text-normal mb-[7px]"><a
-                                            class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Sales
-                                                report</span></a>
-                                    </li>
-                                    <li class="text-normal mb-[7px]"><a
-                                            class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Export
-                                                report</span></a>
-                                    </li>
-                                    <li class="text-normal mb-[7px]"><a
-                                            class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Profit
-                                                manage</span></a>
-                                    </li>
-                                    <li class="text-normal mb-[7px]"><a
-                                            class="flex items-center bg-transparent p-0 gap-[7px]" href="#"> <span
-                                                class="text-gray-500 text-[11px] leading-4 hover:text-gray-700">Revenue
-                                                report</span></a>
-                                    </li>
-                                    <div class="w-full bg-neutral h-[1px] my-[7px] dark:bg-dark-neutral-border"></div>
-                                    <li class="text-normal mb-[7px]"><a
-                                            class="flex items-center bg-transparent p-0 gap-[7px]" href="#remove"> <span
-                                                class="text-red text-[11px] leading-4">Remove widget</span></a>
-                                    </li>
-                                </div>
-                            </ul>
-                        </div>
+
                     </div>
                     <div class="flex flex-col gap-y-[22px] xl:min-w-[361px]">
                         @foreach ($activeUsers as $user)
@@ -970,5 +784,43 @@
             </div>
         </div>
     </footer>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('viewsGrowthChart');
+        if (ctx) {
+            const rawData = @json($chartData);
+            const labels = Object.keys(rawData);
+            const data = Object.values(rawData).map(item => item.total_views);
 
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Views',
+                        data: data,
+                        borderColor: '#22C55E',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush
 @endsection

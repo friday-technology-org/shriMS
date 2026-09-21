@@ -147,6 +147,21 @@ class FrontendController extends Controller
      */
     protected function renderPost(Post $post)
     {
+        $request = request();
+        $userAgent = strtolower($request->userAgent() ?? '');
+        $isBot = preg_match('/bot|crawl|spider|slurp|facebook|google|bing/i', $userAgent);
+
+        if (!$isBot) {
+            // Increment total views
+            $post->increment('views_count');
+
+            // Log daily stats
+            $today = \Carbon\Carbon::today()->toDateString();
+            \Cms\Core\Models\PostViewStat::firstOrCreate(
+                ['post_id' => $post->id, 'date' => $today]
+            )->increment('views');
+        }
+
         cms_loop()->setup($post);
         cms_loop()->thePost();
 
