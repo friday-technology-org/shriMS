@@ -29,6 +29,7 @@ class Post extends Model
         'site_id',
         'lang',
         'translation_of_id',
+        'views_count',
     ];
 
     protected $casts = [
@@ -125,5 +126,10 @@ class Post extends Model
     public function revisions()
     {
         return $this->hasMany(PostRevision::class)->orderBy('created_at', 'desc');
+    }
+
+    public function viewStats()
+    {
+        return $this->hasMany(PostViewStat::class);
     }
 }
