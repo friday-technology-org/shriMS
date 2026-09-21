@@ -77,7 +77,17 @@ class MediaController extends Controller
     {
         $request->validate([
             'files'   => 'required|array|min:1',
-            'files.*' => 'file|max:51200', // 50MB
+            'files.*' => [
+                'file',
+                'max:51200',
+                function ($attribute, $value, $fail) {
+                    $dangerousExtensions = ['php', 'php3', 'php4', 'php5', 'phtml', 'exe', 'sh', 'bat', 'cgi', 'pl'];
+                    $extension = strtolower($value->getClientOriginalExtension());
+                    if (in_array($extension, $dangerousExtensions)) {
+                        $fail('The '.$attribute.' must not be a dangerous file type.');
+                    }
+                },
+            ],
         ]);
 
         $uploaded = [];

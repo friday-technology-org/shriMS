@@ -36,6 +36,9 @@ class DashboardController extends Controller
         
         $dashboardData['coreVersion'] = $coreVersion;
 
-        return view('cms-core::dashboard.index', $dashboardData);
+        // Allow plugins to override the entirely of the dashboard view
+        $view = apply_filters('cms_dashboard_view', 'cms-core::dashboard.index');
+
+        return view($view, $dashboardData);
     }
 }
