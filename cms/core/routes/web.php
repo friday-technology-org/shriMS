@@ -149,7 +149,7 @@ Route::middleware(['web'])->group(function () {
     });
 
     // Public API endpoints (Protected by API tokens)
-    Route::prefix('api/v1')->middleware('cms.api.auth')->group(function () {
+    Route::prefix('api/v1')->middleware(['cms.api.auth', 'throttle:api'])->group(function () {
         Route::get('posts', [\Cms\Core\Http\Controllers\ApiController::class, 'posts']);
         Route::get('posts/{id}', [\Cms\Core\Http\Controllers\ApiController::class, 'post']);
         Route::get('pages', [\Cms\Core\Http\Controllers\ApiController::class, 'pages']);
