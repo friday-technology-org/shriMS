@@ -16,5 +16,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            if ($request->is('admin') || $request->is('admin/*')) {
+                $status = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface ? $e->getStatusCode() : 500;
+                
+                // For CSRF Token Mismatch
+                if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+                    $status = 419;
+                }
+
+                if (view()->exists("cms-core::errors.{$status}")) {
+                    return response()->view("cms-core::errors.{$status}", ['exception' => $e], $status);
+                }
+            }
+        });
     })->create();
