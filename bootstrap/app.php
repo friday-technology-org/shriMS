@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
             if ($request->is('admin') || $request->is('admin/*')) {
+                if ($e instanceof \Illuminate\Auth\AuthenticationException || 
+                    $e instanceof \Illuminate\Validation\ValidationException ||
+                    $e instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+                    return; // Let Laravel handle redirects for these exceptions
+                }
+
                 $status = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface ? $e->getStatusCode() : 500;
                 
                 // For CSRF Token Mismatch
